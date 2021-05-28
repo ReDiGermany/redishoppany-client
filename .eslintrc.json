@@ -13,7 +13,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".tsx", ".ts"]
+        "extensions": [".tsx", ".ts", ".svg"]
       }
     }
   },
