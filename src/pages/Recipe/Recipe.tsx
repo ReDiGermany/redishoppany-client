@@ -28,9 +28,21 @@ import {
   titleText,
 } from '../../styles/RecipeStyle'
 import IPageProps from '../../interfaces/IPageProps'
+import APIFriends from '../../helper/API/APIFriends'
+import IFriend from '../../interfaces/IFriend'
 
-export default class Recipes extends Component<IPageProps> {
+interface IRecipeState {
+  deleteConfirmBox: boolean
+  shareBox: boolean
+  focusText: boolean
+  ingredients: string[]
+  text: string
+  friends: IFriend[]
+}
+
+export default class Recipes extends Component<IPageProps, IRecipeState> {
   state = {
+    friends: [],
     deleteConfirmBox: false,
     shareBox: false,
     focusText: false,
@@ -48,6 +60,7 @@ export default class Recipes extends Component<IPageProps> {
   }
 
   render() {
+    // TODO: Add recipe API
     const url =
       'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg'
 
@@ -55,8 +68,9 @@ export default class Recipes extends Component<IPageProps> {
       {
         icon: 'share-alt',
         name: 'edit',
-        onClick: () => {
-          this.setState({ shareBox: true })
+        onClick: async () => {
+          const friends = await APIFriends.shortList()
+          this.setState({ friends, shareBox: true })
         },
       },
     ]
@@ -125,6 +139,7 @@ export default class Recipes extends Component<IPageProps> {
           items={[
             {
               onClick: () => {
+                // TODO: Add delete API
                 this.setState({ deleteConfirmBox: false })
                 console.log('jetzt Löschen.')
               },
@@ -138,26 +153,12 @@ export default class Recipes extends Component<IPageProps> {
             this.setState({ shareBox: false })
           }}
           open={this.state.shareBox}
-          items={[
-            {
-              onClick: () => {
-                this.setState({ shareBox: false })
-              },
-              name: 'A. Lien',
+          items={this.state.friends.map((friend: IFriend) => ({
+            onClick: () => {
+              // TODO: Add Share API
             },
-            {
-              onClick: () => {
-                this.setState({ shareBox: false })
-              },
-              name: 'I. Seven',
-            },
-            {
-              onClick: () => {
-                this.setState({ shareBox: false })
-              },
-              name: 'K. Ahnung',
-            },
-          ]}
+            name: `${friend.firstName} ${friend.lastName}`,
+          }))}
         />
       </View>
     )
