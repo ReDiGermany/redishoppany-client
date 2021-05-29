@@ -29,7 +29,6 @@ export default class Index extends Component<IIndexProps, IIndexState> {
 
   async componentDidMount() {
     const user = await APIUser.getMe()
-    console.log('user', user)
     this.setState({ user })
   }
 
@@ -40,7 +39,6 @@ export default class Index extends Component<IIndexProps, IIndexState> {
         <View
           style={{ height: GlobalStyles.appHeight, backgroundColor: '#202020' }}
         >
-          <StatusBar style="auto" />
           <View
             style={{
               marginTop: sb.currentHeight ?? 0,
@@ -86,16 +84,6 @@ export default class Index extends Component<IIndexProps, IIndexState> {
             </Router>
           </View>
         </View>
-        {/* <ShoppingItem name="Item 1" /> */}
-        {/* <ShoppingItem name="Item 2" /> */}
-        {/* <ShoppingItem name="Item 3" /> */}
-        {/* <ShoppingItem name="Item 4" /> */}
-        {/* <ShoppingItem name="Item 5" /> */}
-        {/* <ShoppingItem name="Item 6" /> */}
-        {/* <ShoppingItem name="Item 7" /> */}
-        {/* <ShoppingItem name="Item 8" /> */}
-        {/* <ShoppingItem name="Item 9" /> */}
-        {/* <ShoppingItem name="Item 10" /> */}
       </AppearanceProvider>
     )
   }
