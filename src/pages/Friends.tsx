@@ -31,6 +31,7 @@ export default class Friends extends Component<IPageProps> {
     return (
       <View>
         <Navigation
+          user={this.props.user}
           label="Friends"
           // badge="10"
         />

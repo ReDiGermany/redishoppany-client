@@ -70,7 +70,11 @@ export default class Recipes extends Component<IPageProps> {
 
     return (
       <View>
-        <Navigation label="Rezept" buttons={shareButton} />
+        <Navigation
+          user={this.props.user}
+          label="Rezept"
+          buttons={shareButton}
+        />
         <SafeAreaView style={contentHeight}>
           <ScrollView>
             <Image {...headerImage} />

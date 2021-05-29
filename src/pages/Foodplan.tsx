@@ -29,6 +29,7 @@ export default class Foodplan extends Component<IPageProps> {
     return (
       <View>
         <Navigation
+          user={this.props.user}
           label="Essensplan"
           // badge="10"
           buttons={[

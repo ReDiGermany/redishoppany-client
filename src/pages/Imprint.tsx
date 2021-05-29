@@ -7,7 +7,7 @@ export default class Imprint extends Component<IPageProps> {
   render() {
     return (
       <View>
-        <Navigation label="Impressum" />
+        <Navigation user={this.props.user} label="Impressum" />
       </View>
     )
   }

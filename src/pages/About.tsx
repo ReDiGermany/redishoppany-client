@@ -11,7 +11,7 @@ export default class About extends Component<IAboutProps> {
   render() {
     return (
       <View>
-        <Navigation label="About" />
+        <Navigation user={this.props.user} label="About" />
       </View>
     )
   }

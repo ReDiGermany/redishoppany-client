@@ -7,7 +7,7 @@ export default class Settings extends Component<IPageProps> {
   render() {
     return (
       <View>
-        <Navigation label="Einstellungen" />
+        <Navigation user={this.props.user} label="Einstellungen" />
       </View>
     )
   }

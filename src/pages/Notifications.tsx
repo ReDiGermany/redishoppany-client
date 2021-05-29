@@ -25,6 +25,7 @@ export default class Notifications extends Component<IPageProps> {
     return (
       <View>
         <Navigation
+          user={this.props.user}
           label="Benachrichtigungen"
           // badge="10"
           buttons={[

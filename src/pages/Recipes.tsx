@@ -56,7 +56,7 @@ export default class Recipes extends Component<IPageProps> {
   render() {
     return (
       <View>
-        <Navigation label="Rezepte" />
+        <Navigation user={this.props.user} label="Rezepte" />
         <SafeAreaView
           style={{
             height:
