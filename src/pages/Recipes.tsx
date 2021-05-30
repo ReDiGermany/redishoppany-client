@@ -6,10 +6,20 @@ import IPageProps from '../interfaces/IPageProps'
 import Navigation from '../Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
 import IRecipesState from '../interfaces/IRecipesState'
+import {
+  container,
+  image as imageStyle,
+  imageBox,
+  nameBox,
+  textBox,
+  timeBox,
+} from '../styles/RecipesListStyle'
+import EditRecipe from './EditRecipe/EditRecipe'
 
 export default class Recipes extends Component<IPageProps, IRecipesState> {
   state: IRecipesState = {
     recipes: [],
+    addRecipe: false,
   }
 
   async componentDidMount() {
@@ -18,75 +28,35 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
   }
 
   render() {
+    const image = (item: any) => ({
+      width: GlobalStyles.appWidth,
+      height: 150,
+      style: imageStyle,
+      source: { uri: item.image },
+    })
+
+    const onClick = () => {
+      this.setState({ addRecipe: true })
+    }
+
+    const buttons = [{ icon: 'plus', name: 'add', onClick }]
+
+    if (this.state.addRecipe) {
+      return <EditRecipe user={this.props.user} />
+    }
+
     return (
       <View>
-        <Navigation user={this.props.user} label="Rezepte" />
-        <SafeAreaView
-          style={{
-            height:
-              GlobalStyles.appHeight -
-              GlobalStyles.barHeight -
-              GlobalStyles.statusbarHeight,
-          }}
-        >
+        <Navigation user={this.props.user} label="Rezepte" buttons={buttons} />
+        <SafeAreaView style={container}>
           <ScrollView>
             {this.state.recipes.map((item, index) => (
               <Link key={index} to={`/recipe/${item.id}`}>
-                <View
-                  style={{
-                    borderRadius: 5,
-                    overflow: 'hidden',
-                    height: 150,
-                    width: GlobalStyles.appWidth - 40,
-                    marginLeft: 20,
-                    marginVertical: 10,
-                  }}
-                >
-                  <Image
-                    width={GlobalStyles.appWidth}
-                    height={150}
-                    style={{
-                      height: 150,
-                      width: '100%',
-                    }}
-                    source={{ uri: item.image }}
-                  />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      height: 50,
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      width: '100%',
-                      backgroundColor: 'rgba(0,0,0,.5)',
-                      paddingHorizontal: 20,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textShadowColor: '#000',
-                        textShadowOffset: { width: 3, height: 3 },
-                        textShadowRadius: 0,
-                        color: '#fff',
-                        lineHeight: 50,
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      {item.name}
-                    </Text>
-                    <Text
-                      style={{
-                        color: '#fff',
-                        lineHeight: 70,
-                        fontSize: 12,
-                        opacity: 0.5,
-                        flex: 1,
-                        textAlign: 'right',
-                      }}
-                    >
-                      {item.time}
-                    </Text>
+                <View style={imageBox}>
+                  <Image {...image(item)} />
+                  <View style={textBox}>
+                    <Text style={nameBox}>{item.name}</Text>
+                    <Text style={timeBox}>{item.time}</Text>
                   </View>
                 </View>
               </Link>
