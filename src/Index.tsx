@@ -59,9 +59,12 @@ export default class Index extends Component<IIndexProps, IIndexState> {
                 <Route path="/imprint">
                   <Imprint user={this.state.user} />
                 </Route>
-                <Route path="/list">
-                  <List user={this.state.user} />
-                </Route>
+                <Route
+                  path="/list/:id"
+                  render={(props: any) => (
+                    <List user={this.state.user} id={props.match.params.id} />
+                  )}
+                ></Route>
                 <Route path="/settings">
                   <Settings user={this.state.user} />
                 </Route>
@@ -71,14 +74,18 @@ export default class Index extends Component<IIndexProps, IIndexState> {
                 <Route path="/recipes">
                   <Recipes user={this.state.user} />
                 </Route>
-                <Route path="/recipe/:id">
-                  <Recipe user={this.state.user} />
-                </Route>
+                <Route
+                  path="/recipe/:id"
+                  render={(props: any) => (
+                    <Recipe user={this.state.user} id={props.match.params.id} />
+                  )}
+                />
                 <Route path="/logout">
                   <Logout user={this.state.user} />
                 </Route>
                 <Route exact path="/">
-                  <List user={this.state.user} />
+                  {/* TODO: Add default list id? */}
+                  <List user={this.state.user} id={1} />
                 </Route>
               </View>
             </Router>
