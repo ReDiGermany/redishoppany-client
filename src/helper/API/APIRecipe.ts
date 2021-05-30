@@ -20,8 +20,8 @@ export default class APIRecipe {
     return ret
   }
 
-  public static async list(): Promise<IAPIRecipe> {
-    const ret = (await API.get)<IAPIRecipe>('/recipe')
+  public static async list(): Promise<IAPIRecipe[]> {
+    const ret = (await API.get)<IAPIRecipe[]>('/recipe')
 
     return ret
   }
