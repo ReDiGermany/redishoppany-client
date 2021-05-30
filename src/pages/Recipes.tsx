@@ -1,56 +1,20 @@
 import React, { Component } from 'react'
 import { ScrollView, View, Image, Text, SafeAreaView } from 'react-native'
 import { Link } from 'react-router-native'
+import APIRecipe from '../helper/API/APIRecipe'
 import IPageProps from '../interfaces/IPageProps'
 import Navigation from '../Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
+import IRecipesState from '../interfaces/IRecipesState'
 
-export default class Recipes extends Component<IPageProps> {
-  state = {
-    recipes: [
-      {
-        name: 'Rezept Name',
-        time: 'ca 3h',
-        url: '/recipe/asd',
-        image:
-          'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg',
-      },
-      {
-        name: 'Rezept Name',
-        time: 'ca 3h',
-        url: '/recipe/asd',
-        image:
-          'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg',
-      },
-      {
-        name: 'Rezept Name',
-        time: 'ca 3h',
-        url: '/recipe/asd',
-        image:
-          'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg',
-      },
-      {
-        name: 'Rezept Name',
-        time: 'ca 3h',
-        url: '/recipe/asd',
-        image:
-          'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg',
-      },
-      {
-        name: 'Rezept Name',
-        time: 'ca 3h',
-        url: '/recipe/asd',
-        image:
-          'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg',
-      },
-      {
-        name: 'Rezept Name',
-        time: 'ca 3h',
-        url: '/recipe/asd',
-        image:
-          'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg',
-      },
-    ],
+export default class Recipes extends Component<IPageProps, IRecipesState> {
+  state: IRecipesState = {
+    recipes: [],
+  }
+
+  async componentDidMount() {
+    const recipes = await APIRecipe.list()
+    this.setState({ recipes })
   }
 
   render() {
@@ -67,7 +31,7 @@ export default class Recipes extends Component<IPageProps> {
         >
           <ScrollView>
             {this.state.recipes.map((item, index) => (
-              <Link key={index} to={item.url}>
+              <Link key={index} to={`/recipe/${item.id}`}>
                 <View
                   style={{
                     borderRadius: 5,
