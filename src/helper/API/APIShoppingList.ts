@@ -1,6 +1,6 @@
 import API from '../API'
 import IShoppingList from '../../interfaces/IShoppingList'
-import IAPIShoppingListResponse from './IAPIShoppingListResponse'
+import IAPIShoppingListResponse from '../../interfaces/IAPIShoppingListResponse'
 
 export default class APIShoppingList {
   public static async create(name: string): Promise<boolean> {
