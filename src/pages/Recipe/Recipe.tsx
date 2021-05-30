@@ -40,7 +40,11 @@ interface IRecipeState {
   friends: IFriend[]
 }
 
-export default class Recipes extends Component<IPageProps, IRecipeState> {
+interface IRecipesProps extends IPageProps {
+  id: number
+}
+
+export default class Recipes extends Component<IRecipesProps, IRecipeState> {
   state = {
     friends: [],
     deleteConfirmBox: false,
