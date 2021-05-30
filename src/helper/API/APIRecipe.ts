@@ -3,7 +3,7 @@ import IAPIRecipeDetails from '../../interfaces/IAPIRecipeDetails'
 import IAPIRecipeDetailsItem from '../../interfaces/IAPIRecipeDetailsItem'
 import API from '../API'
 
-export default class APIShareRecipe {
+export default class APIRecipe {
   public static async create(
     name: string,
     time: string,

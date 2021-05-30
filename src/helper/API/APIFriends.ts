@@ -7,7 +7,7 @@ interface IAPIFriendsList {
   outgoing?: IFriend[]
 }
 
-export default class APIUser {
+export default class APIFriends {
   public static async list(): Promise<IAPIFriendsList> {
     const ret = await API.get<IAPIFriendsList>('/friends')
 
