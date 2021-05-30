@@ -4,17 +4,20 @@ import API from '../API'
 
 export default class APIUser {
   public static async getMe(): Promise<IAPIUserMe> {
-    const ret = await API.get('/user/me')
+    const ret = await API.get<IAPIUserMe>('/user/me')
 
-    return ret.data
+    return ret
   }
 
-  public static async getMeByToken(password: string, username: string) {
-    const ret = API.axiosInstance.get('/user/me', {
+  public static async getMeByToken(
+    password: string,
+    username: string
+  ): Promise<IAPIUserMe> {
+    const ret = await API.axiosInstance.get<IAPIUserMe>('/user/me', {
       auth: { password, username },
     })
 
-    return ret
+    return ret.data
   }
 
   public static async checkLogin(
@@ -34,9 +37,27 @@ export default class APIUser {
     return ret.status === 202
   }
 
-  public static async logout() {
-    await API.get('/user/logout')
+  public static async logout(): Promise<boolean> {
+    const ret = await API.get<boolean>('/user/logout')
 
-    return true
+    return ret
+  }
+
+  public static async register(
+    firstname: string,
+    lastname: string,
+    email: string,
+    password: string,
+    passwordConfirm: string
+  ): Promise<boolean> {
+    const ret = await API.post<boolean>('/user/register', {
+      firstname,
+      lastname,
+      email,
+      password,
+      passwordConfirm,
+    })
+
+    return ret
   }
 }
