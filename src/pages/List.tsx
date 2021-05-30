@@ -6,54 +6,32 @@ import ListHeader from '../ListHeader'
 import GlobalStyles from '../styles/GlobalStyles'
 import Input from '../Input'
 import Moveable from '../components/Moveable/Moveable'
+import APIShoppingList from '../helper/API/APIShoppingList'
+import IShoppingListCategory from '../interfaces/IShoppingListCategory'
 
-export default class List extends Component<IPageProps> {
-  state = {
-    items: [
-      {
-        name: 'Unsortiert',
-        items: [
-          { visible: true, open: false, name: 'Zalami', click: () => {} },
-          { visible: true, open: false, name: 'Tschinkn', click: () => {} },
-          { visible: true, open: false, name: 'Prot', click: () => {} },
-        ],
-      },
-      {
-        name: 'Gemüse',
-        items: [
-          { visible: true, open: false, name: 'Zalami', click: () => {} },
-          { visible: true, open: false, name: 'Tschinkn', click: () => {} },
-          { visible: true, open: false, name: 'Prot', click: () => {} },
-        ],
-      },
-      {
-        name: 'TK',
-        items: [
-          { visible: true, open: false, name: 'Zalami', click: () => {} },
-          { visible: true, open: false, name: 'Tschinkn', click: () => {} },
-          { visible: true, open: false, name: 'Prot', click: () => {} },
-        ],
-      },
-      {
-        name: 'Süßkram',
-        items: [
-          { visible: true, open: false, name: 'Zalami', click: () => {} },
-          { visible: true, open: false, name: 'Tschinkn', click: () => {} },
-          { visible: true, open: false, name: 'Prot', click: () => {} },
-        ],
-      },
-      {
-        name: 'Getränke',
-        items: [
-          { visible: true, open: false, name: 'Zalami', click: () => {} },
-          { visible: true, open: false, name: 'Tschinkn', click: () => {} },
-          { visible: true, open: false, name: 'Prot', click: () => {} },
-        ],
-      },
-    ],
+interface IPageListProps extends IPageProps {
+  id: number
+}
+
+interface IPageListState {
+  items: IShoppingListCategory[]
+  refreshing: boolean
+  scrolling: boolean
+  bottomBox: boolean
+}
+
+export default class List extends Component<IPageListProps, IPageListState> {
+  state: IPageListState = {
+    items: [],
     refreshing: false,
     scrolling: true,
     bottomBox: false,
+  }
+
+  componentDidMount() {
+    APIShoppingList.singleList(this.props.id).then(data => {
+      this.setState({ items: data.categories })
+    })
   }
 
   render() {
@@ -74,7 +52,7 @@ export default class List extends Component<IPageProps> {
         _iindex: number
       ) => void
     ) => {
-      this.state.items.forEach((cat, ccatindex) => {
+      this.state.items?.forEach((cat, ccatindex) => {
         cat.items.forEach((item, citemindex) => {
           callback(
             item,
@@ -90,7 +68,7 @@ export default class List extends Component<IPageProps> {
       <View>
         <Navigation
           user={this.props.user}
-          label="MainList"
+          label={`MainList${this.props.id}`}
           // badge="10"
           buttons={[
             {
