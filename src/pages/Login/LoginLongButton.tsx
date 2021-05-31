@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Pressable, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { loginStyles } from './Login'
+import loginStyles from '../../styles/LoginStyle'
 
 interface ILoginSocialButtonProps {
   title: string

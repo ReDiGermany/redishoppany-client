@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { TextInput } from 'react-native'
-import { loginStyles } from './Login'
+import loginStyles from '../../styles/LoginStyle'
 
 interface ILoginInputPasswordProps {
   onChange: (_text: string, _valid: boolean | null) => void
