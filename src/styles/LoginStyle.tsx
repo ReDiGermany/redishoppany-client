@@ -5,8 +5,9 @@ import GlobalStyles from './GlobalStyles'
 const loginStyles = StyleSheet.create({
   body: {
     paddingTop: GlobalStyles.statusbarHeight,
-    height: GlobalStyles.contentHeight,
+    height: GlobalStyles.appHeight,
     backgroundColor: '#202020',
+    zIndex: 1,
   },
   input: {
     textAlign: 'center',
