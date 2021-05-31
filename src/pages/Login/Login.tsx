@@ -52,7 +52,7 @@ export default class Login extends Component {
             style={{
               maxWidth: 500,
               height: boxHeight,
-              marginTop: `calc( (100vh - ${boxHeight}px) / 2 )`,
+              marginTop: (GlobalStyles.appHeight - boxHeight) / 2,
             }}
           >
             <LoginTitle />

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
+import GlobalStyles from '../../styles/GlobalStyles'
 
 interface ILoginHeadingProps {
   title: string
@@ -13,7 +14,7 @@ export default class LoginHeading extends Component<ILoginHeadingProps> {
           style={{
             zIndex: 1,
             height: 1,
-            width: 'calc( 100% - 40px )',
+            width: GlobalStyles.appWidth - 40,
             backgroundColor: '#fff',
             position: 'absolute',
             top: 25,
