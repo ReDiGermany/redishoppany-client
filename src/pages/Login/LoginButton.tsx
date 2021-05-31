@@ -5,6 +5,7 @@ import loginStyles from '../../styles/LoginStyle'
 
 interface ILoginButtonProps {
   disabled: boolean
+  checking: boolean
   onSubmit: () => void
 }
 
@@ -21,10 +22,14 @@ export default class LoginButton extends Component<ILoginButtonProps> {
         ]}
         onPress={this.props.onSubmit}
       >
-        <Text style={textStyle}>
-          <Icon name="sign-in-alt" size={20} />{' '}
-          {this.props.disabled ? 'please login...' : 'Login'}
-        </Text>
+        {this.props.checking ? (
+          <Text style={textStyle}>Checking login...</Text>
+        ) : (
+          <Text style={textStyle}>
+            <Icon name="sign-in-alt" size={20} />{' '}
+            {this.props.disabled ? 'please login...' : 'Login'}
+          </Text>
+        )}
       </Pressable>
     )
   }
