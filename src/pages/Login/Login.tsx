@@ -13,14 +13,24 @@ import { Router } from '../../Router/react-router'
 import Index from '../../Index'
 import APIUser from '../../helper/API/APIUser'
 import loginStyles from '../../styles/LoginStyle'
+import Alert from '../../components/Alert'
+import ILoginStateAlert from '../../interfaces/ILoginStateAlert'
+import ILoginState from '../../interfaces/ILoginState'
+import ILoginProps from './ILoginProps'
 
-export default class Login extends Component {
-  state = {
+export default class Login extends Component<ILoginProps, ILoginState> {
+  state: ILoginState = {
     email: '',
     password: '',
-    emailValid: null,
-    passwordValid: null,
+    emailValid: undefined,
+    passwordValid: undefined,
     loggedin: false,
+    loginChecking: false,
+    alert: {
+      type: 'error',
+      text: '',
+      info: undefined,
+    },
   }
 
   render() {
@@ -35,9 +45,18 @@ export default class Login extends Component {
     const checkLogin = async () => {
       if (this.state.passwordValid && this.state.emailValid) {
         const { email, password } = this.state
+        this.setState({ loginChecking: true })
 
-        const loggedin = await APIUser.checkLogin(email, password)
-        this.setState({ loggedin })
+        const loggedin = await APIUser.checkLogin(email, password).catch(() => {
+          const alert: ILoginStateAlert = {
+            type: 'error',
+            text: 'Logindaten waren falsch!',
+            info: 'Bitte versuche es erneut.',
+          }
+          this.setState({ alert })
+        })
+        if (loggedin) this.setState({ loggedin })
+        this.setState({ loginChecking: false })
       }
     }
 
@@ -45,9 +64,14 @@ export default class Login extends Component {
       return <Index />
     }
 
+    const { alert } = this.state
+
     return (
       <Router>
         <SafeAreaView style={loginStyles.body}>
+          {!this.state.loginChecking && this.state.alert.text !== '' && (
+            <Alert {...alert} />
+          )}
           <View
             style={{
               maxWidth: 500,
@@ -69,6 +93,7 @@ export default class Login extends Component {
               }}
             />
             <LoginButton
+              checking={this.state.loginChecking}
               onSubmit={checkLogin}
               disabled={!(this.state.passwordValid && this.state.emailValid)}
             />
