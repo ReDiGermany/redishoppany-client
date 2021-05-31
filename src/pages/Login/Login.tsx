@@ -16,7 +16,7 @@ import loginStyles from '../../styles/LoginStyle'
 import Alert from '../../components/Alert'
 import ILoginStateAlert from '../../interfaces/ILoginStateAlert'
 import ILoginState from '../../interfaces/ILoginState'
-import ILoginProps from './ILoginProps'
+import ILoginProps from '../../interfaces/ILoginProps'
 
 export default class Login extends Component<ILoginProps, ILoginState> {
   state: ILoginState = {
