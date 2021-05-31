@@ -42,7 +42,7 @@ export default class BottomBox extends Component<IBottomBoxProps> {
           height: GlobalStyles.contentHeight,
           backgroundColor: 'rgba(0,0,0,.8)',
           position: 'absolute',
-          bottom: 0,
+          bottom: -50,
           opacity: this.state.fadeVal,
           zIndex: this.state.fadeVal === 0 ? -1000 : 1000,
         }}
