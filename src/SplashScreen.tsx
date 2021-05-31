@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Image, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
+import GlobalStyles from './styles/GlobalStyles'
 
 export default class SplashScreen extends Component {
   render() {
@@ -12,9 +13,22 @@ export default class SplashScreen extends Component {
           width={100}
           height={100}
           // eslint-disable-next-line global-require
-          source={require('../assets/splash.png')}
+          source={require('../assets/splash_white.png')}
           onError={e => console.error(e.nativeEvent.error)}
         />
+        <Text
+          style={{
+            position: 'absolute',
+            bottom: GlobalStyles.appHeight / 10,
+            fontWeight: 'bold',
+            textAlign: 'center',
+            width: GlobalStyles.appWidth,
+            left: 0,
+            color: '#fff',
+          }}
+        >
+          Loading...
+        </Text>
       </View>
     )
   }
