@@ -5,8 +5,8 @@
     "name": "Max 'ReDiGermany' Kruggel",
     "url": "https://redigermany.de"
   },
-  "name": "@redigermany/shoppany-client",
-  "displayName": "ReDiShoppany Client",
+  "name": "lisha",
+  "displayName": "LiSha - List Sharing",
   "version": "0.0.1",
   "scripts": {
     "start": "expo start",

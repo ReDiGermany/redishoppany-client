@@ -1,15 +1,15 @@
 {
   "expo": {
     "userInterfaceStyle": "dark",
-    "name": "client",
-    "slug": "client",
+    "name": "LiSha - List Sharing",
+    "slug": "lisha",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash_white.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#111111"
     },
     "updates": {
       "fallbackToCacheTimeout": 10
