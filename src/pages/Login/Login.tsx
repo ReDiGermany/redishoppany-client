@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, SafeAreaView } from 'react-native'
+import { View, SafeAreaView, Dimensions } from 'react-native'
 import Row from '../../components/Row'
 import LoginTitle from './LoginTitle'
 import LoginInputEmail from './LoginInputEmail'
@@ -17,6 +17,7 @@ import Alert from '../../components/Alert'
 import ILoginStateAlert from '../../interfaces/ILoginStateAlert'
 import ILoginState from '../../interfaces/ILoginState'
 import ILoginProps from '../../interfaces/ILoginProps'
+import IScreen from '../../interfaces/IScreen'
 
 export default class Login extends Component<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -31,9 +32,26 @@ export default class Login extends Component<ILoginProps, ILoginState> {
       text: '',
       info: undefined,
     },
+    dimensions: {
+      window: undefined,
+      screen: undefined,
+    },
+  }
+
+  onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
+    this.setState({ dimensions })
+  }
+
+  componentDidMount() {
+    Dimensions.addEventListener('change', this.onChange)
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this.onChange)
   }
 
   render() {
+    console.log('render')
     let boxHeight = 30 // welcome text
     boxHeight += 2 * (GlobalStyles.barHeight + 30) // input fields
     boxHeight += GlobalStyles.barHeight + 30 // login btn

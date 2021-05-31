@@ -1,4 +1,5 @@
 import ILoginStateAlert from './ILoginStateAlert'
+import IScreen from './IScreen'
 
 export default interface ILoginState {
   email: string
@@ -8,4 +9,8 @@ export default interface ILoginState {
   loggedin: boolean
   loginChecking: boolean
   alert: ILoginStateAlert
+  dimensions: {
+    window?: IScreen
+    screen?: IScreen
+  }
 }
