@@ -8,6 +8,7 @@ import Input from '../Input'
 import Moveable from '../components/Moveable/Moveable'
 import APIShoppingList from '../helper/API/APIShoppingList'
 import IShoppingListCategory from '../interfaces/IShoppingListCategory'
+import BottomBox from '../BottomBox'
 
 interface IPageListProps extends IPageProps {
   id: number
@@ -18,6 +19,7 @@ interface IPageListState {
   refreshing: boolean
   scrolling: boolean
   bottomBox: boolean
+  lists: { onClick: () => void; name: string }[]
 }
 
 export default class List extends Component<IPageListProps, IPageListState> {
@@ -26,20 +28,26 @@ export default class List extends Component<IPageListProps, IPageListState> {
     refreshing: false,
     scrolling: true,
     bottomBox: false,
+    lists: [],
   }
 
-  componentDidMount() {
-    APIShoppingList.singleList(this.props.id).then(data => {
-      this.setState({ items: data.categories })
-    })
+  async componentDidMount() {
+    await this.reloadList()
+  }
+
+  async reloadList() {
+    this.setState({ refreshing: true })
+    const test = await APIShoppingList.list()
+    console.log('lists', test)
+
+    const data = await APIShoppingList.singleList(this.props.id)
+    this.setState({ items: data.categories })
+    this.setState({ refreshing: false })
   }
 
   render() {
-    const onRefresh = () => {
-      this.setState({ refreshing: true })
-      setTimeout(() => {
-        this.setState({ refreshing: false })
-      }, 1000)
+    const onRefresh = async () => {
+      await this.reloadList()
     }
 
     const eachItem = (
@@ -92,7 +100,8 @@ export default class List extends Component<IPageListProps, IPageListState> {
             height:
               GlobalStyles.appHeight -
               GlobalStyles.barHeight -
-              GlobalStyles.statusbarHeight,
+              GlobalStyles.statusbarHeight -
+              50,
           }}
         >
           <ScrollView
@@ -194,16 +203,23 @@ export default class List extends Component<IPageListProps, IPageListState> {
           </ScrollView>
         </SafeAreaView>
         <Input
-          onSave={value => {
-            console.log(value)
+          prefix={1}
+          onSave={async (name, amount) => {
+            await APIShoppingList.addToList(
+              this.props.id,
+              name,
+              parseInt(amount, 10)
+            )
+            this.reloadList()
           }}
         />
-        {/* <BottomBox
+        <BottomBox
+          items={this.state.lists}
           onClose={() => {
             this.setState({ bottomBox: false })
           }}
           open={this.state.bottomBox}
-        /> */}
+        />
       </View>
     )
   }
