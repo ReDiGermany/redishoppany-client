@@ -26,7 +26,8 @@ const {
   },
   btn: {
     height: 40,
-    width: GlobalStyles.appWidth / (GlobalStyles.appWidth < 300 ? 2 : 3) - 20,
+    width:
+      GlobalStyles().appWidth / (GlobalStyles().appWidth < 300 ? 2 : 3) - 20,
     marginBottom: 10,
   },
   btnEdit: {
@@ -41,7 +42,7 @@ const {
     justifyContent: 'space-evenly',
   },
   contentHeight: {
-    height: GlobalStyles.contentHeight,
+    height: GlobalStyles().contentHeight,
   },
   header: {
     height: 200,
@@ -75,7 +76,7 @@ const {
     fontSize: 15,
     lineHeight: 40,
     color: '#fff',
-    minWidth: GlobalStyles.appWidth / 2,
+    minWidth: GlobalStyles().appWidth / 2,
   },
   ingredientBull: { opacity: 0.3 },
   textBox: {

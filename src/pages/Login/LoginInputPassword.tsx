@@ -19,7 +19,7 @@ export default class LoginInputPassword extends Component<ILoginInputPasswordPro
     return (
       <TextInput
         placeholderTextColor="rgba(255,255,255,.5)"
-        style={[loginStyles.input, loginStyles[style]]}
+        style={[loginStyles().input, loginStyles()[style]]}
         onSubmitEditing={this.props.onSubmit}
         onChangeText={value => {
           const valid = true

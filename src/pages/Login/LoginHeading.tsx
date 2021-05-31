@@ -14,7 +14,7 @@ export default class LoginHeading extends Component<ILoginHeadingProps> {
           style={{
             zIndex: 1,
             height: 1,
-            width: GlobalStyles.appWidth - 40,
+            width: GlobalStyles().appWidth - 40,
             backgroundColor: '#fff',
             position: 'absolute',
             top: 25,

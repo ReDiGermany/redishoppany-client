@@ -6,9 +6,9 @@ const windowHeight = Dimensions.get('window').height
 const outerBox = (open: boolean, opacity: number) =>
   StyleSheet.create({
     row: {
-      height: windowHeight - GlobalStyles.barHeight,
+      height: windowHeight - GlobalStyles().barHeight,
       position: 'absolute',
-      top: GlobalStyles.barHeight,
+      top: GlobalStyles().barHeight,
       zIndex: open ? 1000 : -1000,
       width: '100%',
       backgroundColor: 'rgba(0,0,0,.5)',

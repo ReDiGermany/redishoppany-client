@@ -4,12 +4,12 @@ import GlobalStyles from './GlobalStyles'
 
 export default StyleSheet.create({
   row: {
-    color: GlobalStyles.color.light,
+    color: GlobalStyles().color.light,
     paddingLeft: 15,
-    height: GlobalStyles.barHeight,
+    height: GlobalStyles().barHeight,
     textAlignVertical: 'center',
     fontSize: 20,
     fontWeight: 'bold',
-    ...WebStyle({ lineHeight: GlobalStyles.barHeight }),
+    ...WebStyle({ lineHeight: GlobalStyles().barHeight }),
   },
 }).row

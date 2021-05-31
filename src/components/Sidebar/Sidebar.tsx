@@ -68,7 +68,7 @@ export default class Sidebar extends Component<ISidebarProps> {
               <SidebarUserProfile user={this.props.user} />
               <SafeAreaView
                 style={{
-                  height: GlobalStyles.contentHeight - 60 - 80,
+                  height: GlobalStyles().contentHeight - 60 - 80,
                 }}
               >
                 <ScrollView>

@@ -11,13 +11,16 @@ interface ILoginButtonProps {
 
 export default class LoginButton extends Component<ILoginButtonProps> {
   render() {
-    const textStyle = [loginStyles.vendorLoginText, loginStyles.loginButtonText]
+    const textStyle = [
+      loginStyles().vendorLoginText,
+      loginStyles().loginButtonText,
+    ]
 
     return (
       <Pressable
         disabled={this.props.disabled}
         style={[
-          loginStyles.loginButton,
+          loginStyles().loginButton,
           this.props.disabled ? { opacity: 0.8 } : {},
         ]}
         onPress={this.props.onSubmit}

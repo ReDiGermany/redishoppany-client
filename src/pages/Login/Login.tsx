@@ -53,12 +53,12 @@ export default class Login extends Component<ILoginProps, ILoginState> {
   render() {
     console.log('render')
     let boxHeight = 30 // welcome text
-    boxHeight += 2 * (GlobalStyles.barHeight + 30) // input fields
-    boxHeight += GlobalStyles.barHeight + 30 // login btn
+    boxHeight += 2 * (GlobalStyles().barHeight + 30) // input fields
+    boxHeight += GlobalStyles().barHeight + 30 // login btn
     boxHeight += 40 // heading
-    boxHeight += GlobalStyles.barHeight // socialmedia login
+    boxHeight += GlobalStyles().barHeight // socialmedia login
     boxHeight += 40 // heading
-    boxHeight += GlobalStyles.lineHeight // register / anonym
+    boxHeight += GlobalStyles().lineHeight // register / anonym
 
     const checkLogin = async () => {
       if (this.state.passwordValid && this.state.emailValid) {
@@ -86,7 +86,7 @@ export default class Login extends Component<ILoginProps, ILoginState> {
 
     return (
       <Router>
-        <SafeAreaView style={loginStyles.body}>
+        <SafeAreaView style={loginStyles().body}>
           {!this.state.loginChecking && this.state.alert.text !== '' && (
             <Alert {...alert} />
           )}
@@ -94,7 +94,7 @@ export default class Login extends Component<ILoginProps, ILoginState> {
             style={{
               maxWidth: 500,
               height: boxHeight,
-              marginTop: (GlobalStyles.appHeight - boxHeight) / 2,
+              marginTop: (GlobalStyles().appHeight - boxHeight) / 2,
             }}
           >
             <LoginTitle />

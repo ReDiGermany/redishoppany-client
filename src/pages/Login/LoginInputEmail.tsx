@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { TextInput } from 'react-native'
+import { Dimensions, TextInput } from 'react-native'
+import IScreen from '../../interfaces/IScreen'
 import loginStyles from '../../styles/LoginStyle'
 
 interface ILoginInputEmailProps {
@@ -11,6 +12,23 @@ export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
   state = {
     valid: undefined,
     value: '',
+    dimensions: {
+      window: undefined,
+      screen: undefined,
+    },
+  }
+
+  onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
+    console.log('LoginInputEmail', dimensions)
+    this.setState({ dimensions })
+  }
+
+  componentDidMount() {
+    Dimensions.addEventListener('change', this.onChange)
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener('change', this.onChange)
   }
 
   render() {
@@ -22,7 +40,7 @@ export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
     return (
       <TextInput
         placeholderTextColor="rgba(255,255,255,.5)"
-        style={[loginStyles.input, loginStyles[style]]}
+        style={[loginStyles().input, loginStyles()[style]]}
         onSubmitEditing={this.props.onSubmit}
         onChangeText={value => {
           const valid =

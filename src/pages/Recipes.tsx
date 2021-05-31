@@ -29,7 +29,7 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
 
   render() {
     const image = (item: any) => ({
-      width: GlobalStyles.appWidth,
+      width: GlobalStyles().appWidth,
       height: 150,
       style: imageStyle,
       source: { uri: item.image },

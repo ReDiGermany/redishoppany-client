@@ -39,7 +39,7 @@ export default class BottomBox extends Component<IBottomBoxProps> {
       <View
         style={{
           width: '100%',
-          height: GlobalStyles.contentHeight,
+          height: GlobalStyles().contentHeight,
           backgroundColor: 'rgba(0,0,0,.8)',
           position: 'absolute',
           bottom: -50,
@@ -63,13 +63,13 @@ export default class BottomBox extends Component<IBottomBoxProps> {
               position: 'absolute',
               // bottom: 0,
               bottom: -(
-                (3 * GlobalStyles.barHeight + GlobalStyles.barHeight) *
+                (3 * GlobalStyles().barHeight + GlobalStyles().barHeight) *
                 (1 - this.state.fadeVal)
               ),
             }}
           >
             {this.props.title && <ListHeader text={this.props.title} />}
-            <ScrollView style={{ maxHeight: GlobalStyles.lineHeight * 3.5 }}>
+            <ScrollView style={{ maxHeight: GlobalStyles().lineHeight * 3.5 }}>
               {this.props.items?.map(item => (
                 <Moveable
                   key={item.name}

@@ -54,7 +54,7 @@ export default class Ingredient extends Component<IIngredientProps> {
             backgroundColor: '#111',
             padding: 10,
             marginTop: 10,
-            width: GlobalStyles.appWidth / 2 - 72,
+            width: GlobalStyles().appWidth / 2 - 72,
           }}
           onSubmitEditing={onSubmit}
           onChange={d => onChange({ name: d.nativeEvent.text })}

@@ -33,7 +33,7 @@ export default class NavigationTitle extends Component<INavigationTitleProps> {
         <Pressable {...barIcon}>
           <Icon {...icon} />
           {this.props.badge && (
-            <Text style={BadgeStyle(GlobalStyles.color.red)}>
+            <Text style={BadgeStyle(GlobalStyles().color.red)}>
               {this.props.badge}
             </Text>
           )}

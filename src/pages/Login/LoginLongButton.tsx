@@ -11,11 +11,14 @@ interface ILoginSocialButtonProps {
 export default class LoginLongButton extends Component<ILoginSocialButtonProps> {
   render() {
     return (
-      <Pressable style={[loginStyles.longButton]} onPress={() => {}}>
-        <Text style={loginStyles.vendorLoginText}>
+      <Pressable style={[loginStyles().longButton]} onPress={() => {}}>
+        <Text style={loginStyles().vendorLoginText}>
           {this.props.icon && (
             <Icon
-              style={[loginStyles.vendorLoginIcon, loginStyles.LongButtonIcon]}
+              style={[
+                loginStyles().vendorLoginIcon,
+                loginStyles().LongButtonIcon,
+              ]}
               name={this.props.icon}
             />
           )}{' '}

@@ -80,7 +80,7 @@ export default class Recipes extends Component<IRecipesProps, IRecipeState> {
     ]
 
     const headerImage = {
-      width: GlobalStyles.appWidth,
+      width: GlobalStyles().appWidth,
       height: 150,
       style: header,
       source: { uri: url },

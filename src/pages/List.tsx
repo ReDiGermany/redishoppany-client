@@ -98,9 +98,9 @@ export default class List extends Component<IPageListProps, IPageListState> {
         <SafeAreaView
           style={{
             height:
-              GlobalStyles.appHeight -
-              GlobalStyles.barHeight -
-              GlobalStyles.statusbarHeight -
+              GlobalStyles().appHeight -
+              GlobalStyles().barHeight -
+              GlobalStyles().statusbarHeight -
               50,
           }}
         >

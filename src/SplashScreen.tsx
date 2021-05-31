@@ -19,10 +19,10 @@ export default class SplashScreen extends Component {
         <Text
           style={{
             position: 'absolute',
-            bottom: GlobalStyles.appHeight / 10,
+            bottom: GlobalStyles().appHeight / 10,
             fontWeight: 'bold',
             textAlign: 'center',
-            width: GlobalStyles.appWidth,
+            width: GlobalStyles().appWidth,
             left: 0,
             color: '#fff',
           }}

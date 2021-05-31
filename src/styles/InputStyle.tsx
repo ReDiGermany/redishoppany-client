@@ -6,7 +6,7 @@ export const { box, prefixBlock, textBlock, button, icon, textBlockNoPrefix } =
     textBlockNoPrefix: {
       borderTopLeftRadius: 5,
       borderBottomLeftRadius: 5,
-      width: GlobalStyles.appWidth - 20 - 2 - 30,
+      width: GlobalStyles().appWidth - 20 - 2 - 30,
     },
     icon: {
       height: 30,
@@ -18,7 +18,7 @@ export const { box, prefixBlock, textBlock, button, icon, textBlockNoPrefix } =
     button: {
       height: 30,
       marginTop: 10,
-      backgroundColor: GlobalStyles.color.accent,
+      backgroundColor: GlobalStyles().color.accent,
       width: 30,
       borderTopRightRadius: 5,
       borderBottomRightRadius: 5,
@@ -30,7 +30,7 @@ export const { box, prefixBlock, textBlock, button, icon, textBlockNoPrefix } =
       flexDirection: 'row',
       backgroundColor: '#111',
       height: 50,
-      width: GlobalStyles.appWidth,
+      width: GlobalStyles().appWidth,
       paddingHorizontal: 10,
     },
     prefixBlock: {
@@ -50,6 +50,6 @@ export const { box, prefixBlock, textBlock, button, icon, textBlockNoPrefix } =
       marginTop: 10,
       color: '#fff',
       backgroundColor: '#202020',
-      width: GlobalStyles.appWidth - 20 - 2 - 50 - 30,
+      width: GlobalStyles().appWidth - 20 - 2 - 50 - 30,
     },
   })

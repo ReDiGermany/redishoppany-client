@@ -3,7 +3,7 @@ import GlobalStyles from './GlobalStyles'
 
 export const { container, imageBox, image, textBox, nameBox, timeBox } =
   StyleSheet.create({
-    container: { height: GlobalStyles.contentHeight },
+    container: { height: GlobalStyles().contentHeight },
     timeBox: {
       color: '#fff',
       lineHeight: 70,
@@ -16,7 +16,7 @@ export const { container, imageBox, image, textBox, nameBox, timeBox } =
       borderRadius: 5,
       overflow: 'hidden',
       height: 150,
-      width: GlobalStyles.appWidth - 40,
+      width: GlobalStyles().appWidth - 40,
       marginLeft: 20,
       marginVertical: 10,
     },

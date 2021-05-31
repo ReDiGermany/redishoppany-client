@@ -17,7 +17,10 @@ export default class LoginSocialButton extends Component<ILoginSocialButtonProps
   render() {
     return (
       <Pressable
-        style={[loginStyles.vendorLogin, { backgroundColor: this.props.color }]}
+        style={[
+          loginStyles().vendorLogin,
+          { backgroundColor: this.props.color },
+        ]}
         onPress={() => {
           this.setState({ icon: 'hourglass', pressed: true })
           setTimeout(() => {
@@ -28,7 +31,7 @@ export default class LoginSocialButton extends Component<ILoginSocialButtonProps
           }, 3000)
         }}
       >
-        <Icon style={[loginStyles.vendorLoginIcon]} name={this.state.icon} />
+        <Icon style={[loginStyles().vendorLoginIcon]} name={this.state.icon} />
       </Pressable>
     )
   }

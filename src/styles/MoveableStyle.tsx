@@ -15,9 +15,9 @@ const textBox = (x: number) =>
   StyleSheet.create({
     box: {
       marginLeft: x < 0 ? x : 0,
-      backgroundColor: GlobalStyles.dark.deep,
+      backgroundColor: GlobalStyles().dark.deep,
       width: '100%',
-      borderBottomColor: GlobalStyles.dark.bright,
+      borderBottomColor: GlobalStyles().dark.bright,
       borderBottomWidth: 1,
       // backgroundColor: "#4ae53a",
     },
@@ -30,8 +30,8 @@ const iconBoxIcon = (width: number) =>
       textAlignVertical: 'center',
       fontSize: (width / 50) * 20,
       opacity: width / 50,
-      height: GlobalStyles.lineHeight,
-      lineHeight: GlobalStyles.lineHeight,
+      height: GlobalStyles().lineHeight,
+      lineHeight: GlobalStyles().lineHeight,
     },
   }).row
 
@@ -40,20 +40,20 @@ const deleteIcon = (x: number) =>
     row: {
       textAlign: 'center',
       textAlignVertical: 'center',
-      height: GlobalStyles.lineHeight,
-      lineHeight: GlobalStyles.lineHeight,
-      fontSize: (x / GlobalStyles.lineHeight) * 20,
+      height: GlobalStyles().lineHeight,
+      lineHeight: GlobalStyles().lineHeight,
+      fontSize: (x / GlobalStyles().lineHeight) * 20,
       fontWeight: 'bold',
-      opacity: x / GlobalStyles.lineHeight,
+      opacity: x / GlobalStyles().lineHeight,
     },
   }).row
 
 const deleteBox = (x: number) =>
   StyleSheet.create({
     row: {
-      height: GlobalStyles.lineHeight,
+      height: GlobalStyles().lineHeight,
       width: x,
-      backgroundColor: GlobalStyles.color.red,
+      backgroundColor: GlobalStyles().color.red,
     },
   }).row
 
@@ -75,7 +75,7 @@ const buttonIcon = (color: string) =>
 const iconBox = (width: number, right: number, color: string) =>
   StyleSheet.create({
     row: {
-      height: GlobalStyles.lineHeight,
+      height: GlobalStyles().lineHeight,
       width,
       backgroundColor: color,
       position: 'absolute',
@@ -96,9 +96,9 @@ const textBoxText = StyleSheet.create({
 
 const textPrefix = StyleSheet.create({
   row: {
-    color: GlobalStyles.color.dimmed,
-    height: GlobalStyles.lineHeight,
-    lineHeight: GlobalStyles.lineHeight,
+    color: GlobalStyles().color.dimmed,
+    height: GlobalStyles().lineHeight,
+    lineHeight: GlobalStyles().lineHeight,
     textAlignVertical: 'center',
     paddingLeft: 10,
     // opacity: 0.5,

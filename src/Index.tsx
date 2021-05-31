@@ -38,12 +38,15 @@ export default class Index extends Component<IIndexProps, IIndexState> {
       <AppearanceProvider>
         <StatusBar style="auto" />
         <View
-          style={{ height: GlobalStyles.appHeight, backgroundColor: '#202020' }}
+          style={{
+            height: GlobalStyles().appHeight,
+            backgroundColor: '#202020',
+          }}
         >
           <View
             style={{
               marginTop: sb.currentHeight ?? 0,
-              height: GlobalStyles.appHeight,
+              height: GlobalStyles().appHeight,
             }}
           >
             <Router>

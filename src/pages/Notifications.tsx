@@ -41,9 +41,9 @@ export default class Notifications extends Component<IPageProps> {
         <SafeAreaView
           style={{
             height:
-              GlobalStyles.appHeight -
-              GlobalStyles.barHeight -
-              GlobalStyles.statusbarHeight,
+              GlobalStyles().appHeight -
+              GlobalStyles().barHeight -
+              GlobalStyles().statusbarHeight,
           }}
         >
           <ScrollView
