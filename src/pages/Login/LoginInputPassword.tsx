@@ -3,16 +3,16 @@ import { TextInput } from 'react-native'
 import loginStyles from '../../styles/LoginStyle'
 
 interface ILoginInputPasswordProps {
-  onChange: (_text: string, _valid: boolean | null) => void
+  onChange: (_text: string, _valid: boolean | undefined) => void
   onSubmit: () => void
 }
 
 export default class LoginInputPassword extends Component<ILoginInputPasswordProps> {
-  state = { valid: null, value: '' }
+  state = { valid: undefined, value: '' }
 
   render() {
     let style: 'unknown' | 'valid' | 'invalid' = 'unknown'
-    if (this.state.valid !== null) {
+    if (this.state.valid !== undefined) {
       style = this.state.valid ? 'valid' : 'invalid'
     }
 
