@@ -3,5 +3,9 @@
   "settings": "Einstellungen",
   "about": "Über",
   "imprint": "Impressum",
-  "list_suffix": "'s Listen"
+  "list_suffix": "'s Listen",
+  "overview": "Übersicht",
+  "foodlist": "Essensplan",
+  "recipes": "Rezepte",
+  "friends": "Freunde"
 }

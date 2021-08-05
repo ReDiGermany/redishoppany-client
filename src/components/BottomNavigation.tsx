@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Pressable, Text, StyleSheet } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import Language from '../language/Language'
 import Row from './Row'
 
 const bottomNavigationStyle = StyleSheet.create({
@@ -49,22 +50,22 @@ export default class BottomNavigation extends Component<IBottomNavigationProps> 
     active: 0,
     items: [
       {
-        name: 'Home',
+        name: Language.get('overview'),
         icon: 'home',
       },
 
       {
-        name: 'Foodlist',
+        name: Language.get('foodlist'),
         icon: 'bars',
       },
 
       {
-        name: 'Rezepte',
+        name: Language.get('recipes'),
         icon: 'book',
       },
 
       {
-        name: 'Freunde',
+        name: Language.get('friends'),
         icon: 'users',
       },
     ],

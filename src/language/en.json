@@ -3,5 +3,9 @@
   "settings": "Settings",
   "about": "About",
   "imprint": "Imprint",
-  "list_suffix": "'s Lists"
+  "list_suffix": "'s Lists",
+  "overview": "Overview",
+  "foodlist": "Foodplan",
+  "recipes": "Recipes",
+  "friends": "Friends"
 }
