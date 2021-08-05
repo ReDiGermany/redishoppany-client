@@ -1,27 +1,10 @@
 import React from 'react'
 import { Pressable, View } from 'react-native'
 import { boxStyle } from '../../styles/MoveableStyle'
+import IMoveableProps from '../../interfaces/IMoveableProps'
 import MoveableDeleteIcon from './MoveableDeleteIcon'
 import MoveableIcon from './MoveableIcon'
 import MoveableText from './MoveableText'
-
-export interface IMoveableProps {
-  name?: string
-  onDelete?: () => void
-  right?: { icon: string; color: string; click: () => void }[]
-  buttons?: { name: string; icon: string; color: string }[]
-  prefix?: number | string
-  to?: string
-  onPop?: () => void
-  onLongPress?: () => void
-  onRelease?: () => void
-  open?: boolean
-  visible?: boolean
-  dropdownItems?: { label: string; value: string }[]
-  dropdownSelected?: (_item: { label: string; value: string }) => void
-  checked?: boolean
-  onClick?: () => void
-}
 
 export default class Moveable extends React.Component<IMoveableProps> {
   state = {
@@ -130,6 +113,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
       dropdownSelected: this.props.dropdownSelected,
       checked: this.props.checked,
       onClick: this.props.onClick,
+      centerText: this.props.centerText,
     }
 
     const getIcon = (
@@ -152,7 +136,13 @@ export default class Moveable extends React.Component<IMoveableProps> {
     return (
       <Pressable
         onPress={this.props.onClick}
-        style={boxStyle(this.props.visible ?? true)}
+        style={{
+          ...boxStyle(this.props.visible ?? true, this.props.large ?? false),
+          ...this.props.style,
+          ...(this.state.posX === 0
+            ? { marginLeft: 10, marginRight: 10 }
+            : { marginLeft: 0, marginRight: 0 }),
+        }}
       >
         {this.state.posX > 0 && this.props.onDelete && (
           <MoveableDeleteIcon posX={this.state.posX} />
