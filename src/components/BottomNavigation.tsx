@@ -1,49 +1,10 @@
 import React, { Component } from 'react'
-import { Pressable, Text, StyleSheet } from 'react-native'
+import { Pressable, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Language from '../language/Language'
+import BottomNavigationStyle from '../styles/BottomNavigationStyle'
+import { IBottomNavigationProps } from '../interfaces/IBottomNavigationProps'
 import Row from './Row'
-
-const bottomNavigationStyle = StyleSheet.create({
-  row: {
-    paddingHorizontal: 30,
-    justifyContent: 'space-between',
-    height: 50,
-    lineHeight: 50,
-  },
-  button: {
-    backgroundColor: 'transparent',
-    width: 60,
-    height: 45,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  icon: {
-    color: '#ffffff',
-    textAlign: 'center',
-    fontSize: 20,
-    marginTop: 15,
-  },
-  text: {
-    color: 'transparent',
-    fontSize: 10,
-    textAlign: 'center',
-  },
-  activeButton: {
-    backgroundColor: '#202020',
-  },
-  activeIcon: {
-    marginTop: 10,
-    fontSize: 15,
-  },
-  activeText: {
-    color: '#ffffff33',
-  },
-})
-
-interface IBottomNavigationProps {
-  navUpdate: (index: number) => void
-}
 
 export default class BottomNavigation extends Component<IBottomNavigationProps> {
   state = {
@@ -73,14 +34,14 @@ export default class BottomNavigation extends Component<IBottomNavigationProps> 
 
   render() {
     return (
-      <Row style={bottomNavigationStyle.row}>
+      <Row style={BottomNavigationStyle.row}>
         {this.state.items.map((item, index) => (
           <Pressable
             key={item.name}
             style={{
-              ...bottomNavigationStyle.button,
+              ...BottomNavigationStyle.button,
               ...(this.state.active === index
-                ? bottomNavigationStyle.activeButton
+                ? BottomNavigationStyle.activeButton
                 : {}),
             }}
             onPress={() => {
@@ -90,18 +51,18 @@ export default class BottomNavigation extends Component<IBottomNavigationProps> 
           >
             <Icon
               style={{
-                ...bottomNavigationStyle.icon,
+                ...BottomNavigationStyle.icon,
                 ...(this.state.active === index
-                  ? bottomNavigationStyle.activeIcon
+                  ? BottomNavigationStyle.activeIcon
                   : {}),
               }}
               name={item.icon}
             />
             <Text
               style={{
-                ...bottomNavigationStyle.text,
+                ...BottomNavigationStyle.text,
                 ...(this.state.active === index
-                  ? bottomNavigationStyle.activeText
+                  ? BottomNavigationStyle.activeText
                   : {}),
               }}
             >
