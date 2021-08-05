@@ -1,11 +1,14 @@
 import { StyleSheet } from 'react-native'
 import GlobalStyles from './GlobalStyles'
 
-const box = (visible?: boolean) =>
+const box = (visible?: boolean, large?: boolean) =>
   StyleSheet.create({
     box: {
-      height: 50,
-      lineHeight: 50,
+      height: large ? 50 : 50,
+      lineHeight: large ? 50 : 50,
+      marginBottom: large ? 10 : 0,
+      marginLeft: 10,
+      marginRight: 10,
       flexDirection: 'row',
       display: visible ? 'flex' : 'none' ?? 'flex',
     },
@@ -15,10 +18,11 @@ const textBox = (x: number) =>
   StyleSheet.create({
     box: {
       marginLeft: x < 0 ? x : 0,
-      backgroundColor: GlobalStyles().dark.deep,
+      backgroundColor: `${GlobalStyles().dark.deep}80`,
       width: '100%',
-      borderBottomColor: GlobalStyles().dark.bright,
-      borderBottomWidth: 1,
+      // borderBottomColor: GlobalStyles().dark.bright,
+      // borderBottomWidth: 1,
+      borderRadius: 10,
       // backgroundColor: "#4ae53a",
     },
   }).box
@@ -45,6 +49,7 @@ const deleteIcon = (x: number) =>
       fontSize: (x / GlobalStyles().lineHeight) * 20,
       fontWeight: 'bold',
       opacity: x / GlobalStyles().lineHeight,
+      color: '#fff',
     },
   }).row
 
@@ -54,6 +59,8 @@ const deleteBox = (x: number) =>
       height: GlobalStyles().lineHeight,
       width: x,
       backgroundColor: GlobalStyles().color.red,
+      borderTopLeftRadius: 10,
+      borderBottomLeftRadius: 10,
     },
   }).row
 

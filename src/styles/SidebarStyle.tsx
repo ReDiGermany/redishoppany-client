@@ -19,8 +19,8 @@ const profileName = StyleSheet.create({
   row: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 20,
-    marginTop: 10,
+    fontSize: 15,
+    marginTop: 35,
   },
 }).row
 const profileImage = StyleSheet.create({
@@ -29,11 +29,12 @@ const profileImage = StyleSheet.create({
     borderRadius: 50,
     height: 50,
     width: 50,
-    margin: 10,
+    margin: 30,
+    marginRight: 10,
   },
 }).row
 const profileEmail = StyleSheet.create({
-  row: { color: '#fff', fontSize: 13, opacity: 0.8 },
+  row: { color: '#fff', fontSize: 11, opacity: 0.3 },
 }).row
 const linkText = StyleSheet.create({
   row: {
@@ -121,11 +122,48 @@ const socialMedia = (color: string) =>
       color: '#fff',
     },
   }).row
+const profileBell = StyleSheet.create({
+  row: {
+    height: 50,
+    lineHeight: 50,
+    width: 50,
+    fontSize: 25,
+    color: '#fff',
+    right: 0,
+    top: 0,
+    position: 'absolute',
+  },
+}).row
+const profileBellNumber = StyleSheet.create({
+  row: {
+    right: 20,
+    top: 5,
+    position: 'absolute',
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: '#fff',
+    backgroundColor: '#900000',
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+    borderRadius: 3,
+    textAlign: 'right',
+  },
+}).row
+const bellLink = StyleSheet.create({
+  row: {
+    right: 30,
+    top: 30,
+    position: 'absolute',
+  },
+}).row
 
 const boxStyle = { outerBox, box }
 
 const profileStyle = {
   name: profileName,
+  bell: profileBell,
+  bellNumber: profileBellNumber,
+  bellLink,
   image: profileImage,
   email: profileEmail,
 }
