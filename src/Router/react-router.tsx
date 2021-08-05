@@ -11,4 +11,3 @@ export const Route = NativeRoute
 export const Link = NativeLink
 export const UseHistory = NativeUseHistory
 export const Redirect = NativeRedirect
-// const history = useHistory()
