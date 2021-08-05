@@ -6,6 +6,7 @@ import UserProfileSmall from '../../components/UserProfileSmall'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
+import { Redirect } from '../../Router/react-router'
 
 const HomeStyles = StyleSheet.create({
   heading: {
@@ -18,7 +19,15 @@ const HomeStyles = StyleSheet.create({
 })
 
 export default class HomeList extends Component<IPageProps> {
+  state = {
+    redirect: '',
+  }
+
   render() {
+    if (this.state.redirect !== '') {
+      return <Redirect push to={this.state.redirect} />
+    }
+
     return (
       <>
         <UserProfileSmall user={this.props.user} />
@@ -41,7 +50,8 @@ export default class HomeList extends Component<IPageProps> {
                   onDelete: undefined,
                   large: true,
                   name: item.name,
-                  to: `/list/${item.id}`,
+                  onClick: () =>
+                    this.setState({ redirect: `/list/${item.id}` }),
                 }
                 if (index === 0) moveable.onDelete = () => {}
 
@@ -51,17 +61,23 @@ export default class HomeList extends Component<IPageProps> {
           )
         })}
         <Text style={HomeStyles.heading}>{Language.get('other')}</Text>
-        <Moveable name={Language.get('settings')} centerText={true} />
+        <Moveable
+          name={Language.get('settings')}
+          centerText={true}
+          onClick={() => this.setState({ redirect: '/settings' })}
+        />
         <Row style={{ marginTop: 10, marginBottom: 30 }}>
           <Moveable
             style={{ width: Dimensions.get('window').width / 2 - 20 }}
             name={Language.get('about')}
             centerText={true}
+            onClick={() => this.setState({ redirect: '/about' })}
           />
           <Moveable
             style={{ width: Dimensions.get('window').width / 2 - 20 }}
             name={Language.get('imprint')}
             centerText={true}
+            onClick={() => this.setState({ redirect: '/imprint' })}
           />
         </Row>
       </>
