@@ -6,14 +6,7 @@ import NavigationBarStyle from './styles/NavigationBarStyle'
 import NavigationButtonIconStyle from './styles/NavigationButtonIconStyle'
 import NavigationTitle from './NavigationTitle'
 import IconBoxStyle from './styles/IconBoxStyle'
-import IAPIUserMe from './interfaces/IAPIUserMe'
-
-interface INavigationProps {
-  label: string
-  badge?: string
-  buttons?: { name: string; onClick?: () => void; icon: string }[]
-  user?: IAPIUserMe
-}
+import INavigationProps from './interfaces/INavigationProps'
 
 export default class Navigation extends Component<INavigationProps> {
   state = {
