@@ -17,7 +17,7 @@ export default class NavigationTitle extends Component<INavigationTitleProps> {
     }
     const icon = {
       style: NavigationButtonIconStyle,
-      name: this.props.open ? 'times' : 'bars',
+      name: 'arrow-left',
       size: 20,
       fill: '#fff',
     }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, Pressable, Platform } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import Sidebar from './components/Sidebar/Sidebar'
 import NavigationBarStyle from './styles/NavigationBarStyle'
 import NavigationButtonIconStyle from './styles/NavigationButtonIconStyle'
 import NavigationTitle from './NavigationTitle'
@@ -9,26 +8,15 @@ import IconBoxStyle from './styles/IconBoxStyle'
 import INavigationProps from './interfaces/INavigationProps'
 
 export default class Navigation extends Component<INavigationProps> {
-  state = {
-    navOpen: false,
-  }
+  state = {}
 
   render() {
     const navigationTitle = {
       label: this.props.label,
       badge: this.props.badge,
-      open: this.state.navOpen,
       onPress: () => {
-        this.setState({ navOpen: !this.state.navOpen })
+        console.log('back?')
       },
-    }
-
-    const sidebar = {
-      onShouldClose: () => {
-        this.setState({ navOpen: false })
-      },
-      open: this.state.navOpen,
-      user: this.props.user,
     }
 
     const pressable = (item: any) => ({
@@ -37,19 +25,13 @@ export default class Navigation extends Component<INavigationProps> {
       style: IconBoxStyle,
     })
 
-    const buttons =
-      !this.state.navOpen && this.props.buttons ? this.props.buttons : []
-
     let zIndex: number | undefined
-    if (Platform.OS === 'web' && this.state.navOpen) {
-      zIndex = 1
-    }
 
     return (
       <View style={{ zIndex }}>
         <View style={NavigationBarStyle}>
           <NavigationTitle {...navigationTitle} />
-          {buttons.map(item => (
+          {this.props.buttons?.map(item => (
             <Pressable {...pressable(item)}>
               <Text style={NavigationButtonIconStyle}>
                 <Icon name={item.icon} size={20} />
@@ -57,7 +39,6 @@ export default class Navigation extends Component<INavigationProps> {
             </Pressable>
           ))}
         </View>
-        <Sidebar {...sidebar} />
       </View>
     )
   }
