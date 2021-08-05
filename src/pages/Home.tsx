@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { View, Dimensions, ImageBackground } from 'react-native'
+import { View, ImageBackground } from 'react-native'
 import BottomNavigation from '../components/BottomNavigation'
 import IPageProps from '../interfaces/IPageProps'
+import GlobalStyles from '../styles/GlobalStyles'
 import HomeFoodplan from './Home/HomeFoodplan'
 import HomeFriendlist from './Home/HomeFriendlist'
 import HomeList from './Home/HomeLists'
 import HomeRecipes from './Home/HomeRecipes'
-
-const windowWidth = Dimensions.get('window').width
 
 export default class Home extends Component<IPageProps> {
   state = {
@@ -27,7 +26,7 @@ export default class Home extends Component<IPageProps> {
           <ImageBackground
             source={require('../../assets/background.jpg')}
             resizeMode="cover"
-            style={{ width: windowWidth }}
+            style={{ width: GlobalStyles().appWidth }}
           >
             {this.state.active === 0 && <HomeList user={this.props.user} />}
             {this.state.active === 1 && <HomeFoodplan user={this.props.user} />}
