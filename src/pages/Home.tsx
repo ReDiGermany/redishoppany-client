@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { View, ScrollView, Dimensions, ImageBackground } from 'react-native'
+import { View, Dimensions, ImageBackground } from 'react-native'
 import BottomNavigation from '../components/BottomNavigation'
 import IPageProps from '../interfaces/IPageProps'
+import HomeFoodplan from './Home/HomeFoodplan'
+import HomeFriendlist from './Home/HomeFriendlist'
 import HomeList from './Home/HomeLists'
+import HomeRecipes from './Home/HomeRecipes'
 
-const windowHeight = Dimensions.get('window').height
 const windowWidth = Dimensions.get('window').width
 
 export default class Home extends Component<IPageProps> {
@@ -27,9 +29,12 @@ export default class Home extends Component<IPageProps> {
             resizeMode="cover"
             style={{ width: windowWidth }}
           >
-            <ScrollView style={{ height: windowHeight - 50 }}>
-              {this.state.active === 0 && <HomeList user={this.props.user} />}
-            </ScrollView>
+            {this.state.active === 0 && <HomeList user={this.props.user} />}
+            {this.state.active === 1 && <HomeFoodplan user={this.props.user} />}
+            {this.state.active === 2 && <HomeRecipes user={this.props.user} />}
+            {this.state.active === 3 && (
+              <HomeFriendlist user={this.props.user} />
+            )}
           </ImageBackground>
         </View>
         <BottomNavigation
