@@ -4,6 +4,7 @@ import Index from './src/Index'
 import SplashScreen from './src/SplashScreen'
 import Login from './src/pages/Login/Login'
 import APIUser from './src/helper/API/APIUser'
+import Language from './src/language/Language'
 
 export default class App extends Component {
   state = {
@@ -16,6 +17,7 @@ export default class App extends Component {
       const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
       const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
       const me = await APIUser.getMeByToken(token, email)
+      Language.getInstance().init('de')
       this.setState({ checkMeDone: true, loggedin: me !== undefined })
     } catch (error) {
       this.setState({ checkMeDone: true, loggedin: false })
