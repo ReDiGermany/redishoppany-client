@@ -14,10 +14,13 @@
     "updates": {
       "fallbackToCacheTimeout": 10
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "userInterfaceStyle": "dark"
+      "userInterfaceStyle": "dark",
+      "bundleIdentifier": "com.redigermany.lisha"
     },
     "android": {
       "userInterfaceStyle": "dark",
@@ -30,7 +33,9 @@
       "favicon": "./assets/favicon.png",
       "build": {
         "babel": {
-          "include": ["react-router-native"]
+          "include": [
+            "react-router-native"
+          ]
         }
       }
     }
