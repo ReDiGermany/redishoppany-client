@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Text,
-  StyleSheet,
-  View,
-  Dimensions,
-  Pressable,
-  ScrollView,
-} from 'react-native'
+import { Text, View, Dimensions, Pressable, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Moveable from '../../components/Moveable/Moveable'
 import Row from '../../components/Row'
@@ -16,16 +9,7 @@ import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
 import { Redirect } from '../../Router/react-router'
 import GlobalStyles from '../../styles/GlobalStyles'
-
-const HomeStyles = StyleSheet.create({
-  heading: {
-    textAlign: 'center',
-    color: '#fff',
-    marginTop: 30,
-    marginBottom: 10,
-    opacity: 0.5,
-  },
-})
+import HomeStyles from '../../styles/HomeStyles'
 
 export default class HomeList extends Component<IPageProps> {
   state = {
