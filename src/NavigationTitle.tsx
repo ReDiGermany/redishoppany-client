@@ -7,13 +7,7 @@ import NavigationButtonIconStyle from './styles/NavigationButtonIconStyle'
 import NavigationLabelStyle from './styles/NavigationLabelStyle'
 import RowFlexStyle from './styles/RowFlexStyle'
 import GlobalStyles from './styles/GlobalStyles'
-
-interface INavigationTitleProps {
-  onPress?: () => void
-  badge?: string | number
-  open: boolean
-  label: string
-}
+import INavigationTitleProps from './interfaces/INavigationTitleProps'
 
 export default class NavigationTitle extends Component<INavigationTitleProps> {
   render() {
