@@ -27,7 +27,8 @@ export default () => {
     contentHeight: 0,
   }
 
-  const contentHeight = data.appHeight - data.barHeight - data.statusbarHeight
+  const contentHeight =
+    data.appHeight - data.barHeight - data.statusbarHeight + 10
 
   return {
     ...data,
