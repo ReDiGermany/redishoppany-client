@@ -40,7 +40,9 @@ export default class API {
     // console.log('GETTING', uri, auth)
     const ret = await API.axiosInstance.get(uri, auth)
 
-    return ret.data.data
+    if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
+
+    return ret.data
   }
 
   public static async post<T>(uri: string, data: any): Promise<T> {
@@ -48,7 +50,9 @@ export default class API {
     // console.log('POSTING', uri, data, auth)
     const ret = await API.axiosInstance.post(uri, data, auth)
 
-    return ret.data.data
+    if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
+
+    return ret.data
   }
 
   public static async delete<T>(uri: string): Promise<T> {
@@ -56,7 +60,9 @@ export default class API {
     // console.log('DELETING', uri, auth)
     const ret = await API.axiosInstance.delete(uri, auth)
 
-    return ret.data.data
+    if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
+
+    return ret.data
   }
 
   public static async put<T>(uri: string, data: any): Promise<T> {
@@ -64,7 +70,9 @@ export default class API {
     // console.log('PUTTING', uri, data, auth)
     const ret = await API.axiosInstance.put(uri, data, auth)
 
-    return ret.data.data
+    if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
+
+    return ret.data
   }
 
   public static async putNoArgs<T>(uri: string): Promise<T> {
