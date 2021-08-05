@@ -6,17 +6,20 @@ import NavigationButtonIconStyle from './styles/NavigationButtonIconStyle'
 import NavigationTitle from './NavigationTitle'
 import IconBoxStyle from './styles/IconBoxStyle'
 import INavigationProps from './interfaces/INavigationProps'
+import { Redirect } from './Router/react-router'
 
 export default class Navigation extends Component<INavigationProps> {
-  state = {}
+  state = {
+    back: false,
+  }
 
   render() {
+    if (this.state.back) return <Redirect to="/" />
+
     const navigationTitle = {
       label: this.props.label,
       badge: this.props.badge,
-      onPress: () => {
-        console.log('back?')
-      },
+      onPress: () => this.setState({ back: true }),
     }
 
     const pressable = (item: any) => ({
@@ -25,10 +28,8 @@ export default class Navigation extends Component<INavigationProps> {
       style: IconBoxStyle,
     })
 
-    let zIndex: number | undefined
-
     return (
-      <View style={{ zIndex }}>
+      <View>
         <View style={NavigationBarStyle}>
           <NavigationTitle {...navigationTitle} />
           {this.props.buttons?.map(item => (
