@@ -17,6 +17,7 @@ import Logout from './pages/Logout'
 import IAPIUserMe from './interfaces/IAPIUserMe'
 import APIUser from './helper/API/APIUser'
 import EditRecipe from './pages/EditRecipe/EditRecipe'
+import Home from './pages/Home'
 
 interface IIndexProps {}
 interface IIndexState {
@@ -92,7 +93,7 @@ export default class Index extends Component<IIndexProps, IIndexState> {
                 </Route>
                 <Route exact path="/">
                   {/* TODO: Add default list id? */}
-                  <List user={this.state.user} id={1} />
+                  <Home user={this.state.user} />
                 </Route>
               </View>
             </Router>
