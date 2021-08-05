@@ -9,15 +9,15 @@ export default () => {
 
   const data = {
     dark: {
-      deep: '#111',
+      deep: '#111111',
       light: '#202020',
       bright: 'rgba(255,255,255,.3)',
     },
     color: {
       accent: '#015AA2',
-      light: '#fff',
+      light: '#ffffff',
       dimmed: 'rgba(255,255,255,.5)',
-      red: '#b50000',
+      red: '#A00000',
     },
     appWidth,
     lineHeight: 50,
