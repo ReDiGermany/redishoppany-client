@@ -13,7 +13,8 @@ import {
   timeBox,
 } from '../../styles/RecipesListStyle'
 import EditRecipe from '../EditRecipe/EditRecipe'
-import UserProfileSmall from '../../components/UserProfileSmall'
+import Navigation from '../../Navigation'
+import Language from '../../language/Language'
 
 export default class Recipes extends Component<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -47,7 +48,7 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
 
     return (
       <ScrollView style={{ height: GlobalStyles().contentHeight }}>
-        <UserProfileSmall user={this.props.user} />
+        <Navigation label={Language.get('recipes')} simple={true} />
         {/* <SafeAreaView style={container}> */}
         {/* <ScrollView> */}
         {this.state.recipes.map((item, index) => (

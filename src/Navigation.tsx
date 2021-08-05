@@ -19,6 +19,7 @@ export default class Navigation extends Component<INavigationProps> {
     const navigationTitle = {
       label: this.props.label,
       badge: this.props.badge,
+      simple: this.props.simple,
       onPress: () => this.setState({ back: true }),
     }
 

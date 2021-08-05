@@ -3,10 +3,10 @@ import { Text, View, Dimensions, Pressable, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Moveable from '../../components/Moveable/Moveable'
 import Row from '../../components/Row'
-import UserProfileSmall from '../../components/UserProfileSmall'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
+import Navigation from '../../Navigation'
 import { Redirect } from '../../Router/react-router'
 import GlobalStyles from '../../styles/GlobalStyles'
 import HomeStyles from '../../styles/HomeStyles'
@@ -20,11 +20,18 @@ export default class HomeList extends Component<IPageProps> {
     if (this.state.redirect !== '') {
       return <Redirect push to={this.state.redirect} />
     }
+    const buttons = []
+    // buttons.push({ icon: 'bell', name: 'notifications', onClick: () => {} })
+    buttons.push({ icon: 'plus', name: 'add', onClick: () => {} })
 
     return (
       <>
         <ScrollView style={{ height: GlobalStyles().contentHeight }}>
-          <UserProfileSmall user={this.props.user} />
+          <Navigation
+            label={Language.get('overview')}
+            simple={true}
+            buttons={buttons}
+          />
           {this.props.user?.lists.map((list, index) => {
             const title =
               index > 0 ? (
@@ -97,7 +104,7 @@ export default class HomeList extends Component<IPageProps> {
             />
           </Row>
         </ScrollView>
-        <Pressable
+        {/* <Pressable
           style={{
             position: 'absolute',
             bottom: 10,
@@ -118,7 +125,7 @@ export default class HomeList extends Component<IPageProps> {
             }}
             name="plus"
           />
-        </Pressable>
+        </Pressable> */}
       </>
     )
   }

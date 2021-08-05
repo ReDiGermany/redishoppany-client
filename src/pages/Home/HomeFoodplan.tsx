@@ -7,7 +7,8 @@ import {
 import Moveable from '../../components/Moveable/Moveable'
 import GlobalStyles from '../../styles/GlobalStyles'
 import IPageProps from '../../interfaces/IPageProps'
-import UserProfileSmall from '../../components/UserProfileSmall'
+import Navigation from '../../Navigation'
+import Language from '../../language/Language'
 
 export default class Foodplan extends Component<IPageProps> {
   state = {
@@ -33,7 +34,7 @@ export default class Foodplan extends Component<IPageProps> {
     return (
       <ScrollView style={{ height: GlobalStyles().contentHeight }}>
         <View>
-          <UserProfileSmall user={this.props.user} />
+          <Navigation label={Language.get('foodlist')} simple={true} />
           {/* <SafeAreaView
             style={{
               height: GlobalStyles().contentHeight,

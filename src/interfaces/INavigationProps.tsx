@@ -5,4 +5,5 @@ export default interface INavigationProps {
   badge?: string
   buttons?: { name: string; onClick?: () => void; icon: string }[]
   user?: IAPIUserMe
+  simple?: boolean
 }

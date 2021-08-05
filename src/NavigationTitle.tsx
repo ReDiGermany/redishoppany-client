@@ -24,14 +24,16 @@ export default class NavigationTitle extends Component<INavigationTitleProps> {
 
     return (
       <View style={RowFlexStyle}>
-        <Pressable {...barIcon}>
-          <Icon {...icon} />
-          {this.props.badge && (
-            <Text style={BadgeStyle(GlobalStyles().color.red)}>
-              {this.props.badge}
-            </Text>
-          )}
-        </Pressable>
+        {!(this.props.simple ?? false) && (
+          <Pressable {...barIcon}>
+            <Icon {...icon} />
+            {this.props.badge && (
+              <Text style={BadgeStyle(GlobalStyles().color.red)}>
+                {this.props.badge}
+              </Text>
+            )}
+          </Pressable>
+        )}
         <Text style={NavigationLabelStyle}>{this.props.label}</Text>
       </View>
     )
