@@ -24,6 +24,7 @@ interface IMoveableTextProps {
   dropdownSelected?: (_item: { label: string; value: string }) => void
   checked?: boolean
   onClick?: () => void
+  centerText?: boolean
 }
 
 export default class MoveableText extends Component<IMoveableTextProps> {
@@ -58,7 +59,10 @@ export default class MoveableText extends Component<IMoveableTextProps> {
     }
 
     const box = {
-      style: textStyle.box(this.props.posX),
+      style: {
+        ...textStyle.box(this.props.posX),
+        ...(this.props.posX === 0 ? { borderRadius: 10 } : { borderRadius: 0 }),
+      },
       onStartShouldSetResponder: () => true,
       onMoveShouldSetResponder: () => true,
       onTouchEnd,
@@ -106,7 +110,16 @@ export default class MoveableText extends Component<IMoveableTextProps> {
                 <MoveableTextPrefix text={this.props.prefix} />
               )}
               {this.props.text && (
-                <Text style={textStyle.text}>{this.props.text}</Text>
+                <Text
+                  style={{
+                    ...textStyle.text,
+                    ...(this.props.centerText
+                      ? { textAlign: 'center', width: '100%', paddingLeft: 0 }
+                      : {}),
+                  }}
+                >
+                  {this.props.text}
+                </Text>
               )}
             </Row>
             {this.props.dropdownItems && this.props.dropdownSelected && (
