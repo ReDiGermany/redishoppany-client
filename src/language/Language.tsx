@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 export default class Language {
   private static instance: Language
 
@@ -17,11 +19,14 @@ export default class Language {
 
   public init(lang: 'de' | 'en'): void {
     this.lang = lang
+    this.file = require('./en.json')
 
-    if (lang === 'de') {
-      this.file = require('./de.json')
-    } else if (lang === 'en') {
-      this.file = require('./en.json')
+    let temp
+    if (lang === 'de') temp = require('./de.json')
+    if (temp) {
+      for (const k in temp) {
+        this.file[k] = temp[k]
+      }
     }
   }
 
