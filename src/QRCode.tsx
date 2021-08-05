@@ -1,6 +1,9 @@
+/* eslint-disable no-nested-ternary */
 import React, { Component } from 'react'
-import { Pressable, View } from 'react-native'
+import { Pressable, View, Text } from 'react-native'
+import { SvgXml } from 'react-native-svg'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import APIFriends from './helper/API/APIFriends'
 import QRScanner from './pages/QRScanner'
 
 interface IQRCodeScanned {
@@ -11,38 +14,55 @@ interface IQRCodeScanned {
 export default class QRCode extends Component<IQRCodeScanned> {
   state = {
     scanner: false,
+    qrcode: '',
+  }
+
+  async componentDidMount() {
+    const qrcode = await APIFriends.qr()
+    this.setState({ qrcode })
   }
 
   render() {
     return (
       <View style={{ backgroundColor: '#fff', width: '100%', height: 200 }}>
-        {this.state.scanner && (
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: 200,
-            }}
-          >
-            <QRScanner
-              onScan={text => {
-                if (
-                  text.match(
-                    /^([a-zA-Z0-9_.-]+)@([a-zA-Z0-9_.-]+)\.([a-zA-Z0-9_.-]{2,4})$/
-                  )
-                ) {
-                  this.props.onSuccess(text)
-                } else {
-                  this.props.onFail()
-                }
-                // console.log(text);
-                this.setState({ scanner: false })
+        {
+          this.state.scanner ? (
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: 200,
               }}
-            />
-          </View>
-        )}
+            >
+              <QRScanner
+                onScan={text => {
+                  if (
+                    text.match(
+                      /^([a-zA-Z0-9_.-]+)@([a-zA-Z0-9_.-]+)\.([a-zA-Z0-9_.-]{2,4})$/
+                    )
+                  ) {
+                    this.props.onSuccess(text)
+                  } else {
+                    this.props.onFail()
+                  }
+                  // console.log(text);
+                  this.setState({ scanner: false })
+                }}
+              />
+            </View>
+          ) : this.state.qrcode !== '' ? (
+            <SvgXml xml={this.state.qrcode} width="100%" height="100%" />
+          ) : (
+            <Text>Loading</Text>
+          )
+          // <Text>{this.state.qrcode}</Text>
+          // <ImageBackground
+          //   source={{ uri: this.state.qrcode }}
+          //   style={{ width: 100, height: 100, backgroundColor: '#eee' }}
+          // />
+        }
         <Pressable
           style={{
             position: 'absolute',
