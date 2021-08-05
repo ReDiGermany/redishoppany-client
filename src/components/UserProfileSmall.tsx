@@ -9,7 +9,6 @@ import Row from './Row'
 
 export default class UserProfileSmall extends Component<IPageProps> {
   render() {
-    console.log(this.props.user)
     const icon = {
       style: profileStyle.bell,
       name: 'bell',
