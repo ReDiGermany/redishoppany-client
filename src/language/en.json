@@ -1,1 +1,7 @@
-{}
+{
+  "other": "Other",
+  "settings": "Settings",
+  "about": "About",
+  "imprint": "Imprint",
+  "list_suffix": "'s Lists"
+}

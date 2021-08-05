@@ -5,6 +5,7 @@ import Row from '../../components/Row'
 import UserProfileSmall from '../../components/UserProfileSmall'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import IPageProps from '../../interfaces/IPageProps'
+import Language from '../../language/Language'
 
 const HomeStyles = StyleSheet.create({
   heading: {
@@ -24,7 +25,10 @@ export default class HomeList extends Component<IPageProps> {
         {this.props.user?.lists.map((list, index) => {
           const title =
             index > 0 ? (
-              <Text style={HomeStyles.heading}>{list.ownerName}'s Listen</Text>
+              <Text style={HomeStyles.heading}>
+                {list.ownerName}
+                {Language.get('list_suffix')}
+              </Text>
             ) : (
               <></>
             )
@@ -46,17 +50,17 @@ export default class HomeList extends Component<IPageProps> {
             </View>
           )
         })}
-        <Text style={HomeStyles.heading}>Anderes</Text>
-        <Moveable name="Einstellungen" centerText={true} />
+        <Text style={HomeStyles.heading}>{Language.get('other')}</Text>
+        <Moveable name={Language.get('settings')} centerText={true} />
         <Row style={{ marginTop: 10, marginBottom: 30 }}>
           <Moveable
             style={{ width: Dimensions.get('window').width / 2 - 20 }}
-            name="Über"
+            name={Language.get('about')}
             centerText={true}
           />
           <Moveable
             style={{ width: Dimensions.get('window').width / 2 - 20 }}
-            name="Impressum"
+            name={Language.get('imprint')}
             centerText={true}
           />
         </Row>
