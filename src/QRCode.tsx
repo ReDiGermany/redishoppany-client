@@ -1,4 +1,5 @@
 /* eslint-disable no-nested-ternary */
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
 import { Pressable, View, Text } from 'react-native'
 import { SvgXml } from 'react-native-svg'
@@ -18,8 +19,11 @@ export default class QRCode extends Component<IQRCodeScanned> {
   }
 
   async componentDidMount() {
-    const qrcode = await APIFriends.qr()
+    let qrcode = await AsyncStorage.getItem('qrcode')
     this.setState({ qrcode })
+    qrcode = await APIFriends.qr()
+    this.setState({ qrcode })
+    await AsyncStorage.setItem('qrcode', qrcode)
   }
 
   render() {
@@ -47,7 +51,6 @@ export default class QRCode extends Component<IQRCodeScanned> {
                   } else {
                     this.props.onFail()
                   }
-                  // console.log(text);
                   this.setState({ scanner: false })
                 }}
               />
@@ -55,7 +58,7 @@ export default class QRCode extends Component<IQRCodeScanned> {
           ) : this.state.qrcode !== '' ? (
             <SvgXml xml={this.state.qrcode} width="100%" height="100%" />
           ) : (
-            <Text>Loading</Text>
+            <Text></Text>
           )
           // <Text>{this.state.qrcode}</Text>
           // <ImageBackground
