@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Pressable, Text } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Language from '../language/Language'
 import BottomNavigationStyle from '../styles/BottomNavigationStyle'
@@ -30,6 +31,15 @@ export default class BottomNavigation extends Component<IBottomNavigationProps> 
         icon: 'users',
       },
     ],
+  }
+
+  async componentDidMount() {
+    let active: string | null = await AsyncStorage.getItem('activeHomePage')
+    if (active === null) {
+      active = '0'
+      await AsyncStorage.setItem('activeHomePage', active)
+    }
+    this.setState({ active: parseInt(active, 10) })
   }
 
   render() {
