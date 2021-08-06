@@ -25,13 +25,6 @@ export default class Foodplan extends Component<IPageProps> {
   }
 
   render() {
-    // const onRefresh = () => {
-    //   this.setState({ refreshing: true })
-    //   setTimeout(() => {
-    //     this.setState({ refreshing: false })
-    //   }, 1000)
-    // }
-
     return (
       <View>
         <Navigation
@@ -49,27 +42,6 @@ export default class Foodplan extends Component<IPageProps> {
             height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
           }}
         >
-          {/* <SafeAreaView
-            style={{
-              height: GlobalStyles().contentHeight,
-            }}
-          > */}
-          {/* <ScrollView
-              onScrollBeginDrag={() => {
-                this.setState({ scrolling: true })
-                console.log('scroll start')
-              }}
-              onScrollEndDrag={() => {
-                this.setState({ scrolling: false })
-                console.log('scroll stop')
-              }}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={onRefresh}
-                />
-              }
-            > */}
           {this.state.notifications.map(item => {
             if (item.empty) {
               return (
@@ -81,7 +53,6 @@ export default class Foodplan extends Component<IPageProps> {
                     { label: 'nix', value: '2' },
                   ]}
                   dropdownSelected={() => {}}
-                  // to="/settings"
                 />
               )
             }
@@ -92,12 +63,9 @@ export default class Foodplan extends Component<IPageProps> {
                 onDelete={() => {}}
                 prefix={item.prefix}
                 name={item.name}
-                // to="/settings"
               />
             )
           })}
-          {/* </ScrollView> */}
-          {/* </SafeAreaView> */}
         </ScrollView>
       </View>
     )
