@@ -120,13 +120,14 @@ export default class Friends extends Component<IPageProps, IPageState> {
         onClick: () => this.setState({ add: !this.state.add }),
       },
     ]
-    buttons.unshift({
-      icon: 'bell',
-      name: 'notifications',
-      onClick: () => this.setState({ redirect: '/notifications' }),
-      // @ts-ignore
-      badge: { color: '#900000', text: '1' },
-    })
+    if (this.props.user?.notificationCount)
+      buttons.unshift({
+        icon: 'bell',
+        name: 'notifications',
+        onClick: () => this.setState({ redirect: '/notifications' }),
+        // @ts-ignore
+        badge: { color: '#900000', text: this.props.user?.notificationCount },
+      })
 
     const navigation = {
       label: this.props.user?.profile.firstName ?? 'User',
