@@ -7,6 +7,7 @@ interface IMoveableButtonProps {
   name: string
   icon: string
   color: string
+  onPress?: () => void
 }
 
 export default class MoveableButton extends Component<IMoveableButtonProps> {
@@ -15,6 +16,7 @@ export default class MoveableButton extends Component<IMoveableButtonProps> {
       style: textStyle.right.button(this.props.color),
       name: this.props.icon,
       size: 15,
+      onPress: this.props.onPress,
     }
     // console.log(icon)
 

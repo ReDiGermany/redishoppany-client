@@ -15,7 +15,7 @@ interface IMoveableTextProps {
   stop?: () => void
   touchStart?: () => void
   text?: string
-  buttons?: { name: string; icon: string; color: string }[]
+  buttons?: { name: string; icon: string; color: string; onPress: () => void }[]
   prefix?: number | string
   to?: string
   onLongPress?: () => void
