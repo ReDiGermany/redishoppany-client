@@ -145,7 +145,10 @@ export default class Moveable extends React.Component<IMoveableProps> {
         }}
       >
         {this.state.posX > 0 && this.props.onDelete && (
-          <MoveableDeleteIcon posX={this.state.posX} />
+          <MoveableDeleteIcon
+            onPress={this.props.onDelete}
+            posX={this.state.posX}
+          />
         )}
         <MoveableText {...moveableText} />
         {this.props.right?.map((item, index) => getIcon(item, index))}

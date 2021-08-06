@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { deleteIconStyle } from '../../styles/MoveableStyle'
 
 interface IMoveableDeleteIconProps {
   posX: number
+  onPress: () => void
 }
 
 export default class MoveableDeleteIcon extends Component<IMoveableDeleteIconProps> {
@@ -13,12 +14,14 @@ export default class MoveableDeleteIcon extends Component<IMoveableDeleteIconPro
       style: deleteIconStyle.icon(this.props.posX),
       name: 'trash',
     }
-    // console.log(icon)
 
     return (
-      <View style={deleteIconStyle.box(this.props.posX)}>
+      <Pressable
+        onPress={this.props.onPress}
+        style={deleteIconStyle.box(this.props.posX)}
+      >
         <Icon {...icon} />
-      </View>
+      </Pressable>
     )
   }
 }
