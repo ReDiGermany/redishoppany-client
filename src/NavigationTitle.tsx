@@ -8,6 +8,7 @@ import NavigationLabelStyle from './styles/NavigationLabelStyle'
 import RowFlexStyle from './styles/RowFlexStyle'
 import GlobalStyles from './styles/GlobalStyles'
 import INavigationTitleProps from './interfaces/INavigationTitleProps'
+import WebStyle from './helper/WebStyle'
 
 export default class NavigationTitle extends Component<INavigationTitleProps> {
   render() {
@@ -34,7 +35,35 @@ export default class NavigationTitle extends Component<INavigationTitleProps> {
             )}
           </Pressable>
         )}
-        <Text style={NavigationLabelStyle}>{this.props.label}</Text>
+        <Text
+          style={{
+            ...NavigationLabelStyle,
+            ...(this.props.subTitle !== undefined
+              ? {
+                  ...WebStyle({ lineHeight: GlobalStyles().barHeight - 20 }),
+                  height: 50,
+                }
+              : {}),
+          }}
+        >
+          {this.props.label}
+        </Text>
+        {this.props.subTitle !== undefined ? (
+          <Text
+            style={{
+              color: '#fff',
+              position: 'absolute',
+              bottom: 10,
+              left: 15,
+              fontSize: 10,
+              opacity: 0.5,
+            }}
+          >
+            {this.props.subTitle}
+          </Text>
+        ) : (
+          <></>
+        )}
       </View>
     )
   }

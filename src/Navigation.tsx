@@ -20,6 +20,7 @@ export default class Navigation extends Component<INavigationProps> {
       label: this.props.label,
       badge: this.props.badge,
       simple: this.props.simple,
+      subTitle: this.props.subTitle,
       onPress: () => this.setState({ back: true }),
     }
 
@@ -31,7 +32,12 @@ export default class Navigation extends Component<INavigationProps> {
 
     return (
       <View>
-        <View style={NavigationBarStyle}>
+        <View
+          style={{
+            ...NavigationBarStyle,
+            ...(this.props.solid ?? true ? {} : { backgroundColor: '#202020' }),
+          }}
+        >
           <NavigationTitle {...navigationTitle} />
           {this.props.buttons?.map(item => (
             <Pressable {...pressable(item)}>
