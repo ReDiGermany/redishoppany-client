@@ -46,14 +46,22 @@ export default class QRCode extends Component<IQRCodeScanned> {
           />
         </View>
       )
-
+    let timeout: any = null
     const pressable = {
-      style: QRCodeStyles.button,
+      style: {
+        ...QRCodeStyles.button,
+        ...(this.state.scanner && { borderColor: '#fff' }),
+      },
       onPress: () => {
-        this.setState({ scanner: true })
-        setTimeout(() => {
-          if (this.state.scanner) this.setState({ scanner: false })
-        }, 10 * 1000)
+        if (this.state.scanner) {
+          clearTimeout(timeout)
+          this.setState({ scanner: false })
+        } else {
+          this.setState({ scanner: true })
+          timeout = setTimeout(() => {
+            if (this.state.scanner) this.setState({ scanner: false })
+          }, 10 * 1000)
+        }
       },
     }
 
@@ -61,7 +69,13 @@ export default class QRCode extends Component<IQRCodeScanned> {
       <View style={QRCodeStyles.container}>
         {QRContent}
         <Pressable {...pressable}>
-          <Icon style={QRCodeStyles.icon} name="camera" />
+          <Icon
+            style={{
+              ...QRCodeStyles.icon,
+              ...(this.state.scanner ? { color: '#fff' } : { color: '#000' }),
+            }}
+            name={this.state.scanner ? 'times' : 'camera'}
+          />
         </Pressable>
       </View>
     )
