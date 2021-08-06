@@ -1,11 +1,6 @@
 import IFriend from '../../interfaces/IFriend'
 import API from '../API'
-
-interface IAPIFriendsList {
-  friends?: IFriend[]
-  incomming?: IFriend[]
-  outgoing?: IFriend[]
-}
+import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
 
 export default class APIFriends {
   public static async list(): Promise<IAPIFriendsList> {
