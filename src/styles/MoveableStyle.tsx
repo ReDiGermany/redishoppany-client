@@ -20,10 +20,6 @@ const textBox = (x: number) =>
       marginLeft: x < 0 ? x : 0,
       backgroundColor: `${GlobalStyles().dark.deep}80`,
       width: '100%',
-      // borderBottomColor: GlobalStyles().dark.bright,
-      // borderBottomWidth: 1,
-      borderRadius: 10,
-      // backgroundColor: "#4ae53a",
     },
   }).box
 
