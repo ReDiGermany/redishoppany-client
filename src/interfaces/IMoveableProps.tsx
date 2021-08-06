@@ -17,4 +17,5 @@ export default interface IMoveableProps {
   onClick?: () => void
   large?: boolean
   centerText?: boolean
+  last?: boolean
 }

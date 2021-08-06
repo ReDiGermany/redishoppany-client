@@ -26,6 +26,7 @@ interface IMoveableTextProps {
   onClick?: () => void
   centerText?: boolean
   large?: boolean
+  last?: boolean
 }
 
 export default class MoveableText extends Component<IMoveableTextProps> {
@@ -59,13 +60,25 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       style: RowFlexStyle,
     }
 
+    const style = {
+      ...textStyle.box(this.props.posX),
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      borderRadius: 0,
+    }
+    if (this.props.posX === 0 && (this.props.large ?? false) === true) {
+      style.borderRadius = 10
+      style.borderBottomLeftRadius = 10
+      style.borderBottomRightRadius = 10
+    }
+    if (this.props.last ?? false) {
+      style.borderBottomLeftRadius = 10
+      style.borderBottomRightRadius = 10
+    }
+    console.log(this.props.text, this.props.last)
+
     const box = {
-      style: {
-        ...textStyle.box(this.props.posX),
-        ...(this.props.posX === 0 && (this.props.large ?? false)
-          ? { borderRadius: 10 }
-          : { borderRadius: 0 }),
-      },
+      style,
       onStartShouldSetResponder: () => true,
       onMoveShouldSetResponder: () => true,
       onTouchEnd,

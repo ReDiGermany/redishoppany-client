@@ -115,6 +115,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
       onClick: this.props.onClick,
       centerText: this.props.centerText,
       large: this.props.large,
+      last: this.props.last,
     }
 
     const getIcon = (
@@ -134,6 +135,18 @@ export default class Moveable extends React.Component<IMoveableProps> {
       return <View key={index}></View>
     }
 
+    const borderStyle = {
+      borderBottomWidth: 0,
+      borderBottomColor: '#00000080',
+    }
+
+    if (
+      (this.props.last ?? false) === false &&
+      (this.props.large ?? false) === false
+    ) {
+      borderStyle.borderBottomWidth = 2
+    }
+
     return (
       <Pressable
         onPress={this.props.onClick}
@@ -143,6 +156,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
           ...(this.state.posX === 0
             ? { marginLeft: 10, marginRight: 10 }
             : { marginLeft: 0, marginRight: 0 }),
+          ...borderStyle,
         }}
       >
         {this.state.posX > 0 && this.props.onDelete && (
