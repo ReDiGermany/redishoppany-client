@@ -1,38 +1,20 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
-
-interface IMoveableTextDropdownProps {
-  dropdownItems: { label: string; value: string }[]
-  dropdownSelected: (_item: { label: string; value: string }) => void
-}
+import MoveableTextDropdownStyles from '../../styles/MoveableTextDropdownStyles'
+import IMoveableTextDropdownProps from '../../interfaces/IMoveableTextDropdownProps'
 
 export default class MoveableTextDropdown extends Component<IMoveableTextDropdownProps> {
   state = {
-    selectedItem: this.props.dropdownItems[0].value,
+    selectedItem:
+      this.props.dropdownItems.length && this.props.dropdownItems[0].value,
   }
 
   render() {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(255,255,255,.2)',
-          borderRadius: 5,
-          marginLeft: 10,
-          marginRight: 10,
-          marginTop: 10,
-          marginBottom: 10,
-        }}
-      >
+      <View style={MoveableTextDropdownStyles.container}>
         <Picker
-          style={{
-            backgroundColor: '#202020',
-            borderRadius: 5,
-            borderColor: '#202020',
-            color: '#fff',
-            flex: 1,
-          }}
+          style={MoveableTextDropdownStyles.picker}
           selectedValue={this.state.selectedItem}
           onValueChange={itemValue =>
             this.setState({ selectedItem: itemValue })
