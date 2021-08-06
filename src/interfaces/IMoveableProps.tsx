@@ -3,7 +3,7 @@ export default interface IMoveableProps {
   name?: string
   onDelete?: () => void
   right?: { icon: string; color: string; click: () => void }[]
-  buttons?: { name: string; icon: string; color: string }[]
+  buttons?: { name: string; icon: string; color: string; onPress: () => void }[]
   prefix?: number | string
   to?: string
   onPop?: () => void
