@@ -10,15 +10,21 @@ export default class AddBar extends Component<IAddBarProps> {
     value: '',
   }
 
+  save() {
+    this.setState({ value: '' })
+    this.props.onChange(this.state.value)
+  }
+
   render() {
     if (!this.props.visible) return <></>
 
     const textInput: any = {
+      value: this.state.value,
       autoFocus: true,
       placeholder: this.props.placeholder,
       placeholderTextColor: '#ffffff30',
       autoCapitalize: 'none',
-      onSubmitEditing: () => this.props.onChange(this.state.value),
+      onSubmitEditing: () => this.save(),
       style: AddBarStyles.input,
       onChangeText: (value: string) => this.setState({ value }),
     }
@@ -30,7 +36,7 @@ export default class AddBar extends Component<IAddBarProps> {
     }
 
     const icon = {
-      onPress: () => this.props.onChange(this.state.value),
+      onPress: () => this.save(),
       style: AddBarStyles.icon,
       name: this.props.icon ?? 'check',
     }
