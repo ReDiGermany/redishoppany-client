@@ -15,6 +15,7 @@ import IFoodplanItem from '../../interfaces/IFoodplanItem'
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import APIRecipe from '../../helper/API/APIRecipe'
 import IFoodplanPageState from '../../interfaces/IFoodplanPageState'
+import { Redirect } from '../../Router/react-router'
 
 export default class Foodplan extends Component<
   IPageProps,
@@ -25,6 +26,7 @@ export default class Foodplan extends Component<
     recipes: [],
     refreshing: false,
     isTop: true,
+    redirect: '',
   }
 
   constructor(props: IPageProps) {
@@ -47,9 +49,30 @@ export default class Foodplan extends Component<
   }
 
   render() {
+    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
+
     const nextDay = this.state.plan.length
       ? this.state.plan[this.state.plan.length - 1]
       : Language.get('tomorrow')
+
+    const buttons = [
+      {
+        icon: 'plus',
+        name: 'add',
+        onClick: () => {
+          console.log('add')
+          this.setState({ redirect: '/foodplan/add' })
+        },
+      },
+    ]
+    if (this.props.user?.notificationCount)
+      buttons.unshift({
+        icon: 'bell',
+        name: 'notifications',
+        onClick: () => this.setState({ redirect: '/notifications' }),
+        // @ts-ignore
+        badge: { color: '#900000', text: this.props.user?.notificationCount },
+      })
 
     return (
       <View>
@@ -57,6 +80,7 @@ export default class Foodplan extends Component<
           solid={this.state.isTop}
           label={Language.get('foodlist')}
           simple={true}
+          buttons={buttons}
         />
         <ScrollView
           onScroll={e =>

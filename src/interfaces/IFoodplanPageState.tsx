@@ -6,4 +6,5 @@ export default interface IFoodplanPageState {
   refreshing: boolean
   isTop: boolean
   recipes: IAPIRecipe[]
+  redirect: string
 }
