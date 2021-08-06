@@ -110,61 +110,53 @@ export default class Friends extends Component<IPageProps, IPageState> {
   }
 
   render() {
-    console.log({
-      outgoing: this.state.list.outgoing.length,
-      incomming: this.state.list.incomming.length,
-      friends: this.state.list.friends.length,
-    })
+    const navigation = {
+      label: this.props.user?.profile.firstName ?? 'User',
+      subTitle: this.props.user?.profile.email ?? 'someone@email.tld',
+      simple: true,
+      solid: this.state.isTop,
+      buttons: [
+        {
+          icon: this.state.qr ? 'chevron-up' : 'qrcode',
+          name: 'qr',
+          onClick: () => this.setState({ qr: !this.state.qr, add: false }),
+        },
+        {
+          icon: this.state.add ? 'chevron-up' : 'plus',
+          name: 'add',
+          onClick: () => this.setState({ add: !this.state.add, qr: false }),
+        },
+      ],
+    }
+
+    const scrollView = {
+      onScroll: (e: any) =>
+        this.setState({
+          isTop: e.nativeEvent.contentOffset.y <= 0,
+        }),
+      style: {
+        height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
+      },
+    }
+
+    const addBar = {
+      onChange: this.addFriend,
+      placeholder: 'E-Mail',
+      visible: this.state.add,
+    }
+
+    const qrCode = {
+      onFail: () => console.log('Das hat leider nicht funktioniert.'),
+      onSuccess: this.addFriend,
+    }
 
     return (
       <View>
-        <Navigation
-          label={this.props.user?.profile.firstName ?? 'User'}
-          subTitle={this.props.user?.profile.email ?? 'someone@email.tld'}
-          simple={true}
-          solid={this.state.isTop}
-          buttons={[
-            {
-              icon: this.state.qr ? 'chevron-up' : 'qrcode',
-              name: 'qr',
-              onClick: () => {
-                this.setState({ qr: !this.state.qr, add: false })
-              },
-            },
-            {
-              icon: this.state.add ? 'chevron-up' : 'plus',
-              name: 'add',
-              onClick: () => {
-                this.setState({ add: !this.state.add, qr: false })
-              },
-            },
-          ]}
-        />
+        <Navigation {...navigation} />
+        <ScrollView {...scrollView}>
+          <AddBar {...addBar} type="email" />
+          {this.state.qr && <QRCode {...qrCode} />}
 
-        <ScrollView
-          onScroll={e =>
-            this.setState({
-              isTop: e.nativeEvent.contentOffset.y <= 0,
-            })
-          }
-          style={{
-            height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
-          }}
-        >
-          <AddBar
-            onChange={this.addFriend}
-            placeholder="E-Mail"
-            type="email"
-            visible={this.state.add}
-          />
-          {this.state.qr && (
-            <QRCode
-              onFail={() => {
-                console.log('Das hat leider nicht funktioniert.')
-              }}
-              onSuccess={this.addFriend}
-            />
-          )}
           {this.state.list.friends.length > 0 && (
             <>
               <ListHeader color="#111" text={Language.get('friends')} />
@@ -177,6 +169,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
               ))}
             </>
           )}
+
           {this.state.list.incomming.length > 0 && (
             <>
               <ListHeader
@@ -200,6 +193,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
               ))}
             </>
           )}
+
           {this.state.list.outgoing.length > 0 && (
             <>
               <ListHeader
