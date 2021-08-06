@@ -12,45 +12,50 @@ import {
   textBox,
   timeBox,
 } from '../../styles/RecipesListStyle'
-import EditRecipe from '../EditRecipe/EditRecipe'
 import Navigation from '../../Navigation'
 import Language from '../../language/Language'
+// @ts-ignore
+import recipeImageNotFound from '../../../assets/recipe_not_found.jpg'
+import { Redirect } from '../../Router/react-router'
 
 export default class Recipes extends Component<IPageProps, IRecipesState> {
   state: IRecipesState = {
     recipes: [],
-    addRecipe: false,
+    redirect: '',
   }
 
   async componentDidMount() {
     const recipes = await APIRecipe.list()
+    recipes.forEach((item, idx) => {
+      if (item.image === '') recipes[idx].image = recipeImageNotFound
+      else recipes[idx].image = { uri: item.image }
+    })
     this.setState({ recipes })
   }
 
   render() {
+    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
+
     const image = (item: any) => ({
       width: GlobalStyles().appWidth,
       height: 150,
       style: imageStyle,
-      source: { uri: item.image },
+      source: item.image,
     })
-
-    // const onClick = () => {
-    // this.setState({ addRecipe: true })
-    // }
-
-    // const buttons = [{ icon: 'plus', name: 'add', onClick }]
-
-    if (this.state.addRecipe) {
-      return <EditRecipe user={this.props.user} />
-    }
-    // console.log(this.state.recipes)
 
     return (
       <ScrollView style={{ height: GlobalStyles().contentHeight }}>
-        <Navigation label={Language.get('recipes')} simple={true} />
-        {/* <SafeAreaView style={container}> */}
-        {/* <ScrollView> */}
+        <Navigation
+          label={Language.get('recipes')}
+          simple={true}
+          buttons={[
+            {
+              icon: 'plus',
+              name: 'add',
+              onClick: () => this.setState({ redirect: '/recipe/add' }),
+            },
+          ]}
+        />
         {this.state.recipes.map((item, index) => (
           <Link key={index} to={`/recipe/${item.id}`}>
             <View style={imageBox}>
@@ -62,8 +67,6 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
             </View>
           </Link>
         ))}
-        {/* </ScrollView> */}
-        {/* </SafeAreaView> */}
       </ScrollView>
     )
   }
