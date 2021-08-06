@@ -12,6 +12,7 @@ export default class About extends Component<IAboutProps> {
     return (
       <View>
         <Navigation user={this.props.user} label="About" />
+        {/* https://pixabay.com/de/photos/hochzeitsfeier-bankett-geschirr-1967373/ */}
       </View>
     )
   }
