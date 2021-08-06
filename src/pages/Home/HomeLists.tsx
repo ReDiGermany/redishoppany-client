@@ -18,13 +18,32 @@ export default class HomeList extends Component<IPageProps> {
     redirect: '',
     isTop: true,
     add: false,
-    user: this.props.user,
+    lists: this.props.user?.lists ?? [],
+  }
+
+  constructor(props: IPageProps) {
+    super(props)
+    console.log(props)
+  }
+
+  shouldComponentUpdate(nextProps: Readonly<IPageProps>) {
+    if (
+      JSON.stringify(nextProps.user?.lists) !==
+        JSON.stringify(this.state.lists) &&
+      nextProps.user?.lists.length
+    ) {
+      this.setState({ lists: nextProps.user?.lists ?? [] })
+
+      return false
+    }
+
+    return true
   }
 
   async addList(name: string) {
     await APIShoppingList.create(name)
     const user = await APIUser.getMe()
-    this.setState({ user, add: false })
+    this.setState({ lists: user.lists, add: false })
   }
 
   render() {
@@ -69,7 +88,7 @@ export default class HomeList extends Component<IPageProps> {
             height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
           }}
         >
-          {this.state.user?.lists.map((list, index) => {
+          {this.state.lists.map((list, index) => {
             const title =
               index > 0 ? (
                 <Text style={HomeStyles.heading}>
