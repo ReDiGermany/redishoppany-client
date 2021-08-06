@@ -34,13 +34,23 @@ export default class Navigation extends Component<INavigationProps> {
       <View>
         <View
           style={{
-            ...NavigationBarStyle,
+            ...NavigationBarStyle.container,
             ...(this.props.solid ?? true ? {} : { backgroundColor: '#202020' }),
           }}
         >
           <NavigationTitle {...navigationTitle} />
           {this.props.buttons?.map(item => (
             <Pressable {...pressable(item)}>
+              {item.badge && (
+                <Text
+                  style={{
+                    ...NavigationBarStyle.badge,
+                    backgroundColor: item.badge.color,
+                  }}
+                >
+                  {item.badge.text}
+                </Text>
+              )}
               <Text style={NavigationButtonIconStyle}>
                 <Icon name={item.icon} size={20} />
               </Text>
