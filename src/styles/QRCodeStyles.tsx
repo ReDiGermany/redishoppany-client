@@ -21,9 +21,8 @@ const QRCodeStyles = StyleSheet.create({
     borderRadius: 25,
   },
   icon: {
-    height: 50,
-    width: 50,
-    lineHeight: 50,
+    height: 46,
+    width: 48,
     textAlign: 'center',
     textAlignVertical: 'center',
     fontSize: 25,
