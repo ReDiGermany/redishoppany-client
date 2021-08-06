@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
-import { Text, View, Dimensions, Pressable, ScrollView } from 'react-native'
+import { Text, View, Dimensions, ScrollView } from 'react-native'
+import AddBar from '../../components/AddBar'
 import Moveable from '../../components/Moveable/Moveable'
 import Row from '../../components/Row'
+import APIShoppingList from '../../helper/API/APIShoppingList'
+import APIUser from '../../helper/API/APIUser'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
@@ -14,15 +17,34 @@ export default class HomeList extends Component<IPageProps> {
   state = {
     redirect: '',
     isTop: true,
+    add: false,
+    user: this.props.user,
+  }
+
+  async addList(name: string) {
+    await APIShoppingList.create(name)
+    const user = await APIUser.getMe()
+    this.setState({ user, add: false })
   }
 
   render() {
-    if (this.state.redirect !== '') {
+    if (this.state.redirect !== '')
       return <Redirect push to={this.state.redirect} />
-    }
-    const buttons = []
-    // buttons.push({ icon: 'bell', name: 'notifications', onClick: () => {} })
-    buttons.push({ icon: 'plus', name: 'add', onClick: () => {} })
+    const buttons = [
+      {
+        icon: 'plus',
+        name: this.state.add ? 'chevron-up' : 'add',
+        onClick: () => this.setState({ add: !this.state.add }),
+      },
+    ]
+    if (this.props.user?.notificationCount)
+      buttons.unshift({
+        icon: 'bell',
+        name: 'notifications',
+        onClick: () => this.setState({ redirect: '/notifications' }),
+        // @ts-ignore
+        badge: { color: '#900000', text: this.props.user?.notificationCount },
+      })
 
     return (
       <>
@@ -31,6 +53,11 @@ export default class HomeList extends Component<IPageProps> {
           label={Language.get('overview')}
           simple={true}
           buttons={buttons}
+        />
+        <AddBar
+          placeholder={Language.get('listname')}
+          visible={this.state.add}
+          onChange={name => this.addList(name)}
         />
         <ScrollView
           onScroll={e =>
@@ -42,34 +69,13 @@ export default class HomeList extends Component<IPageProps> {
             height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
           }}
         >
-          {this.props.user?.lists.map((list, index) => {
+          {this.state.user?.lists.map((list, index) => {
             const title =
               index > 0 ? (
                 <Text style={HomeStyles.heading}>
                   {list.ownerName}
                   {Language.get('list_suffix')}
                 </Text>
-              ) : (
-                <></>
-              )
-
-            const add =
-              index === 1337 ? (
-                <Pressable>
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      color: '#ffffff33',
-                      height: 30,
-                      lineHeight: 30,
-                      textDecorationStyle: 'solid',
-                      textDecorationColor: '#fff',
-                      textDecorationLine: 'underline',
-                    }}
-                  >
-                    new List
-                  </Text>
-                </Pressable>
               ) : (
                 <></>
               )
@@ -87,7 +93,6 @@ export default class HomeList extends Component<IPageProps> {
 
                   return <Moveable key={item.name} {...moveable} />
                 })}
-                {add}
               </View>
             )
           })}
