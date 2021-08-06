@@ -1,16 +1,46 @@
-/* eslint-disable no-nested-ternary */
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
-import { Pressable, View, Text } from 'react-native'
+import { Pressable, View, StyleSheet } from 'react-native'
 import { SvgXml } from 'react-native-svg'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import APIFriends from './helper/API/APIFriends'
+import { mailRegex } from './helper/Constants'
 import QRScanner from './pages/QRScanner'
 
 interface IQRCodeScanned {
   onSuccess: (_email: string) => void
   onFail: () => void
 }
+
+const QRCodeStyles = StyleSheet.create({
+  container: { backgroundColor: '#fff', width: '100%', height: 200 },
+  scannerBox: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: 200,
+    overflow: 'hidden',
+  },
+  button: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    height: 50,
+    width: 50,
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 25,
+  },
+  icon: {
+    height: 50,
+    width: 50,
+    lineHeight: 50,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 25,
+  },
+})
 
 export default class QRCode extends Component<IQRCodeScanned> {
   state = {
@@ -32,77 +62,39 @@ export default class QRCode extends Component<IQRCodeScanned> {
   }
 
   render() {
-    return (
-      <View style={{ backgroundColor: '#fff', width: '100%', height: 200 }}>
-        {
-          this.state.scanner ? (
-            <View
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: 200,
-              }}
-            >
-              <QRScanner
-                onScan={text => {
-                  if (
-                    text.match(
-                      /^([a-zA-Z0-9_.-]+)@([a-zA-Z0-9_.-]+)\.([a-zA-Z0-9_.-]{2,4})$/
-                    )
-                  ) {
-                    this.props.onSuccess(text)
-                  } else {
-                    this.props.onFail()
-                  }
-                  this.setState({ scanner: false })
-                }}
-              />
-            </View>
-          ) : this.state.qrcode !== '' ? (
-            <SvgXml xml={this.state.qrcode} width="100%" height="100%" />
-          ) : (
-            <Text></Text>
-          )
-          // <Text>{this.state.qrcode}</Text>
-          // <ImageBackground
-          //   source={{ uri: this.state.qrcode }}
-          //   style={{ width: 100, height: 100, backgroundColor: '#eee' }}
-          // />
-        }
-        <Pressable
-          style={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10,
-            height: 50,
-            width: 50,
-            borderColor: '#000',
-            borderWidth: 1,
-            borderRadius: 25,
-          }}
-          //   to="/qrscanner"
-          onPress={() => {
-            this.setState({ scanner: true })
-            setTimeout(() => {
-              if (this.state.scanner) {
-                this.setState({ scanner: false })
-              }
-            }, 10 * 1000)
-          }}
-        >
-          <Icon
-            style={{
-              height: 50,
-              width: 50,
-              lineHeight: 50,
-              textAlign: 'center',
-              textAlignVertical: 'center',
-              fontSize: 25,
+    let QRContent = <></>
+
+    if (this.state.qrcode !== '')
+      QRContent = <SvgXml xml={this.state.qrcode} width="100%" height="100%" />
+
+    if (this.state.scanner)
+      QRContent = (
+        <View style={QRCodeStyles.scannerBox}>
+          <QRScanner
+            onScan={text => {
+              if (text.match(mailRegex)) this.props.onSuccess(text)
+              else this.props.onFail()
+              this.setState({ scanner: false })
             }}
-            name="camera"
           />
+        </View>
+      )
+
+    const pressable = {
+      style: QRCodeStyles.button,
+      onPress: () => {
+        this.setState({ scanner: true })
+        setTimeout(() => {
+          if (this.state.scanner) this.setState({ scanner: false })
+        }, 10 * 1000)
+      },
+    }
+
+    return (
+      <View style={QRCodeStyles.container}>
+        {QRContent}
+        <Pressable {...pressable}>
+          <Icon style={QRCodeStyles.icon} name="camera" />
         </Pressable>
       </View>
     )
