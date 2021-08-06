@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
 import { View, ImageBackground } from 'react-native'
 import BottomNavigation from '../components/BottomNavigation'
@@ -11,6 +12,15 @@ import HomeRecipes from './Home/HomeRecipes'
 export default class Home extends Component<IPageProps> {
   state = {
     active: 0,
+  }
+
+  async componentDidMount() {
+    let active: string | null = await AsyncStorage.getItem('activeHomePage')
+    if (active === null) {
+      active = '0'
+      await AsyncStorage.setItem('activeHomePage', active)
+    }
+    this.setState({ active: parseInt(active, 10) })
   }
 
   render() {
@@ -38,8 +48,9 @@ export default class Home extends Component<IPageProps> {
         </View>
         <BottomNavigation
           active={this.state.active}
-          navUpdate={active => {
+          navUpdate={async active => {
             this.setState({ active })
+            await AsyncStorage.setItem('activeHomePage', active.toString())
           }}
         />
       </View>
