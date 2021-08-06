@@ -8,7 +8,7 @@ import Row from './Row'
 
 export default class BottomNavigation extends Component<IBottomNavigationProps> {
   state = {
-    active: 0,
+    active: this.props.active,
     items: [
       {
         name: Language.get('overview'),

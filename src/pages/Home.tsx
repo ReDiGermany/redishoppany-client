@@ -37,6 +37,7 @@ export default class Home extends Component<IPageProps> {
           </ImageBackground>
         </View>
         <BottomNavigation
+          active={this.state.active}
           navUpdate={active => {
             this.setState({ active })
           }}
