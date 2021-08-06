@@ -17,11 +17,13 @@ import Language from '../../language/Language'
 // @ts-ignore
 import recipeImageNotFound from '../../../assets/recipe_not_found.jpg'
 import { Redirect } from '../../Router/react-router'
+import AddBar from '../../components/AddBar'
 
 export default class Recipes extends Component<IPageProps, IRecipesState> {
   state: IRecipesState = {
     recipes: [],
     redirect: '',
+    showOnly: '',
   }
 
   async componentDidMount() {
@@ -42,6 +44,7 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
       style: imageStyle,
       source: item.image,
     })
+    let renderedItems = 0
 
     return (
       <ScrollView style={{ height: GlobalStyles().contentHeight }}>
@@ -56,17 +59,46 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
             },
           ]}
         />
-        {this.state.recipes.map((item, index) => (
-          <Link key={index} to={`/recipe/${item.id}`}>
-            <View style={imageBox}>
-              <Image {...image(item)} />
-              <View style={textBox}>
-                <Text style={nameBox}>{item.name}</Text>
-                <Text style={timeBox}>{item.time}</Text>
+        <AddBar
+          onType={showOnly => this.setState({ showOnly })}
+          placeholder={Language.get('search')}
+          autoFocus={false}
+        />
+        {this.state.recipes.map((item, index) => {
+          if (
+            this.state.showOnly !== '' &&
+            !item.name.match(this.state.showOnly)
+          )
+            return <View key={index}></View>
+
+          renderedItems++
+
+          return (
+            <Link key={index} to={`/recipe/${item.id}`}>
+              <View style={imageBox}>
+                <Image {...image(item)} />
+                <View style={textBox}>
+                  <Text style={nameBox}>{item.name}</Text>
+                  <Text style={timeBox}>{item.time}</Text>
+                </View>
               </View>
-            </View>
-          </Link>
-        ))}
+            </Link>
+          )
+        })}
+        {renderedItems === 0 && (
+          <Text
+            style={{
+              color: '#fff',
+              textAlign: 'center',
+              opacity: 0.5,
+              fontWeight: 'bold',
+              textDecorationStyle: 'solid',
+              textDecorationLine: 'underline',
+            }}
+          >
+            {Language.get('no_recipe_found')}
+          </Text>
+        )}
       </ScrollView>
     )
   }

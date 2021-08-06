@@ -12,24 +12,27 @@ export default class AddBar extends Component<IAddBarProps> {
 
   save() {
     this.setState({ value: '' })
-    this.props.onChange(this.state.value)
+    this.props.onChange?.(this.state.value)
   }
 
   render() {
-    if (!this.props.visible) return <></>
+    if (!(this.props.visible ?? true)) return <></>
 
     const textInput: any = {
       value: this.state.value,
-      autoFocus: true,
+      autoFocus: this.props.autoFocus ?? true,
       placeholder: this.props.placeholder,
       placeholderTextColor: '#ffffff30',
       autoCapitalize: 'none',
       onSubmitEditing: () => this.save(),
       style: AddBarStyles.input,
-      onChangeText: (value: string) => this.setState({ value }),
+      onChangeText: (value: string) => {
+        this.props.onType?.(value)
+        this.setState({ value })
+      },
     }
 
-    if (this.props.type === 'email') {
+    if ((this.props.type ?? 'text') === 'email') {
       textInput.textContentType = 'emailAddress'
       textInput.keyboardType = 'email-address'
       textInput.autoCompleteType = 'off'

@@ -1,7 +1,9 @@
 export default interface IAddBarProps {
-  visible: boolean
+  autoFocus?: boolean
+  visible?: boolean
   placeholder: string
-  type: 'email' | 'text'
+  type?: 'email' | 'text'
   icon?: string
-  onChange: (text: string) => void
+  onChange?: (text: string) => void
+  onType?: (text: string) => void
 }
