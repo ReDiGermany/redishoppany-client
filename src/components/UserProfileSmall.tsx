@@ -7,7 +7,11 @@ import ColumnStyle from '../styles/ColumnStyle'
 import { profileStyle } from '../styles/SidebarStyle'
 import Row from './Row'
 
-export default class UserProfileSmall extends Component<IPageProps> {
+interface IUserProfileSmall extends IPageProps {
+  solid?: boolean
+}
+
+export default class UserProfileSmall extends Component<IUserProfileSmall> {
   render() {
     const icon = {
       style: profileStyle.bell,
@@ -15,7 +19,11 @@ export default class UserProfileSmall extends Component<IPageProps> {
     }
 
     return (
-      <Row style={{}}>
+      <Row
+        style={{
+          ...(this.props.solid ?? false ? {} : { backgroundColor: '#202020' }),
+        }}
+      >
         <View style={profileStyle.image}></View>
         <View style={ColumnStyle}>
           <Text style={profileStyle.name}>

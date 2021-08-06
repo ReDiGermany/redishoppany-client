@@ -20,7 +20,7 @@ const profileName = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
-    marginTop: 35,
+    marginTop: 25,
   },
 }).row
 const profileImage = StyleSheet.create({
@@ -29,7 +29,7 @@ const profileImage = StyleSheet.create({
     borderRadius: 50,
     height: 50,
     width: 50,
-    margin: 30,
+    margin: 20,
     marginRight: 10,
   },
 }).row
