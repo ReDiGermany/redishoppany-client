@@ -54,9 +54,6 @@ export default class MoveableText extends Component<IMoveableTextProps> {
     }
 
     const link = {
-      // to: this.props.to ?? '#',
-      // activeOpacity: 1,
-      // component: TouchableOpacity,
       style: RowFlexStyle,
     }
 
@@ -75,7 +72,6 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       style.borderBottomLeftRadius = 10
       style.borderBottomRightRadius = 10
     }
-    console.log(this.props.text, this.props.last)
 
     const box = {
       style,
@@ -84,37 +80,15 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       onTouchEnd,
       onTouchCancel: onTouchEnd,
       onTouchStart,
-      onResponderEnd: () => {
-        this.props.onRelease?.()
-        // console.log("onResponderEnd");
-      },
-      onResponderMove: (e: any) => {
-        // console.log("onResponderMove");
-        this.props.handle?.(e)
-      },
-      onResponderStart: () => {
-        // console.log("onResponderStart");
-      },
-      // onResponderTerminationRequest: () => {
-      //   console.log("onResponderTerminationRequest");
-      // },
-      onResponderTerminate: () => {
-        this.props.onRelease?.()
-        // console.log("onResponderTerminate");
-      },
+      onResponderEnd: () => this.props.onRelease?.(),
+      onResponderMove: (e: any) => this.props.handle?.(e),
+      onResponderTerminate: () => this.props.onRelease?.(),
       onResponderRelease: () => {
-        // console.log("onResponderRelease");
         this.props.onRelease?.()
         this.props.stop?.()
       },
-      onResponderGrant: (e: any) => {
-        // console.log("onResponderGrant");
-        onResponderGrant(e)
-      },
-      onResponderReject: () => {
-        // console.log("onResponderReject");
-        this.props.onRelease?.()
-      },
+      onResponderGrant: (e: any) => onResponderGrant(e),
+      onResponderReject: () => this.props.onRelease?.(),
     }
 
     return (
