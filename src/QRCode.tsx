@@ -18,10 +18,15 @@ export default class QRCode extends Component<IQRCodeScanned> {
     qrcode: '',
   }
 
+  constructor(props: IQRCodeScanned) {
+    super(props)
+    ;(async () => {
+      this.setState({ qrcode: await AsyncStorage.getItem('qrcode') })
+    })()
+  }
+
   async componentDidMount() {
-    let qrcode = await AsyncStorage.getItem('qrcode')
-    this.setState({ qrcode })
-    qrcode = await APIFriends.qr()
+    const qrcode = await APIFriends.qr()
     this.setState({ qrcode })
     await AsyncStorage.setItem('qrcode', qrcode)
   }
