@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Text, View, Dimensions, Pressable, ScrollView } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import Moveable from '../../components/Moveable/Moveable'
 import Row from '../../components/Row'
 import IMoveableProps from '../../interfaces/IMoveableProps'
@@ -14,6 +13,7 @@ import HomeStyles from '../../styles/HomeStyles'
 export default class HomeList extends Component<IPageProps> {
   state = {
     redirect: '',
+    isTop: true,
   }
 
   render() {
@@ -26,12 +26,22 @@ export default class HomeList extends Component<IPageProps> {
 
     return (
       <>
-        <ScrollView style={{ height: GlobalStyles().contentHeight }}>
-          <Navigation
-            label={Language.get('overview')}
-            simple={true}
-            buttons={buttons}
-          />
+        <Navigation
+          solid={this.state.isTop}
+          label={Language.get('overview')}
+          simple={true}
+          buttons={buttons}
+        />
+        <ScrollView
+          onScroll={e =>
+            this.setState({
+              isTop: e.nativeEvent.contentOffset.y <= 0,
+            })
+          }
+          style={{
+            height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
+          }}
+        >
           {this.props.user?.lists.map((list, index) => {
             const title =
               index > 0 ? (
@@ -104,28 +114,6 @@ export default class HomeList extends Component<IPageProps> {
             />
           </Row>
         </ScrollView>
-        {/* <Pressable
-          style={{
-            position: 'absolute',
-            bottom: 10,
-            right: 10,
-            height: 50,
-            width: 50,
-            backgroundColor: '#46deb3',
-            borderRadius: 50,
-          }}
-        >
-          <Icon
-            style={{
-              width: 50,
-              height: 50,
-              textAlign: 'center',
-              textAlignVertical: 'center',
-              fontSize: 20,
-            }}
-            name="plus"
-          />
-        </Pressable> */}
       </>
     )
   }

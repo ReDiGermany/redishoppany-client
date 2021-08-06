@@ -21,6 +21,7 @@ export default class Foodplan extends Component<IPageProps> {
       { prefix: 'MO', name: '', empty: true },
     ],
     refreshing: false,
+    isTop: true,
   }
 
   render() {
@@ -32,9 +33,22 @@ export default class Foodplan extends Component<IPageProps> {
     // }
 
     return (
-      <ScrollView style={{ height: GlobalStyles().contentHeight }}>
-        <View>
-          <Navigation label={Language.get('foodlist')} simple={true} />
+      <View>
+        <Navigation
+          solid={this.state.isTop}
+          label={Language.get('foodlist')}
+          simple={true}
+        />
+        <ScrollView
+          onScroll={e =>
+            this.setState({
+              isTop: e.nativeEvent.contentOffset.y <= 0,
+            })
+          }
+          style={{
+            height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
+          }}
+        >
           {/* <SafeAreaView
             style={{
               height: GlobalStyles().contentHeight,
@@ -84,8 +98,8 @@ export default class Foodplan extends Component<IPageProps> {
           })}
           {/* </ScrollView> */}
           {/* </SafeAreaView> */}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     )
   }
 }
