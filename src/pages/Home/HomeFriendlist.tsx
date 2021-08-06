@@ -162,6 +162,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
               <ListHeader color="#111" text={Language.get('friends')} />
               {this.state.list.friends.map((friend: IFriend, index) => (
                 <Moveable
+                  key={`friend_${friend.id}`}
                   name={`${friend.firstName} ${friend.lastName}`}
                   onDelete={() => this.removeFriend(friend)}
                   last={index === this.state.list.friends.length - 1}
@@ -178,6 +179,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
               />
               {this.state.list.incomming.map((friend: IFriend, index) => (
                 <Moveable
+                  key={`inc_${friend.id}`}
                   name={`${friend.firstName} ${friend.lastName}`}
                   onDelete={() => this.denyInvite(friend)}
                   last={index === this.state.list.incomming.length - 1}
@@ -202,6 +204,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
               />
               {this.state.list.outgoing.map((friend: IFriend, index) => (
                 <Moveable
+                  key={`out_${friend.id}`}
                   name={`${friend.firstName} ${friend.lastName}`}
                   onDelete={() => this.cancleInvite(friend)}
                   last={index === this.state.list.outgoing.length - 1}
