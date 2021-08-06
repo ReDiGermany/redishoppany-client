@@ -18,6 +18,7 @@ import IAPIUserMe from './interfaces/IAPIUserMe'
 import APIUser from './helper/API/APIUser'
 import EditRecipe from './pages/EditRecipe/EditRecipe'
 import Home from './pages/Home'
+import AddToFoodplan from './pages/AddToFoodplan'
 
 interface IIndexProps {}
 interface IIndexState {
@@ -54,6 +55,9 @@ export default class Index extends Component<IIndexProps, IIndexState> {
               <View>
                 <Route path="/about">
                   <About user={this.state.user} />
+                </Route>
+                <Route path="/foodplan/add">
+                  <AddToFoodplan user={this.state.user} />
                 </Route>
                 <Route path="/foodplan">
                   <Foodplan user={this.state.user} />
