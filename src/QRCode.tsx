@@ -1,46 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { Component } from 'react'
-import { Pressable, View, StyleSheet } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { SvgXml } from 'react-native-svg'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import APIFriends from './helper/API/APIFriends'
 import { mailRegex } from './helper/Constants'
+import IQRCodeScanned from './IQRCodeScanned'
 import QRScanner from './pages/QRScanner'
-
-interface IQRCodeScanned {
-  onSuccess: (_email: string) => void
-  onFail: () => void
-}
-
-const QRCodeStyles = StyleSheet.create({
-  container: { backgroundColor: '#fff', width: '100%', height: 200 },
-  scannerBox: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: 200,
-    overflow: 'hidden',
-  },
-  button: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    height: 50,
-    width: 50,
-    borderColor: '#000',
-    borderWidth: 1,
-    borderRadius: 25,
-  },
-  icon: {
-    height: 50,
-    width: 50,
-    lineHeight: 50,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 25,
-  },
-})
+import QRCodeStyles from './QRCodeStyles'
 
 export default class QRCode extends Component<IQRCodeScanned> {
   state = {
