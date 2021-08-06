@@ -13,18 +13,19 @@ import IPageState from '../../interfaces/IPageState'
 import IFriend from '../../interfaces/IFriend'
 import Language from '../../language/Language'
 import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
+import { Redirect } from '../../Router/react-router'
 
 export default class Friends extends Component<IPageProps, IPageState> {
   state = {
     refreshing: false,
     isTop: true,
-    qr: false,
     add: false,
     list: {
       friends: [],
       incomming: [],
       outgoing: [],
     },
+    redirect: '',
   }
 
   constructor(props: IPageProps) {
@@ -110,23 +111,29 @@ export default class Friends extends Component<IPageProps, IPageState> {
   }
 
   render() {
+    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
+
+    const buttons = [
+      {
+        icon: this.state.add ? 'chevron-up' : 'plus',
+        name: 'add',
+        onClick: () => this.setState({ add: !this.state.add }),
+      },
+    ]
+    buttons.unshift({
+      icon: 'bell',
+      name: 'notifications',
+      onClick: () => this.setState({ redirect: '/notifications' }),
+      // @ts-ignore
+      badge: { color: '#900000', text: '1' },
+    })
+
     const navigation = {
       label: this.props.user?.profile.firstName ?? 'User',
       subTitle: this.props.user?.profile.email ?? 'someone@email.tld',
       simple: true,
       solid: this.state.isTop,
-      buttons: [
-        {
-          icon: this.state.qr ? 'chevron-up' : 'qrcode',
-          name: 'qr',
-          onClick: () => this.setState({ qr: !this.state.qr, add: false }),
-        },
-        {
-          icon: this.state.add ? 'chevron-up' : 'plus',
-          name: 'add',
-          onClick: () => this.setState({ add: !this.state.add, qr: false }),
-        },
-      ],
+      buttons,
     }
 
     const scrollView = {
@@ -155,7 +162,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
         <Navigation {...navigation} />
         <ScrollView {...scrollView}>
           <AddBar {...addBar} type="email" />
-          {this.state.qr && <QRCode {...qrCode} />}
+          <QRCode {...qrCode} />
 
           {this.state.list.friends.length > 0 && (
             <>
