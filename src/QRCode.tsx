@@ -5,9 +5,9 @@ import { SvgXml } from 'react-native-svg'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import APIFriends from './helper/API/APIFriends'
 import { mailRegex } from './helper/Constants'
-import IQRCodeScanned from './IQRCodeScanned'
+import IQRCodeScanned from './interfaces/IQRCodeScanned'
 import QRScanner from './pages/QRScanner'
-import QRCodeStyles from './QRCodeStyles'
+import QRCodeStyles from './styles/QRCodeStyles'
 
 export default class QRCode extends Component<IQRCodeScanned> {
   state = {
