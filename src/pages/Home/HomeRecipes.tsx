@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, View, Image, Text } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Link } from 'react-router-native'
 import APIRecipe from '../../helper/API/APIRecipe'
 import IPageProps from '../../interfaces/IPageProps'
@@ -26,12 +27,23 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
     showOnly: '',
   }
 
+  constructor(props: IPageProps) {
+    super(props)
+    ;(async () => {
+      const recipes = await AsyncStorage.getItem('recipeList')
+      if (recipes !== null) {
+        this.setState({ recipes: JSON.parse(recipes) })
+      }
+    })()
+  }
+
   async componentDidMount() {
     const recipes = await APIRecipe.list()
     recipes.forEach((item, idx) => {
       if (item.image === '') recipes[idx].image = recipeImageNotFound
       else recipes[idx].image = { uri: item.image }
     })
+    await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
     this.setState({ recipes })
   }
 
