@@ -17,7 +17,7 @@ import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
 export default class Friends extends Component<IPageProps, IPageState> {
   state = {
     refreshing: false,
-    isTop: false,
+    isTop: true,
     qr: false,
     add: false,
     list: {
