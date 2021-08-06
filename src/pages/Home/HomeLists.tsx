@@ -79,13 +79,11 @@ export default class HomeList extends Component<IPageProps> {
                 {title}
                 {list.items.map(item => {
                   const moveable: IMoveableProps = {
-                    // onDelete: undefined,
                     large: true,
                     name: item.name,
                     onClick: () =>
                       this.setState({ redirect: `/list/${item.id}` }),
                   }
-                  // if (index === 0) moveable.onDelete = () => {}
 
                   return <Moveable key={item.name} {...moveable} />
                 })}
@@ -97,6 +95,7 @@ export default class HomeList extends Component<IPageProps> {
           <Moveable
             name={Language.get('settings')}
             centerText={true}
+            large={true}
             onClick={() => this.setState({ redirect: '/settings' })}
           />
           <Row style={{ marginTop: 10, marginBottom: 30 }}>
@@ -104,12 +103,14 @@ export default class HomeList extends Component<IPageProps> {
               style={{ width: Dimensions.get('window').width / 2 - 20 }}
               name={Language.get('about')}
               centerText={true}
+              large={true}
               onClick={() => this.setState({ redirect: '/about' })}
             />
             <Moveable
               style={{ width: Dimensions.get('window').width / 2 - 20 }}
               name={Language.get('imprint')}
               centerText={true}
+              large={true}
               onClick={() => this.setState({ redirect: '/imprint' })}
             />
           </Row>
