@@ -12,6 +12,7 @@ import APIFriends from '../../helper/API/APIFriends'
 import IPageState from '../../interfaces/IPageState'
 import IFriend from '../../interfaces/IFriend'
 import Language from '../../language/Language'
+import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
 
 export default class Friends extends Component<IPageProps, IPageState> {
   state = {
@@ -36,27 +37,85 @@ export default class Friends extends Component<IPageProps, IPageState> {
 
   async componentDidMount() {
     const list = await APIFriends.list()
+    this.update(list)
+  }
+
+  update(list: IAPIFriendsList) {
     this.setState({ list })
-    await AsyncStorage.setItem('friendlist', JSON.stringify(list))
+    ;(async () => {
+      await AsyncStorage.setItem('friendlist', JSON.stringify(list))
+    })()
   }
 
-  cancleInvite(id: number) {
-    console.log('cancleInvite', id)
+  removePending(friend: IFriend) {
+    const { list } = this.state
+
+    list.incomming.forEach((value: IFriend, idx) => {
+      if (value.id === friend.id) list.incomming.splice(idx, 1)
+    })
+
+    list.outgoing.forEach((value: IFriend, idx) => {
+      if (value.id === friend.id) list.outgoing.splice(idx, 1)
+    })
+
+    return list
   }
 
-  acceptFriend(id: number) {
-    console.log('acceptFriend', id)
+  cancleInvite(friend: IFriend) {
+    const list = this.removePending(friend)
+
+    ;(async () => {
+      await APIFriends.cancel(friend.id)
+    })()
+    this.update(list)
   }
 
-  removeFriend(id: number) {
-    console.log('removeFriend', id)
+  denyInvite(friend: IFriend) {
+    const list = this.removePending(friend)
+
+    ;(async () => {
+      await APIFriends.deny(friend.id)
+    })()
+    this.update(list)
+  }
+
+  acceptFriend(friend: IFriend) {
+    const list = this.removePending(friend)
+    // @ts-ignore should be possible #never
+    list.friends.push(friend)
+    ;(async () => {
+      await APIFriends.accept(friend.id)
+    })()
+    this.update(list)
+  }
+
+  removeFriend(friend: IFriend) {
+    const { list } = this.state
+
+    list.friends.forEach((item: IFriend, idx) => {
+      if (item.id === friend.id) {
+        list.friends.splice(idx, 1)
+      }
+    })
+    ;(async () => {
+      await APIFriends.delete(friend.id)
+    })()
+    this.update(list)
   }
 
   addFriend(email: string) {
-    console.log('addFriend', email)
+    ;(async () => {
+      await APIFriends.add(email)
+    })()
   }
 
   render() {
+    console.log({
+      outgoing: this.state.list.outgoing.length,
+      incomming: this.state.list.incomming.length,
+      friends: this.state.list.friends.length,
+    })
+
     return (
       <View>
         <Navigation
@@ -112,7 +171,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
               {this.state.list.friends.map((friend: IFriend, index) => (
                 <Moveable
                   name={`${friend.firstName} ${friend.lastName}`}
-                  onDelete={() => this.removeFriend(friend.id)}
+                  onDelete={() => this.removeFriend(friend)}
                   last={index === this.state.list.friends.length - 1}
                 />
               ))}
@@ -127,14 +186,14 @@ export default class Friends extends Component<IPageProps, IPageState> {
               {this.state.list.incomming.map((friend: IFriend, index) => (
                 <Moveable
                   name={`${friend.firstName} ${friend.lastName}`}
-                  onDelete={() => this.cancleInvite(friend.id)}
+                  onDelete={() => this.denyInvite(friend)}
                   last={index === this.state.list.incomming.length - 1}
                   buttons={[
                     {
                       name: 'accept',
                       color: '#0F0',
                       icon: 'check',
-                      onPress: () => this.acceptFriend(friend.id),
+                      onPress: () => this.acceptFriend(friend),
                     },
                   ]}
                 />
@@ -150,7 +209,7 @@ export default class Friends extends Component<IPageProps, IPageState> {
               {this.state.list.outgoing.map((friend: IFriend, index) => (
                 <Moveable
                   name={`${friend.firstName} ${friend.lastName}`}
-                  onDelete={() => this.cancleInvite(friend.id)}
+                  onDelete={() => this.cancleInvite(friend)}
                   last={index === this.state.list.outgoing.length - 1}
                 />
               ))}
