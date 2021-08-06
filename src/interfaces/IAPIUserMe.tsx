@@ -1,3 +1,5 @@
+import IAPIUserMeLists from './IAPIUserMeLists'
+
 export default interface IAPIUserMe {
   profile: {
     firstName: string
@@ -5,13 +7,7 @@ export default interface IAPIUserMe {
     email: string
     confirmed: boolean
   }
-  lists: [
-    {
-      owner: boolean
-      ownerName: string
-      items: { id: number; name: string; count: number }[]
-    }
-  ]
+  lists: IAPIUserMeLists[]
   notificationCount: number
   recipeCount: number
   foodplanCount: number
