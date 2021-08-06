@@ -45,19 +45,28 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
       source: item.image,
     })
     let renderedItems = 0
+    const buttons = [
+      {
+        icon: 'plus',
+        name: 'add',
+        onClick: () => this.setState({ redirect: '/recipe/add' }),
+      },
+    ]
+    if (this.props.user?.notificationCount)
+      buttons.unshift({
+        icon: 'bell',
+        name: 'notifications',
+        onClick: () => this.setState({ redirect: '/notifications' }),
+        // @ts-ignore
+        badge: { color: '#900000', text: this.props.user?.notificationCount },
+      })
 
     return (
       <ScrollView style={{ height: GlobalStyles().contentHeight }}>
         <Navigation
           label={Language.get('recipes')}
           simple={true}
-          buttons={[
-            {
-              icon: 'plus',
-              name: 'add',
-              onClick: () => this.setState({ redirect: '/recipe/add' }),
-            },
-          ]}
+          buttons={buttons}
         />
         <AddBar
           onType={showOnly => this.setState({ showOnly })}
