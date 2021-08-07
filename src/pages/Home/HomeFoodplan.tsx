@@ -12,7 +12,6 @@ import Navigation from '../../Navigation'
 import Language from '../../language/Language'
 import APIFoodplan from '../../helper/API/APIFoodplan'
 import IFoodplanItem from '../../interfaces/IFoodplanItem'
-import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import APIRecipe from '../../helper/API/APIRecipe'
 import IFoodplanPageState from '../../interfaces/IFoodplanPageState'
 import { Redirect } from '../../Router/react-router'
@@ -46,6 +45,17 @@ export default class Foodplan extends Component<
     this.setState({ plan, recipes })
     await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
     await AsyncStorage.setItem('foodplanList', JSON.stringify(plan))
+  }
+
+  remove(item: IFoodplanItem) {
+    ;(async () => {
+      await APIFoodplan.remove(item.id)
+      const { plan } = this.state
+      plan.forEach((itm: IFoodplanItem, idx) => {
+        if (itm.id === item.id) plan.splice(idx, 1)
+      })
+      this.setState({ plan })
+    })()
   }
 
   render() {
@@ -92,41 +102,14 @@ export default class Foodplan extends Component<
             height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
           }}
         >
-          {this.state.plan.map((item: IFoodplanItem) => {
-            if (false) {
-              return (
-                <Moveable
-                  // @ts-ignore
-                  key={`${item.name}-${item.prefix}`}
-                  // @ts-ignore
-                  prefix={item.prefix}
-                  dropdownItems={[
-                    { label: 'Schnitzel', value: '1' },
-                    { label: 'nix', value: '2' },
-                  ]}
-                  dropdownSelected={() => {}}
-                />
-              )
-            }
-
-            return (
-              <Moveable
-                key={item.id}
-                onDelete={() => {}}
-                prefix={item.date}
-                name={item.recipe.name}
-              />
-            )
-          })}
-          <Moveable
-            key="addItem"
-            prefix={nextDay}
-            dropdownItems={this.state.recipes.map((item: IAPIRecipe) => ({
-              label: item.name,
-              value: item.id.toString(),
-            }))}
-            dropdownSelected={() => {}}
-          />
+          {this.state.plan.map((item: IFoodplanItem) => (
+            <Moveable
+              key={item.id}
+              onDelete={() => this.remove(item)}
+              prefix={item.date}
+              name={item.recipe.name}
+            />
+          ))}
         </ScrollView>
       </View>
     )
