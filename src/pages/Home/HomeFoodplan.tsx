@@ -61,10 +61,6 @@ export default class Foodplan extends Component<
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
-    const nextDay = this.state.plan.length
-      ? this.state.plan[this.state.plan.length - 1]
-      : Language.get('tomorrow')
-
     const buttons = [
       {
         icon: 'plus',
