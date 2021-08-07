@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { ScrollView, View, Image, Text, Pressable } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Link } from 'react-router-native'
 import APIRecipe from '../helper/API/APIRecipe'
 import IPageProps from '../interfaces/IPageProps'
 import GlobalStyles from '../styles/GlobalStyles'
