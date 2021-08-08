@@ -1,4 +1,5 @@
 import API from '../API'
+import { IAPIShareFoodplanFriends } from '../../interfaces/IAPIShareFoodplanFriends'
 
 export default class APIShareFoodplan {
   public static async invite(id: number): Promise<boolean> {
@@ -21,6 +22,14 @@ export default class APIShareFoodplan {
 
   public static async revoke(id: number): Promise<boolean> {
     const ret = (await API.delete)<boolean>(`/share/foodplan/revoke/${id}`)
+
+    return ret
+  }
+
+  public static async list(): Promise<IAPIShareFoodplanFriends[]> {
+    const ret = (await API.delete)<IAPIShareFoodplanFriends[]>(
+      `/share/foodplan/invite`
+    )
 
     return ret
   }
