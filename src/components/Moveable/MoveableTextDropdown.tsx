@@ -7,7 +7,8 @@ import IMoveableTextDropdownProps from '../../interfaces/IMoveableTextDropdownPr
 export default class MoveableTextDropdown extends Component<IMoveableTextDropdownProps> {
   state = {
     selectedItem:
-      this.props.dropdownItems.length && this.props.dropdownItems[0].value,
+      this.props.selectedItem ??
+      (this.props.dropdownItems.length && this.props.dropdownItems[0].value),
   }
 
   render() {

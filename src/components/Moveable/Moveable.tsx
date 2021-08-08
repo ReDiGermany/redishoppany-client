@@ -118,6 +118,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
       last: this.props.last,
       disabled: this.props.disabled,
       boldText: this.props.boldText,
+      selectedItem: this.props.selectedItem,
     }
 
     const getIcon = (

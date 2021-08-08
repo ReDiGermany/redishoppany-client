@@ -19,4 +19,5 @@ export default interface IMoveableTextProps {
   last?: boolean
   disabled?: boolean
   boldText?: boolean
+  selectedItem?: number
 }

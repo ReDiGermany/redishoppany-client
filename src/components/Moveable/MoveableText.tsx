@@ -101,6 +101,7 @@ export default class MoveableText extends Component<IMoveableTextProps> {
               <MoveableTextDropdown
                 dropdownItems={this.props.dropdownItems}
                 dropdownSelected={this.props.dropdownSelected}
+                selectedItem={this.props.selectedItem}
               />
             )}
           </Pressable>
