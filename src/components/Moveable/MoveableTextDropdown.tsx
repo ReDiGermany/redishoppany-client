@@ -21,11 +21,6 @@ export default class MoveableTextDropdown extends Component<IMoveableTextDropdow
             this.setState({ selectedItem: itemValue })
           }
         >
-          <Picker.Item
-            style={{ color: '#fff' }}
-            enabled={false}
-            label="Select"
-          />
           {this.props.dropdownItems.map(item => (
             <Picker.Item style={{ color: '#fff' }} key={item.value} {...item} />
           ))}
