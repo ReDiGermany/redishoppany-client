@@ -19,6 +19,7 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       clearTimeout(this.state.longPressTimer)
       this.props.onRelease?.()
     }
+
     const onTouchStart = () => {
       this.props.touchStart?.()
       this.setState({
@@ -27,6 +28,7 @@ export default class MoveableText extends Component<IMoveableTextProps> {
         }, 1000),
       })
     }
+
     const onResponderGrant = (e: any) => {
       const initX = parseInt(e.nativeEvent.pageX, 10)
       const initY = parseInt(e.nativeEvent.pageY, 10)
@@ -86,15 +88,9 @@ export default class MoveableText extends Component<IMoveableTextProps> {
                 <Text
                   style={{
                     ...textStyle.text,
-                    ...(this.props.centerText
-                      ? { textAlign: 'center', width: '100%', paddingLeft: 0 }
-                      : {}),
-                    ...(this.props.disabled ?? false
-                      ? { opacity: 0.3, height: 30, lineHeight: 30 }
-                      : {}),
-                    ...(this.props.boldText ?? false
-                      ? { fontWeight: 'bold' }
-                      : {}),
+                    ...(this.props.centerText && textStyle.centerText),
+                    ...(this.props.disabled && textStyle.disabled),
+                    ...(this.props.boldText && textStyle.boldText),
                   }}
                 >
                   {this.props.text}

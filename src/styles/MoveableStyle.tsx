@@ -108,8 +108,8 @@ const textPrefix = StyleSheet.create({
   },
 }).row
 
-const textBoxCheckIcon = StyleSheet.create({
-  row: {
+const styles = StyleSheet.create({
+  checkIcon: {
     height: 50,
     lineHeight: 50,
     width: 50,
@@ -117,12 +117,28 @@ const textBoxCheckIcon = StyleSheet.create({
     color: '#4ae53a',
     textAlign: 'center',
   },
-}).row
+  centerText: {
+    textAlign: 'center',
+    width: '100%',
+    paddingLeft: 0,
+  },
+  disabled: {
+    opacity: 0.3,
+    height: 30,
+    lineHeight: 30,
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+})
 
 const textStyle = {
   box: textBox,
   text: textBoxText,
-  checkIcon: textBoxCheckIcon,
+  checkIcon: styles.checkIcon,
+  centerText: styles.centerText,
+  disabled: styles.disabled,
+  boldText: styles.boldText,
   right: {
     button: buttonIcon,
   },
