@@ -1,6 +1,6 @@
 import API from '../API'
-import IFoodplanItem from '../../interfaces/IFoodplanItem'
 import IFoodplanPlan from '../../interfaces/IFoodplanPlan'
+import IFoodplanKw from '../../interfaces/IFoodplanKw'
 
 export default class APIFoodplan {
   public static async add(recipe: number): Promise<boolean> {
@@ -16,8 +16,8 @@ export default class APIFoodplan {
     return ret
   }
 
-  public static async list(): Promise<IFoodplanItem[]> {
-    const ret = (await API.get)<IFoodplanItem[]>('/foodplan')
+  public static async list(): Promise<IFoodplanKw[]> {
+    const ret = (await API.get)<IFoodplanKw[]>('/foodplan')
 
     return ret
   }

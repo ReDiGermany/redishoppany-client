@@ -1,10 +1,12 @@
-import IFoodplanItem from './IFoodplanItem'
 import IAPIRecipe from './IAPIRecipe'
+import IFoodplanItem from './IFoodplanItem'
+import IFoodplanKw from './IFoodplanKw'
 
 export default interface IFoodplanPageState {
-  plan: IFoodplanItem[]
+  plan: IFoodplanKw[]
   refreshing: boolean
   isTop: boolean
   recipes: IAPIRecipe[]
+  item?: IFoodplanItem
   redirect: string
 }
