@@ -18,4 +18,5 @@ export default interface IMoveableProps {
   large?: boolean
   centerText?: boolean
   last?: boolean
+  disabled?: boolean
 }

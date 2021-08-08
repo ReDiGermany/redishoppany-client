@@ -116,6 +116,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
       centerText: this.props.centerText,
       large: this.props.large,
       last: this.props.last,
+      disabled: this.props.disabled,
     }
 
     const getIcon = (
@@ -157,6 +158,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
             ? { marginLeft: 10, marginRight: 10 }
             : { marginLeft: 0, marginRight: 0 }),
           ...borderStyle,
+          ...(this.props.disabled ?? false ? { height: 30 } : {}),
         }}
       >
         {this.state.posX > 0 && this.props.onDelete && (

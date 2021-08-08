@@ -77,7 +77,10 @@ export default class MoveableText extends Component<IMoveableTextProps> {
           <Pressable onPress={this.props.onClick} {...link}>
             <Row>
               {this.props.prefix && (
-                <MoveableTextPrefix text={this.props.prefix} />
+                <MoveableTextPrefix
+                  disabled={this.props.disabled}
+                  text={this.props.prefix}
+                />
               )}
               {this.props.text && (
                 <Text
@@ -85,6 +88,9 @@ export default class MoveableText extends Component<IMoveableTextProps> {
                     ...textStyle.text,
                     ...(this.props.centerText
                       ? { textAlign: 'center', width: '100%', paddingLeft: 0 }
+                      : {}),
+                    ...(this.props.disabled ?? false
+                      ? { opacity: 0.3, height: 30, lineHeight: 30 }
                       : {}),
                   }}
                 >
