@@ -21,10 +21,10 @@ export default class HomeList extends Component<IPageProps> {
     lists: this.props.user?.lists ?? [],
   }
 
-  constructor(props: IPageProps) {
-    super(props)
-    console.log(props)
-  }
+  // constructor(props: IPageProps) {
+  // super(props)
+  // console.log(props)
+  // }
 
   shouldComponentUpdate(nextProps: Readonly<IPageProps>) {
     if (

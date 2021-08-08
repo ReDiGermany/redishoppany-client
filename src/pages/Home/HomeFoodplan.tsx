@@ -74,7 +74,7 @@ export default class Foodplan extends Component<
     this.setState({ plan, recipes })
     await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
     await AsyncStorage.setItem('foodplanList', JSON.stringify(plan))
-    console.log(plan)
+    // console.log(plan)
     this.setState({ refreshing: false })
   }
 
@@ -86,7 +86,7 @@ export default class Foodplan extends Component<
         icon: 'plus',
         name: 'add',
         onClick: () => {
-          console.log('add')
+          // console.log('add')
           this.setState({ redirect: '/foodplan/add' })
         },
       },
