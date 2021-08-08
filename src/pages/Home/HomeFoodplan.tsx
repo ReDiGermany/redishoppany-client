@@ -137,6 +137,7 @@ export default class Foodplan extends Component<
                         key={`add_${item.date}`}
                         name={`ADD RECIPE for ${this.parseDate(item.date)}`}
                         centerText={true}
+                        boldText={true}
                       />
                     )
                   }

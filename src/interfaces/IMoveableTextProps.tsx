@@ -18,4 +18,5 @@ export default interface IMoveableTextProps {
   large?: boolean
   last?: boolean
   disabled?: boolean
+  boldText?: boolean
 }

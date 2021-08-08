@@ -19,4 +19,5 @@ export default interface IMoveableProps {
   centerText?: boolean
   last?: boolean
   disabled?: boolean
+  boldText?: boolean
 }

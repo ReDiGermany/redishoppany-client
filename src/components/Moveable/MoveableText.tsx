@@ -92,6 +92,9 @@ export default class MoveableText extends Component<IMoveableTextProps> {
                     ...(this.props.disabled ?? false
                       ? { opacity: 0.3, height: 30, lineHeight: 30 }
                       : {}),
+                    ...(this.props.boldText ?? false
+                      ? { fontWeight: 'bold' }
+                      : {}),
                   }}
                 >
                   {this.props.text}
