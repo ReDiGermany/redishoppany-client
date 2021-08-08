@@ -27,7 +27,7 @@ export default class APIShareFoodplan {
   }
 
   public static async list(): Promise<IAPIShareFoodplanFriends[]> {
-    const ret = (await API.delete)<IAPIShareFoodplanFriends[]>(
+    const ret = (await API.get)<IAPIShareFoodplanFriends[]>(
       `/share/foodplan/invite`
     )
 
