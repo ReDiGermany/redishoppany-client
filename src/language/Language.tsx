@@ -31,6 +31,17 @@ export default class Language {
   }
 
   public get(name: string) {
+    if (this.file === undefined) {
+      console.error('[LANGUAGE::ERROR] file unknown')
+
+      return `{${name}}`
+    }
+    if (!(name in this.file)) {
+      console.error('[LANGUAGE::ERROR]', name)
+
+      return `{${name}}`
+    }
+
     return this.file[name]
   }
 
