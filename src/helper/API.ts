@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export default class API {
   private initAPI() {
     this.axiosInstance = axios.create({
-      baseURL: 'http://192.168.0.30:3001/',
+      baseURL: 'https://api.lisha-app.com',
       timeout: 1000,
     })
   }
@@ -37,8 +37,11 @@ export default class API {
 
   public static async get<T>(uri: string): Promise<T> {
     const auth = await API.getAuth()
-    // console.log('GETTING', uri, auth)
+    // console.log('GETTING::init', uri, auth)
     const ret = await API.axiosInstance.get(uri, auth)
+    // console.log('GETTING::ret', ret)
+    if (ret.status < 200 || ret.status > 299)
+      console.log('AXIOS::ERROR::GET', { uri, auth, ret })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
@@ -49,6 +52,8 @@ export default class API {
     const auth = await API.getAuth()
     // console.log('POSTING', uri, data, auth)
     const ret = await API.axiosInstance.post(uri, data, auth)
+    if (ret.status < 200 || ret.status > 299)
+      console.log('AXIOS::ERROR::POST', { uri, auth, ret, data })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
@@ -59,6 +64,8 @@ export default class API {
     const auth = await API.getAuth()
     // console.log('DELETING', uri, auth)
     const ret = await API.axiosInstance.delete(uri, auth)
+    if (ret.status < 200 || ret.status > 299)
+      console.log('AXIOS::ERROR::DELETE', { uri, auth, ret })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
@@ -69,6 +76,8 @@ export default class API {
     const auth = await API.getAuth()
     // console.log('PUTTING', uri, data, auth)
     const ret = await API.axiosInstance.put(uri, data, auth)
+    if (ret.status < 200 || ret.status > 299)
+      console.log('AXIOS::ERROR::PUT', { uri, auth, ret, data })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
