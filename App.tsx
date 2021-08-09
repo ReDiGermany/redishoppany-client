@@ -12,12 +12,18 @@ export default class App extends Component {
     loggedin: false,
   }
 
+  constructor(props: any) {
+    super(props)
+
+    Language.getInstance().init('de')
+  }
+
   async componentDidMount() {
     try {
       const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
       const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
       const me = await APIUser.getMeByToken(token, email)
-      Language.getInstance().init('de')
+      // console.log({ email, token, me })
       this.setState({ checkMeDone: true, loggedin: me !== undefined })
     } catch (error) {
       this.setState({ checkMeDone: true, loggedin: false })
