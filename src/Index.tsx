@@ -96,7 +96,7 @@ export default class Index extends Component<IIndexProps, IIndexState> {
                   <Logout user={this.state.user} />
                 </Route>
                 <Route exact path="/">
-                  {/* TODO: Add default list id? */}
+                  {/* <Settings user={this.state.user} /> */}
                   <Home user={this.state.user} />
                 </Route>
               </View>
