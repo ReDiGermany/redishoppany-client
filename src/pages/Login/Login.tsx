@@ -51,7 +51,6 @@ export default class Login extends Component<ILoginProps, ILoginState> {
   }
 
   render() {
-    console.log('render')
     let boxHeight = 30 // welcome text
     boxHeight += 2 * (GlobalStyles().barHeight + 30) // input fields
     boxHeight += GlobalStyles().barHeight + 30 // login btn
