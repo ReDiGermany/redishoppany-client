@@ -51,7 +51,7 @@ export default class Login extends Component<ILoginProps, ILoginState> {
   }
 
   render() {
-    let boxHeight = 30 // welcome text
+    let boxHeight = 30 + 20 // welcome text + subline text
     boxHeight += 2 * (GlobalStyles().barHeight + 30) // input fields
     boxHeight += GlobalStyles().barHeight + 30 // login btn
     boxHeight += 40 // heading
@@ -104,15 +104,15 @@ export default class Login extends Component<ILoginProps, ILoginState> {
               <LoginTitle />
               <LoginInputEmail
                 onSubmit={checkLogin}
-                onChange={(email, emailValid) => {
+                onChange={(email, emailValid) =>
                   this.setState({ email, emailValid })
-                }}
+                }
               />
               <LoginInputPassword
                 onSubmit={checkLogin}
-                onChange={(password, passwordValid) => {
+                onChange={(password, passwordValid) =>
                   this.setState({ password, passwordValid })
-                }}
+                }
               />
               <LoginButton
                 checking={this.state.loginChecking}
