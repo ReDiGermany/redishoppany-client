@@ -22,5 +22,6 @@
   "login.anonym": "anonym nutzen",
   "login.noaccount": "kein Account?",
   "login.via": "oder einloggen mit",
+  "app.loading": "Lädt...",
   "notifications": "Benachrichtigungen"
 }
