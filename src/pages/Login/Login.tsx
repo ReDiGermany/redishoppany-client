@@ -132,10 +132,12 @@ export default class Login extends Component<ILoginProps, ILoginState> {
               <LoginHeading title={Language.get('login.noaccount')} />
               <Row>
                 <LoginLongButton
+                  onPress={() => {}}
                   icon="user-plus"
                   title={Language.get('register')}
                 />
                 <LoginLongButton
+                  onPress={() => {}}
                   icon="user-secret"
                   title={Language.get('login.anonym')}
                 />

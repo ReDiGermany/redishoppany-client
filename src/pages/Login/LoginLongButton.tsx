@@ -2,23 +2,19 @@ import React, { Component } from 'react'
 import { Pressable, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import loginStyles from '../../styles/LoginStyle'
+import ILoginLongButtonProps from '../../interfaces/ILoginLongButtonProps'
 
-interface ILoginSocialButtonProps {
-  title: string
-  icon?: string
-}
-
-export default class LoginLongButton extends Component<ILoginSocialButtonProps> {
+export default class LoginLongButton extends Component<ILoginLongButtonProps> {
   render() {
     return (
-      <Pressable style={[loginStyles().longButton]} onPress={() => {}}>
+      <Pressable style={loginStyles().longButton} onPress={this.props.onPress}>
         <Text style={loginStyles().vendorLoginText}>
           {this.props.icon && (
             <Icon
-              style={[
-                loginStyles().vendorLoginIcon,
-                loginStyles().LongButtonIcon,
-              ]}
+              style={{
+                ...loginStyles().vendorLoginIcon,
+                ...loginStyles().LongButtonIcon,
+              }}
               name={this.props.icon}
             />
           )}{' '}
