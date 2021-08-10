@@ -20,6 +20,7 @@ import Home from './pages/Home'
 import AddToFoodplan from './pages/AddToFoodplan'
 import IIndexProps from './interfaces/IIndexProps'
 import IIndexState from './interfaces/IIndexState'
+import Login from './pages/Login/Login'
 
 export default class Index extends Component<IIndexProps, IIndexState> {
   state = {
@@ -90,6 +91,9 @@ export default class Index extends Component<IIndexProps, IIndexState> {
                 />
                 <Route path="/logout">
                   <Logout user={this.state.user} />
+                </Route>
+                <Route path="/login">
+                  <Login />
                 </Route>
                 <Route exact path="/">
                   {/* <Settings user={this.state.user} /> */}
