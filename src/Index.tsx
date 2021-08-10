@@ -14,16 +14,12 @@ import Notifications from './pages/Notifications'
 import GlobalStyles from './styles/GlobalStyles'
 import Recipe from './pages/Recipe/Recipe'
 import Logout from './pages/Logout'
-import IAPIUserMe from './interfaces/IAPIUserMe'
 import APIUser from './helper/API/APIUser'
 import EditRecipe from './pages/EditRecipe/EditRecipe'
 import Home from './pages/Home'
 import AddToFoodplan from './pages/AddToFoodplan'
-
-interface IIndexProps {}
-interface IIndexState {
-  user?: IAPIUserMe
-}
+import IIndexProps from './interfaces/IIndexProps'
+import IIndexState from './interfaces/IIndexState'
 
 export default class Index extends Component<IIndexProps, IIndexState> {
   state = {
