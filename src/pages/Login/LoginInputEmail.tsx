@@ -4,6 +4,7 @@ import IScreen from '../../interfaces/IScreen'
 import loginStyles from '../../styles/LoginStyle'
 import { ILoginInputEmailProps } from '../../interfaces/ILoginInputEmailProps'
 import { mailRegex } from '../../helper/Constants'
+import Language from '../../language/Language'
 
 export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
   state = {
@@ -30,9 +31,8 @@ export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
 
   render() {
     let style: 'unknown' | 'valid' | 'invalid' = 'unknown'
-    if (this.state.valid !== undefined) {
+    if (this.state.valid !== undefined)
       style = this.state.valid ? 'valid' : 'invalid'
-    }
 
     return (
       <TextInput
@@ -44,7 +44,7 @@ export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
           this.setState({ value, valid })
           this.props.onChange(value, valid)
         }}
-        placeholder="E-Mail"
+        placeholder={Language.get('email')}
         keyboardType="email-address"
       />
     )
