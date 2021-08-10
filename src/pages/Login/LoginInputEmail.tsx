@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import { Dimensions, TextInput } from 'react-native'
 import IScreen from '../../interfaces/IScreen'
 import loginStyles from '../../styles/LoginStyle'
-
-interface ILoginInputEmailProps {
-  onChange: (_text: string, _valid: boolean | undefined) => void
-  onSubmit: () => void
-}
+import { ILoginInputEmailProps } from '../../interfaces/ILoginInputEmailProps'
 
 export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
   state = {
