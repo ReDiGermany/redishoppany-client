@@ -9,8 +9,7 @@ import LoginHeading from './LoginHeading'
 import LoginSocialButton from './LoginSocialButton'
 import LoginLongButton from './LoginLongButton'
 import GlobalStyles from '../../styles/GlobalStyles'
-import { Router } from '../../Router/react-router'
-import Index from '../../Index'
+import { Redirect, Router } from '../../Router/react-router'
 import APIUser from '../../helper/API/APIUser'
 import loginStyles from '../../styles/LoginStyle'
 import Alert from '../../components/Alert'
@@ -79,7 +78,7 @@ export default class Login extends Component<ILoginProps, ILoginState> {
     }
 
     if (this.state.loggedin) {
-      return <Index />
+      return <Redirect to="/" />
     }
 
     const { alert } = this.state
