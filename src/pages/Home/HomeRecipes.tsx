@@ -111,7 +111,10 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
           return (
             <Link key={index} to={`/recipe/${item.id}`}>
               <View style={imageBox}>
-                <Image {...image(item)} />
+                <Image
+                  {...image(item)}
+                  onError={e => console.log('Image Load Error', e)}
+                />
                 <View style={textBox}>
                   <Text style={nameBox}>{item.name}</Text>
                   <Text style={timeBox}>{item.time}</Text>
