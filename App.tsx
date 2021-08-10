@@ -23,11 +23,9 @@ export default class App extends Component {
       const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
       const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
       const me = await APIUser.getMeByToken(token, email)
-      // console.log({ email, token, me })
       this.setState({ checkMeDone: true, loggedin: me !== undefined })
     } catch (error) {
       this.setState({ checkMeDone: true, loggedin: false })
-      // Error retrieving data
     }
   }
 
