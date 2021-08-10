@@ -66,7 +66,11 @@ export default class Foodplan extends Component<
   }
 
   parseDate(date: string) {
-    return ['SO', 'MO', 'DI', 'MI', 'DO', 'FR', 'SA'][new Date(date).getDay()]
+    return Language.get(
+      ['SO', 'MO', 'DI', 'MI', 'DO', 'FR', 'SA'][
+        new Date(date).getDay()
+      ].toLowerCase()
+    )
   }
 
   async refresh() {
