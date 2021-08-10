@@ -3,6 +3,7 @@ import { Dimensions, TextInput } from 'react-native'
 import IScreen from '../../interfaces/IScreen'
 import loginStyles from '../../styles/LoginStyle'
 import { ILoginInputEmailProps } from '../../interfaces/ILoginInputEmailProps'
+import { mailRegex } from '../../helper/Constants'
 
 export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
   state = {
@@ -39,12 +40,7 @@ export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
         style={[loginStyles().input, loginStyles()[style]]}
         onSubmitEditing={this.props.onSubmit}
         onChangeText={value => {
-          const valid =
-            value === ''
-              ? undefined
-              : value.match(
-                  /^([a-zA-Z0-9_.-]+)@([a-zA-Z0-9_.-]+)\.([a-zA-Z0-9_.-]{2,4})$/
-                ) !== null
+          const valid = value !== '' && value.match(mailRegex) !== null
           this.setState({ value, valid })
           this.props.onChange(value, valid)
         }}
