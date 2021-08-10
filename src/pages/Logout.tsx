@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import APIUser from '../helper/API/APIUser'
 import IPageProps from '../interfaces/IPageProps'
-import Login from './Login/Login'
+import { Redirect } from '../Router/react-router'
 
 export default class Logout extends Component<IPageProps> {
   async componentDidMount() {
@@ -9,6 +9,6 @@ export default class Logout extends Component<IPageProps> {
   }
 
   render() {
-    return <Login />
+    return <Redirect to="/login" />
   }
 }
