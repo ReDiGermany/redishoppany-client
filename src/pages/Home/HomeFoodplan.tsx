@@ -19,6 +19,7 @@ import { Redirect } from '../../Router/react-router'
 import ListHeader from '../../ListHeader'
 import IFoodplanKw from '../../interfaces/IFoodplanKw'
 import IMoveableProps from '../../interfaces/IMoveableProps'
+import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 
 export default class Foodplan extends Component<
   IPageProps,
@@ -28,6 +29,7 @@ export default class Foodplan extends Component<
     plan: [],
     recipes: [],
     refreshing: false,
+    suspendFirstRefresh: false,
     isTop: true,
     redirect: '',
     item: undefined,
@@ -75,13 +77,13 @@ export default class Foodplan extends Component<
     await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
     await AsyncStorage.setItem('foodplanList', JSON.stringify(plan))
     // console.log(plan)
-    this.setState({ refreshing: false })
+    this.setState({ refreshing: false, suspendFirstRefresh: true })
   }
 
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
-    const buttons = [
+    const buttons: INavigationPropsButton[] = [
       {
         icon: 'plus',
         name: 'add',
@@ -96,8 +98,10 @@ export default class Foodplan extends Component<
         icon: 'bell',
         name: 'notifications',
         onClick: () => this.setState({ redirect: '/notifications' }),
-        // @ts-ignore
-        badge: { color: '#900000', text: this.props.user?.notificationCount },
+        badge: {
+          color: '#900000',
+          text: this.props.user?.notificationCount.toString(),
+        },
       })
 
     const currentDate = new Date()
@@ -111,7 +115,7 @@ export default class Foodplan extends Component<
           buttons={buttons}
         />
         <RefreshControl
-          refreshing={this.state.refreshing}
+          refreshing={this.state.refreshing && this.state.suspendFirstRefresh}
           onRefresh={() => this.refresh()}
         >
           <ScrollView
