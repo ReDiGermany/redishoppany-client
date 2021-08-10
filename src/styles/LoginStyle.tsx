@@ -5,16 +5,15 @@ import GlobalStyles from './GlobalStyles'
 const loginStyles = () =>
   StyleSheet.create({
     body: {
-      paddingTop: GlobalStyles().statusbarHeight,
       height: GlobalStyles().appHeight,
       backgroundColor: '#202020',
       zIndex: 1,
     },
     input: {
       textAlign: 'center',
-      borderColor: 'rgba(0,0,0,.3)',
+      borderColor: 'rgba(0,0,0,.7)',
       borderWidth: 1,
-      backgroundColor: '#111',
+      backgroundColor: '#111111A0',
       minHeight: GlobalStyles().barHeight,
       width: GlobalStyles().appWidth - 40,
       marginLeft: 20,

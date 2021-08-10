@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, SafeAreaView, Dimensions } from 'react-native'
+import { View, SafeAreaView, Dimensions, ImageBackground } from 'react-native'
 import Row from '../../components/Row'
 import LoginTitle from './LoginTitle'
 import LoginInputEmail from './LoginInputEmail'
@@ -86,55 +86,61 @@ export default class Login extends Component<ILoginProps, ILoginState> {
     return (
       <Router>
         <SafeAreaView style={loginStyles().body}>
-          {!this.state.loginChecking && this.state.alert.text !== '' && (
-            <Alert {...alert} />
-          )}
-          <View
-            style={{
-              maxWidth: 500,
-              height: boxHeight,
-              marginTop: (GlobalStyles().appHeight - boxHeight) / 2,
-            }}
+          <ImageBackground
+            source={require('../../../assets/background.jpg')}
+            resizeMode="cover"
+            style={{ width: GlobalStyles().appWidth }}
           >
-            <LoginTitle />
-            <LoginInputEmail
-              onSubmit={checkLogin}
-              onChange={(email, emailValid) => {
-                this.setState({ email, emailValid })
-              }}
-            />
-            <LoginInputPassword
-              onSubmit={checkLogin}
-              onChange={(password, passwordValid) => {
-                this.setState({ password, passwordValid })
-              }}
-            />
-            <LoginButton
-              checking={this.state.loginChecking}
-              onSubmit={checkLogin}
-              disabled={!(this.state.passwordValid && this.state.emailValid)}
-            />
-
-            <LoginHeading title="or login via" />
+            {!this.state.loginChecking && this.state.alert.text !== '' && (
+              <Alert {...alert} />
+            )}
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'stretch',
+                maxWidth: 500,
+                height: boxHeight,
+                marginTop: (GlobalStyles().appHeight - boxHeight) / 2,
               }}
             >
-              <LoginSocialButton color="#34a853" icon="google" />
-              <LoginSocialButton color="#3b5998" icon="facebook-f" />
-              <LoginSocialButton color="#1da1f2" icon="twitter" />
-              {/* <LoginSocialButton color="#e1306c" icon="instagram" /> */}
-            </View>
+              <LoginTitle />
+              <LoginInputEmail
+                onSubmit={checkLogin}
+                onChange={(email, emailValid) => {
+                  this.setState({ email, emailValid })
+                }}
+              />
+              <LoginInputPassword
+                onSubmit={checkLogin}
+                onChange={(password, passwordValid) => {
+                  this.setState({ password, passwordValid })
+                }}
+              />
+              <LoginButton
+                checking={this.state.loginChecking}
+                onSubmit={checkLogin}
+                disabled={!(this.state.passwordValid && this.state.emailValid)}
+              />
 
-            <LoginHeading title="kein Account?" />
-            <Row>
-              <LoginLongButton icon="user-plus" title="Registrieren" />
-              <LoginLongButton icon="user-secret" title="anonym nutzen" />
-            </Row>
-          </View>
+              <LoginHeading title="or login via" />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'stretch',
+                }}
+              >
+                <LoginSocialButton color="#34a853" icon="google" />
+                <LoginSocialButton color="#3b5998" icon="facebook-f" />
+                <LoginSocialButton color="#1da1f2" icon="twitter" />
+                {/* <LoginSocialButton color="#e1306c" icon="instagram" /> */}
+              </View>
+
+              <LoginHeading title="kein Account?" />
+              <Row>
+                <LoginLongButton icon="user-plus" title="Registrieren" />
+                <LoginLongButton icon="user-secret" title="anonym nutzen" />
+              </Row>
+            </View>
+          </ImageBackground>
         </SafeAreaView>
       </Router>
     )
