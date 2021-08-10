@@ -12,6 +12,7 @@ import {
   nameBox,
   textBox,
   timeBox,
+  notFoundText,
 } from '../../styles/RecipesListStyle'
 import Navigation from '../../Navigation'
 import Language from '../../language/Language'
@@ -20,6 +21,7 @@ import recipeImageNotFound from '../../../assets/recipe_not_found.jpg'
 import { Redirect } from '../../Router/react-router'
 import AddBar from '../../components/AddBar'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
+import IAPIRecipe from '../../interfaces/IAPIRecipe'
 
 export default class Recipes extends Component<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -33,7 +35,16 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
     ;(async () => {
       const recipes = await AsyncStorage.getItem('recipeList')
       if (recipes !== null) {
-        this.setState({ recipes: JSON.parse(recipes) })
+        const rec: IAPIRecipe[] = JSON.parse(recipes)
+        rec.forEach((item, idx) => {
+          if (
+            typeof item.image === 'number' ||
+            ('uri' in item.image && item.image.uri === '')
+          )
+            rec[idx].image = recipeImageNotFound
+          else rec[idx].image = { uri: item.image }
+        })
+        this.setState({ recipes: rec })
       }
     })()
   }
@@ -110,18 +121,7 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
           )
         })}
         {renderedItems === 0 && (
-          <Text
-            style={{
-              color: '#fff',
-              textAlign: 'center',
-              opacity: 0.5,
-              fontWeight: 'bold',
-              textDecorationStyle: 'solid',
-              textDecorationLine: 'underline',
-            }}
-          >
-            {Language.get('no_recipe_found')}
-          </Text>
+          <Text style={notFoundText}>{Language.get('no_recipe_found')}</Text>
         )}
       </ScrollView>
     )
