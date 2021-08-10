@@ -10,12 +10,14 @@ import IPageProps from '../interfaces/IPageProps'
 import Language from '../language/Language'
 import ListHeader from '../ListHeader'
 import Navigation from '../Navigation'
+import { Redirect } from '../Router/react-router'
 import GlobalStyles from '../styles/GlobalStyles'
 
 interface ISettingsState {
   plans: IFoodplanPlan[]
   shareFoodplanBox: boolean
   foodplanFriends: IAPIShareFoodplanFriends[]
+  redirect: string
 }
 
 export default class Settings extends Component<IPageProps, ISettingsState> {
@@ -23,6 +25,7 @@ export default class Settings extends Component<IPageProps, ISettingsState> {
     plans: [],
     foodplanFriends: [],
     shareFoodplanBox: false,
+    redirect: '',
   }
 
   async componentDidMount() {
@@ -44,6 +47,8 @@ export default class Settings extends Component<IPageProps, ISettingsState> {
   }): any {}
 
   render() {
+    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
+
     let activeFoodplan = '0'
     const foodplanDropdown = this.state.plans.map((item: IFoodplanPlan) => {
       const data = {
@@ -79,6 +84,15 @@ export default class Settings extends Component<IPageProps, ISettingsState> {
             boldText={true}
             onClick={() => this.shareFoodplan()}
             last={true}
+          />
+          <Moveable
+            name="Logout"
+            boldText={true}
+            style={{ marginTop: 10 }}
+            onClick={() => {
+              this.setState({ redirect: '/logout' })
+            }}
+            large={true}
           />
         </View>
         <BottomBox
