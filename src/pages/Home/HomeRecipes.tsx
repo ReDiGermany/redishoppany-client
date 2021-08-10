@@ -19,6 +19,7 @@ import Language from '../../language/Language'
 import recipeImageNotFound from '../../../assets/recipe_not_found.jpg'
 import { Redirect } from '../../Router/react-router'
 import AddBar from '../../components/AddBar'
+import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 
 export default class Recipes extends Component<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -57,7 +58,7 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
       source: item.image,
     })
     let renderedItems = 0
-    const buttons = [
+    const buttons: INavigationPropsButton[] = [
       {
         icon: 'plus',
         name: 'add',
@@ -69,8 +70,10 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
         icon: 'bell',
         name: 'notifications',
         onClick: () => this.setState({ redirect: '/notifications' }),
-        // @ts-ignore
-        badge: { color: '#900000', text: this.props.user?.notificationCount },
+        badge: {
+          color: '#900000',
+          text: this.props.user?.notificationCount.toString(),
+        },
       })
 
     return (
