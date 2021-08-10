@@ -18,5 +18,9 @@
   "email": "E-Mail",
   "welcome.headline": "Willkommen bei LiSha",
   "welcome.subline": "deiner List Sharing App",
+  "login.via": "oder einloggen mit",
+  "register": "Registrieren",
+  "login.noaccount": "kein Account?",
+  "login.anonym": "anonym nutzen",
   "notifications": "Benachrichtigungen"
 }

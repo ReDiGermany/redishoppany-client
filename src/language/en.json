@@ -30,5 +30,9 @@
   "login.please": "Login",
   "login": "Go!",
   "login.checking": "Checking login...",
+  "login.via": "or login via",
+  "login.noaccount": "no account?",
+  "register": "register",
+  "login.anonym": "use anonymously",
   "imprint.text": "Angaben gemäß § 5 TMG:\n\nMax Kruggel\nJahnstraße 18\n58511 Lüdenscheid\n\nKontakt:\nTelefon: +49 157 89186966\nE-Mail: kontakt@lisha-app.com"
 }

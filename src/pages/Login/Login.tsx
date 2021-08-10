@@ -18,6 +18,7 @@ import ILoginStateAlert from '../../interfaces/ILoginStateAlert'
 import ILoginState from '../../interfaces/ILoginState'
 import ILoginProps from '../../interfaces/ILoginProps'
 import IScreen from '../../interfaces/IScreen'
+import Language from '../../language/Language'
 
 export default class Login extends Component<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -120,24 +121,24 @@ export default class Login extends Component<ILoginProps, ILoginState> {
                 disabled={!(this.state.passwordValid && this.state.emailValid)}
               />
 
-              <LoginHeading title="or login via" />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'stretch',
-                }}
-              >
+              <LoginHeading title={Language.get('login.via')} />
+              <Row>
                 <LoginSocialButton color="#34a853" icon="google" />
                 <LoginSocialButton color="#3b5998" icon="facebook-f" />
                 <LoginSocialButton color="#1da1f2" icon="twitter" />
                 {/* <LoginSocialButton color="#e1306c" icon="instagram" /> */}
-              </View>
+              </Row>
 
-              <LoginHeading title="kein Account?" />
+              <LoginHeading title={Language.get('login.noaccount')} />
               <Row>
-                <LoginLongButton icon="user-plus" title="Registrieren" />
-                <LoginLongButton icon="user-secret" title="anonym nutzen" />
+                <LoginLongButton
+                  icon="user-plus"
+                  title={Language.get('register')}
+                />
+                <LoginLongButton
+                  icon="user-secret"
+                  title={Language.get('login.anonym')}
+                />
               </Row>
             </View>
           </ImageBackground>
