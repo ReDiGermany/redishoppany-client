@@ -57,6 +57,7 @@ export default class Input extends Component<IInputProps> {
           style={[textBlock, !this.props.prefix && textBlockNoPrefix]}
           autoFocus={this.state.focus}
           placeholder={this.props.textPlaceholder ?? 'Text'}
+          placeholderTextColor={'#ffffff80'}
         />
         <Pressable onPress={onSubmit} style={button}>
           <Icon style={icon} name="check" />
