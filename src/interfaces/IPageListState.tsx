@@ -6,6 +6,7 @@ export default interface IPageListState {
   scrolling: boolean
   bottomBox: boolean
   settings: boolean
+  isTop: boolean
   preventScroll: boolean
   listName: string
   bottomBoxState: number

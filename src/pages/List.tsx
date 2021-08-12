@@ -27,6 +27,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
     lists: [],
     settings: false,
     preventScroll: false,
+    isTop: true,
     bottomBoxState: 0,
     listName: 'Loading...',
   }
@@ -50,7 +51,15 @@ export default class List extends Component<IPageListProps, IPageListState> {
     await this.reloadList()
   }
 
-  setItemBought(item: IShoppingListItem): void {}
+  setItemBought(
+    item: IShoppingListItem,
+    itemindex: number,
+    catindex: number
+  ): void {
+    const { items } = this.state
+    items[catindex].items[itemindex].inCart = true
+    this.setState({ items })
+  }
 
   setOpenSwitchItem(item: IShoppingListItem): void {}
 
@@ -111,6 +120,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
         <Navigation
           user={this.props.user}
           label={this.state.listName}
+          solid={this.state.isTop}
           buttons={[
             {
               name: 'deleteBought',
@@ -139,6 +149,11 @@ export default class List extends Component<IPageListProps, IPageListState> {
                   onRefresh={onRefresh}
                 />
               }
+              onScroll={e =>
+                this.setState({
+                  isTop: e.nativeEvent.contentOffset.y <= 0,
+                })
+              }
               scrollEnabled={!this.state.preventScroll}
               style={svStyles}
             >
@@ -152,14 +167,13 @@ export default class List extends Component<IPageListProps, IPageListState> {
                     {cat.items.map((item, itemindex) => (
                       <Moveable
                         key={`item_${catindex}_${itemindex}`}
-                        visible={item.visible}
                         open={item.open}
                         onDelete={() => {}}
-                        prefix="1"
+                        prefix={item.amount}
                         name={item.name}
-                        onMoving={(left, right) => {
+                        onMoving={(left, right) =>
                           this.setState({ preventScroll: left || right })
-                        }}
+                        }
                         last={itemindex + 1 === cat.items.length}
                         right={[
                           {
@@ -176,9 +190,12 @@ export default class List extends Component<IPageListProps, IPageListState> {
                         buttons={[
                           {
                             name: 'BUY',
-                            icon: 'cart-plus',
-                            color: 'rgba(0,255,0,.5)',
-                            onPress: () => this.setItemBought(item),
+                            icon: item.inCart ? 'times' : 'cart-plus',
+                            color: item.inCart
+                              ? 'rgba(255,0,0,.5)'
+                              : 'rgba(0,255,0,.5)',
+                            onPress: () =>
+                              this.setItemBought(item, itemindex, catindex),
                           },
                         ]}
                       />
