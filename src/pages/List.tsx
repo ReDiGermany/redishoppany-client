@@ -93,10 +93,6 @@ export default class List extends Component<IPageListProps, IPageListState> {
     }
 
     const svStyles: any = {
-      height:
-        GlobalStyles().contentHeight +
-        60 -
-        (this.state.settings ? GlobalStyles().lineHeight * 3.5 : 0),
       overflow: 'hidden',
     }
 
@@ -108,7 +104,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
         resizeMode="cover"
         style={{
           width: GlobalStyles().appWidth,
-          height: GlobalStyles().contentHeight,
+          height: GlobalStyles().appHeight - 50,
         }}
       >
         <Navigation
@@ -127,7 +123,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
         />
         <SafeAreaView
           style={{
-            height: GlobalStyles().contentHeight - 60,
+            height: GlobalStyles().contentHeight - 10,
           }}
         >
           <View
@@ -154,60 +150,12 @@ export default class List extends Component<IPageListProps, IPageListState> {
                     {cat.items.map((item, itemindex) => (
                       <Moveable
                         key={`item_${catindex}_${itemindex}`}
-                        onRelease={() => {
-                          // console.log("release");
-                          let changed = false
-                          const { items } = this.state
-                          eachItem(
-                            catindex,
-                            itemindex,
-                            (_item, current, cindex, iindex) => {
-                              if (!current) {
-                                items[cindex].items[iindex].visible = true
-                                changed = true
-                              }
-                            }
-                          )
-                          if (changed) this.setState({ items })
-                        }}
-                        onLongPress={() => {
-                          // console.log('longpress')
-                          let changed = false
-                          const { items } = this.state
-                          eachItem(
-                            catindex,
-                            itemindex,
-                            (_item, current, cindex, iindex) => {
-                              if (!current) {
-                                items[cindex].items[iindex].visible = false
-                                changed = true
-                              }
-                            }
-                          )
-                          if (changed) this.setState({ items })
-                        }}
-                        onPop={() => {
-                          let changed = false
-                          const { items } = this.state
-                          eachItem(
-                            catindex,
-                            itemindex,
-                            (_item, current, cindex, iindex) => {
-                              if (item.open !== current) {
-                                items[cindex].items[iindex].open = current
-                                changed = true
-                              }
-                            }
-                          )
-                          if (changed) this.setState({ items })
-                        }}
                         visible={item.visible}
                         open={item.open}
                         onDelete={() => {}}
                         prefix="1"
                         name={item.name}
                         last={itemindex + 1 === cat.items.length}
-                        // to="/settings"
                         right={[
                           {
                             icon: 'exchange-alt',
@@ -235,6 +183,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
               })}
             </ScrollView>
           </View>
+
           <Input
             prefix={1}
             onSave={async (name, amount) => {
@@ -247,9 +196,8 @@ export default class List extends Component<IPageListProps, IPageListState> {
             }}
           />
           <BottomBox
-            // animationState={bottomBoxState => this.setState({ bottomBoxState })}
             title="Listen Optionen"
-            style={{ bottom: -50, zIndex: this.state.settings ? 10000 : -1 }}
+            style={{ bottom: 0, zIndex: this.state.settings ? 10000 : -1 }}
             items={[
               {
                 active: false,
