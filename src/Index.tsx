@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { StatusBar } from 'expo-status-bar'
-import { View, StatusBar as sb } from 'react-native'
-import { AppearanceProvider } from 'react-native-appearance'
-import { Router, Route, Redirect } from './Router/react-router'
+import { View } from 'react-native'
+import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
 import Foodplan from './pages/Foodplan'
 import Friends from './pages/Friends'
@@ -11,7 +9,6 @@ import List from './pages/List'
 import Settings from './pages/Settings'
 import Recipes from './pages/Recipes'
 import Notifications from './pages/Notifications'
-import GlobalStyles from './styles/GlobalStyles'
 import Recipe from './pages/Recipe/Recipe'
 import Logout from './pages/Logout'
 import APIUser from './helper/API/APIUser'
@@ -38,76 +35,57 @@ export default class Index extends Component<IIndexProps, IIndexState> {
     if (!this.props.loggedin) return <Redirect to="/login" />
 
     return (
-      <AppearanceProvider>
-        <StatusBar style="auto" />
-        <View
-          style={{
-            height: GlobalStyles().appHeight,
-            backgroundColor: '#202020',
-          }}
-        >
-          <View
-            style={{
-              marginTop: sb.currentHeight ?? 0,
-              height: GlobalStyles().appHeight,
-            }}
-          >
-            <Router>
-              <View>
-                <Route path="/about">
-                  <About user={this.state.user} />
-                </Route>
-                <Route path="/foodplan/add">
-                  <AddToFoodplan user={this.state.user} />
-                </Route>
-                <Route path="/foodplan">
-                  <Foodplan user={this.state.user} />
-                </Route>
-                <Route path="/friends">
-                  <Friends user={this.state.user} />
-                </Route>
-                <Route path="/imprint">
-                  <Imprint user={this.state.user} />
-                </Route>
-                <Route
-                  path="/list/:id"
-                  render={(props: any) => (
-                    <List user={this.state.user} id={props.match.params.id} />
-                  )}
-                ></Route>
-                <Route path="/settings">
-                  <Settings user={this.state.user} />
-                </Route>
-                <Route path="/notifications">
-                  <Notifications user={this.state.user} />
-                </Route>
-                <Route path="/recipes">
-                  <Recipes user={this.state.user} />
-                </Route>
-                <Route path="/recipe/add">
-                  <EditRecipe user={this.state.user} />
-                </Route>
-                <Route
-                  path="/recipe/:id"
-                  render={(props: any) => (
-                    <Recipe user={this.state.user} id={props.match.params.id} />
-                  )}
-                />
-                <Route path="/logout">
-                  <Logout user={this.state.user} />
-                </Route>
-                <Route path="/login">
-                  <Login />
-                </Route>
-                <Route exact path="/">
-                  {/* <Settings user={this.state.user} /> */}
-                  <Home user={this.state.user} />
-                </Route>
-              </View>
-            </Router>
-          </View>
-        </View>
-      </AppearanceProvider>
+      <View>
+        <Route path="/about">
+          <About user={this.state.user} />
+        </Route>
+        <Route path="/foodplan/add">
+          <AddToFoodplan user={this.state.user} />
+        </Route>
+        <Route path="/foodplan">
+          <Foodplan user={this.state.user} />
+        </Route>
+        <Route path="/friends">
+          <Friends user={this.state.user} />
+        </Route>
+        <Route path="/imprint">
+          <Imprint user={this.state.user} />
+        </Route>
+        <Route
+          path="/list/:id"
+          render={(props: any) => (
+            <List user={this.state.user} id={props.match.params.id} />
+          )}
+        ></Route>
+        <Route path="/settings">
+          <Settings user={this.state.user} />
+        </Route>
+        <Route path="/notifications">
+          <Notifications user={this.state.user} />
+        </Route>
+        <Route path="/recipes">
+          <Recipes user={this.state.user} />
+        </Route>
+        <Route path="/recipe/add">
+          <EditRecipe user={this.state.user} />
+        </Route>
+        <Route
+          path="/recipe/:id"
+          render={(props: any) => (
+            <Recipe user={this.state.user} id={props.match.params.id} />
+          )}
+        />
+        <Route path="/logout">
+          <Logout user={this.state.user} />
+        </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route exact path="/">
+          {/* <Settings user={this.state.user} /> */}
+          <Home user={this.state.user} />
+        </Route>
+      </View>
     )
   }
 }
