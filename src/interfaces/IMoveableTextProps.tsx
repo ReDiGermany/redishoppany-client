@@ -20,4 +20,7 @@ export default interface IMoveableTextProps {
   disabled?: boolean
   boldText?: boolean
   selectedItem?: number | string
+  bgOpacity?: string
+  icon?: string
+  fullWidth?: boolean
 }
