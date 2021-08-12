@@ -52,7 +52,7 @@ export default class Navigation extends Component<INavigationProps> {
                 </Text>
               )}
               <Text style={NavigationButtonIconStyle}>
-                <Icon name={item.icon} size={20} />
+                <Icon name={item.icon} size={15} />
               </Text>
             </Pressable>
           ))}

@@ -19,7 +19,7 @@ export default class NavigationTitle extends Component<INavigationTitleProps> {
     const icon = {
       style: NavigationButtonIconStyle,
       name: 'arrow-left',
-      size: 20,
+      size: 15,
       fill: '#fff',
     }
 
