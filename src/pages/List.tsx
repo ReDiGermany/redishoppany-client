@@ -6,31 +6,16 @@ import {
   ScrollView,
   ToastAndroid,
 } from 'react-native'
-import IPageProps from '../interfaces/IPageProps'
 import Navigation from '../Navigation'
 import ListHeader from '../ListHeader'
 import GlobalStyles from '../styles/GlobalStyles'
 import Input from '../Input'
 import Moveable from '../components/Moveable/Moveable'
 import APIShoppingList from '../helper/API/APIShoppingList'
-import IShoppingListCategory from '../interfaces/IShoppingListCategory'
 import BottomBox from '../BottomBox'
 import IShoppingListItem from '../interfaces/IShoppingListItem'
-
-interface IPageListProps extends IPageProps {
-  id: number
-}
-
-interface IPageListState {
-  items: IShoppingListCategory[]
-  refreshing: boolean
-  scrolling: boolean
-  bottomBox: boolean
-  settings: boolean
-  listName: string
-  bottomBoxState: number
-  lists: { onClick: () => void; name: string; active: boolean }[]
-}
+import IPageListState from '../interfaces/IPageListState'
+import IPageListProps from '../interfaces/IPageListProps'
 
 export default class List extends Component<IPageListProps, IPageListState> {
   state: IPageListState = {
