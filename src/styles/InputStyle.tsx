@@ -25,13 +25,14 @@ export const { box, prefixBlock, textBlock, button, icon, textBlockNoPrefix } =
     },
     box: {
       position: 'absolute',
-      bottom: -50,
+      bottom: 0,
       left: 0,
       flexDirection: 'row',
       backgroundColor: '#111',
       height: 50,
       width: GlobalStyles().appWidth,
       paddingHorizontal: 10,
+      zIndex: 999,
     },
     prefixBlock: {
       height: 30,
