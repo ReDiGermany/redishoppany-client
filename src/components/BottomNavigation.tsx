@@ -47,7 +47,7 @@ export default class BottomNavigation extends Component<IBottomNavigationProps> 
       <Row style={BottomNavigationStyle.row}>
         {this.state.items.map((item, index) => (
           <Pressable
-            key={item.name}
+            key={item.name.toString()}
             style={{
               ...BottomNavigationStyle.button,
               ...(this.state.active === index
@@ -76,7 +76,7 @@ export default class BottomNavigation extends Component<IBottomNavigationProps> 
                   : {}),
               }}
             >
-              {item.name}
+              {item.name.toString()}
             </Text>
           </Pressable>
         ))}
