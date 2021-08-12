@@ -10,6 +10,9 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "jsx": "react",
+    "allowJs": true
   }
+  // "include": ["src/components", "src/custom.d.ts"]
 }

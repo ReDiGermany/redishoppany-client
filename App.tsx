@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+import { AppearanceProvider } from 'react-native-appearance'
+import { StatusBar } from 'expo-status-bar'
+import { View, StatusBar as sb } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Index from './src/Index'
-import SplashScreen from './src/SplashScreen'
-import Login from './src/pages/Login/Login'
 import APIUser from './src/helper/API/APIUser'
 import Language from './src/language/Language'
+import GlobalStyles from './src/styles/GlobalStyles'
+import { Router } from './src/Router/react-router'
 
 export default class App extends Component {
   state = {
@@ -30,9 +33,27 @@ export default class App extends Component {
   }
 
   render() {
-    if (!this.state.checkMeDone) return <SplashScreen />
-    if (!this.state.loggedin) return <Login />
-
-    return <Index />
+    return (
+      <AppearanceProvider>
+        <StatusBar style="auto" />
+        <View
+          style={{
+            height: GlobalStyles().appHeight,
+            backgroundColor: '#202020',
+          }}
+        >
+          <View
+            style={{
+              marginTop: sb.currentHeight ?? 0,
+              height: GlobalStyles().appHeight,
+            }}
+          >
+            <Router>
+              <Index {...this.state} />
+            </Router>
+          </View>
+        </View>
+      </AppearanceProvider>
+    )
   }
 }

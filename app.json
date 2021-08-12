@@ -1,6 +1,5 @@
 {
   "expo": {
-    "userInterfaceStyle": "dark",
     "name": "LiSha - List Sharing",
     "slug": "lisha",
     "version": "1.0.0",
@@ -11,32 +10,14 @@
       "resizeMode": "contain",
       "backgroundColor": "#111111"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 10
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
     "ios": {
       "supportsTablet": true,
-      "userInterfaceStyle": "dark",
       "bundleIdentifier": "com.redigermany.lisha"
     },
     "android": {
-      "userInterfaceStyle": "dark",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "build": {
-        "babel": {
-          "include": [
-            "react-router-native"
-          ]
-        }
       }
     }
   }
