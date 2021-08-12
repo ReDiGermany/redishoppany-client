@@ -80,28 +80,6 @@ export default class List extends Component<IPageListProps, IPageListState> {
       await this.reloadList()
     }
 
-    const eachItem = (
-      catindex: number,
-      itemindex: number,
-      callback: (
-        _item: any,
-        _current: boolean,
-        _cindex: number,
-        _iindex: number
-      ) => void
-    ) => {
-      this.state.items?.forEach((cat, ccatindex) => {
-        cat.items.forEach((item, citemindex) => {
-          callback(
-            item,
-            ccatindex === catindex && citemindex === itemindex,
-            ccatindex,
-            citemindex
-          )
-        })
-      })
-    }
-
     const svStyles: any = {
       overflow: 'hidden',
     }
