@@ -15,6 +15,8 @@ export default class Moveable extends React.Component<IMoveableProps> {
     moving: false,
     isLeft: false,
     isRight: false,
+    movingLeft: false,
+    movingRight: false,
   }
 
   initX = 0
@@ -40,7 +42,8 @@ export default class Moveable extends React.Component<IMoveableProps> {
     if (this.state.isLeft && posX > 0) posX = 0
 
     if (!this.state.moving) this.props.onPop?.()
-    this.setState({ posX })
+    this.props.onMoving?.(posX <= -20, posX >= 20)
+    this.setState({ posX, movingLeft: posX <= -20, movingRight: posX >= 20 })
   }
 
   start = (initX: number, initY: number) => {
@@ -75,7 +78,10 @@ export default class Moveable extends React.Component<IMoveableProps> {
     this.setState({
       posX,
       moving: false,
+      movingLeft: posX <= -20,
+      movingRight: posX >= 20,
     })
+    this.props.onMoving?.(posX <= -20, posX >= 20)
   }
 
   componentDidUpdate(old: IMoveableProps) {

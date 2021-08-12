@@ -26,6 +26,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
     bottomBox: false,
     lists: [],
     settings: false,
+    preventScroll: false,
     bottomBoxState: 0,
     listName: 'Loading...',
   }
@@ -138,6 +139,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
                   onRefresh={onRefresh}
                 />
               }
+              scrollEnabled={!this.state.preventScroll}
               style={svStyles}
             >
               {this.state.items.map((cat, catindex) => {
@@ -155,6 +157,9 @@ export default class List extends Component<IPageListProps, IPageListState> {
                         onDelete={() => {}}
                         prefix="1"
                         name={item.name}
+                        onMoving={(left, right) => {
+                          this.setState({ preventScroll: left || right })
+                        }}
                         last={itemindex + 1 === cat.items.length}
                         right={[
                           {

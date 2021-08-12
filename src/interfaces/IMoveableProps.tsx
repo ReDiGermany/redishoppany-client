@@ -24,4 +24,5 @@ export default interface IMoveableProps {
   bgOpacity?: string
   fullWidth?: boolean
   icon?: string
+  onMoving?: (left: boolean, right: boolean) => void
 }
