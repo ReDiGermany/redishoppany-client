@@ -73,11 +73,6 @@ export default class HomeList extends Component<IPageProps> {
           simple={true}
           buttons={buttons}
         />
-        <AddBar
-          placeholder={Language.get('listname')}
-          visible={this.state.add}
-          onChange={name => this.addList(name)}
-        />
         <ScrollView
           onScroll={e =>
             this.setState({
@@ -88,6 +83,11 @@ export default class HomeList extends Component<IPageProps> {
             height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
           }}
         >
+          <AddBar
+            placeholder={Language.get('listname')}
+            visible={this.state.add}
+            onChange={name => this.addList(name)}
+          />
           {this.state.lists.map((list, index) => {
             const title =
               index > 0 ? (
