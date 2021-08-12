@@ -6,6 +6,7 @@ import Row from '../../components/Row'
 import APIShoppingList from '../../helper/API/APIShoppingList'
 import APIUser from '../../helper/API/APIUser'
 import IMoveableProps from '../../interfaces/IMoveableProps'
+import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
 import Navigation from '../../Navigation'
@@ -49,7 +50,7 @@ export default class HomeList extends Component<IPageProps> {
   render() {
     if (this.state.redirect !== '')
       return <Redirect push to={this.state.redirect} />
-    const buttons = [
+    const buttons: INavigationPropsButton[] = [
       {
         icon: 'plus',
         name: this.state.add ? 'chevron-up' : 'add',
@@ -61,8 +62,10 @@ export default class HomeList extends Component<IPageProps> {
         icon: 'bell',
         name: 'notifications',
         onClick: () => this.setState({ redirect: '/notifications' }),
-        // @ts-ignore
-        badge: { color: '#900000', text: this.props.user?.notificationCount },
+        badge: {
+          color: '#900000',
+          text: this.props.user?.notificationCount.toString(),
+        },
       })
 
     return (
