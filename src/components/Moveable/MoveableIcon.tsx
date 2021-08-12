@@ -11,6 +11,7 @@ interface IMoveableIconProps {
   moving: boolean
   isLeft: boolean
   isRight: boolean
+  last?: boolean
   color: string
   index: number
   // right?: { icon: string; color: string; click: () => void }[];
@@ -31,7 +32,14 @@ export default class MoveableIcon extends Component<IMoveableIconProps> {
     // console.log(icon)
 
     return (
-      <View style={rightIconStyle.box(width, right, this.props.color)}>
+      <View
+        style={rightIconStyle.box(
+          width,
+          right,
+          this.props.color,
+          this.props.last
+        )}
+      >
         <Pressable onPress={this.props.click}>
           <Icon {...icon} />
         </Pressable>

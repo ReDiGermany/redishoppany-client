@@ -126,7 +126,8 @@ export default class Moveable extends React.Component<IMoveableProps> {
 
     const getIcon = (
       item: { icon: string; color: string; click: () => void },
-      index: number
+      index: number,
+      last: boolean
     ) => {
       const moveableIcon = {
         key: index,
@@ -134,6 +135,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
         index,
         ...item,
         ...this.state,
+        last,
       }
 
       if (this.state.posX < 0) return <MoveableIcon {...moveableIcon} />
@@ -174,7 +176,9 @@ export default class Moveable extends React.Component<IMoveableProps> {
           />
         )}
         <MoveableText {...moveableText} />
-        {this.props.right?.map((item, index) => getIcon(item, index))}
+        {this.props.right?.map((item, index) =>
+          getIcon(item, index, index === 0)
+        )}
       </Pressable>
     )
   }

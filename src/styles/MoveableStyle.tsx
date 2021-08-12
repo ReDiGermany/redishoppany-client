@@ -75,7 +75,7 @@ const buttonIcon = (color: string) =>
     },
   }).box
 
-const iconBox = (width: number, right: number, color: string) =>
+const iconBox = (width: number, right: number, color: string, last?: boolean) =>
   StyleSheet.create({
     row: {
       height: GlobalStyles().lineHeight,
@@ -84,6 +84,8 @@ const iconBox = (width: number, right: number, color: string) =>
       position: 'absolute',
       top: 0,
       right,
+      borderTopRightRadius: last ? 5 : 0,
+      borderBottomRightRadius: last ? 5 : 0,
     },
   }).row
 
