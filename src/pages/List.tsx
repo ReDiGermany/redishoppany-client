@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { View, RefreshControl, SafeAreaView, ScrollView } from 'react-native'
+import {
+  View,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  ToastAndroid,
+} from 'react-native'
 import IPageProps from '../interfaces/IPageProps'
 import Navigation from '../Navigation'
 import ListHeader from '../ListHeader'
@@ -9,6 +15,7 @@ import Moveable from '../components/Moveable/Moveable'
 import APIShoppingList from '../helper/API/APIShoppingList'
 import IShoppingListCategory from '../interfaces/IShoppingListCategory'
 import BottomBox from '../BottomBox'
+import IShoppingListItem from '../interfaces/IShoppingListItem'
 
 interface IPageListProps extends IPageProps {
   id: number
@@ -19,7 +26,10 @@ interface IPageListState {
   refreshing: boolean
   scrolling: boolean
   bottomBox: boolean
-  lists: { onClick: () => void; name: string }[]
+  settings: boolean
+  listName: string
+  bottomBoxState: number
+  lists: { onClick: () => void; name: string; active: boolean }[]
 }
 
 export default class List extends Component<IPageListProps, IPageListState> {
@@ -29,20 +39,44 @@ export default class List extends Component<IPageListProps, IPageListState> {
     scrolling: true,
     bottomBox: false,
     lists: [],
+    settings: false,
+    bottomBoxState: 0,
+    listName: 'Loading...',
   }
+
+  // Delete all items
+  deleteItems() {
+    // TODO: API Call
+    // APIShoppingList.
+  }
+
+  async deleteBoughtItems() {
+    await APIShoppingList.deleteBoughtItems(this.props.id)
+    this.reloadList()
+  }
+
+  showShareContext() {}
+
+  delteList() {}
 
   async componentDidMount() {
     await this.reloadList()
   }
 
+  setItemBought(item: IShoppingListItem): void {}
+
+  setOpenSwitchItem(item: IShoppingListItem): void {}
+
   async reloadList() {
     this.setState({ refreshing: true })
-    const test = await APIShoppingList.list()
-    console.log('lists', test)
+    // const test = await APIShoppingList.list()
+    // console.log('lists', test)
 
     const data = await APIShoppingList.singleList(this.props.id)
-    this.setState({ items: data.categories })
+    // console.log(data)
+    this.setState({ items: data.categories, listName: data.name })
     this.setState({ refreshing: false })
+    // console.log(this.state)
   }
 
   render() {
@@ -72,154 +106,205 @@ export default class List extends Component<IPageListProps, IPageListState> {
       })
     }
 
+    const svStyles: any = {
+      height:
+        GlobalStyles().contentHeight +
+        60 -
+        (this.state.settings ? GlobalStyles().lineHeight * 3.5 : 0),
+      overflow: 'hidden',
+    }
+
+    // console.log(svStyles)
+
     return (
-      <View>
+      <View style={{ height: GlobalStyles().contentHeight }}>
         <Navigation
           user={this.props.user}
-          label={`MainList${this.props.id}`}
-          // badge="10"
+          label={this.state.listName}
           buttons={[
-            {
-              name: 'deleteAll',
-              onClick: () => {
-                console.log('deleteAll')
-              },
-              icon: 'trash',
-            },
             {
               name: 'deleteBought',
               onClick: () => {
-                console.log('deleteBought')
+                // console.log('settings')
+                this.setState({ settings: !this.state.settings })
               },
-              icon: 'cart-arrow-down',
+              icon: 'ellipsis-v',
             },
           ]}
         />
         <SafeAreaView
           style={{
-            height:
-              GlobalStyles().appHeight -
-              GlobalStyles().barHeight -
-              GlobalStyles().statusbarHeight -
-              50,
+            height: GlobalStyles().contentHeight - 60,
           }}
         >
-          <ScrollView
-            onScrollBeginDrag={() => {
-              this.setState({ scrolling: true })
-              console.log('scroll start')
+          <View
+            style={{
+              height: GlobalStyles().contentHeight - 60,
             }}
-            onScrollEndDrag={() => {
-              this.setState({ scrolling: false })
-              console.log('scroll stop')
-            }}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={onRefresh}
-              />
-            }
           >
-            {this.state.items.map((cat, catindex) => (
-              <View key={`cat_${catindex}`}>
-                <ListHeader text={cat.name} />
-                {cat.items.map((item, itemindex) => (
-                  <Moveable
-                    key={`item_${catindex}_${itemindex}`}
-                    onRelease={() => {
-                      // console.log("release");
-                      let changed = false
-                      const { items } = this.state
-                      eachItem(
-                        catindex,
-                        itemindex,
-                        (_item, current, cindex, iindex) => {
-                          if (!current) {
-                            items[cindex].items[iindex].visible = true
-                            changed = true
-                          }
-                        }
-                      )
-                      if (changed) this.setState({ items })
-                    }}
-                    onLongPress={() => {
-                      console.log('longpress')
-                      let changed = false
-                      const { items } = this.state
-                      eachItem(
-                        catindex,
-                        itemindex,
-                        (_item, current, cindex, iindex) => {
-                          if (!current) {
-                            items[cindex].items[iindex].visible = false
-                            changed = true
-                          }
-                        }
-                      )
-                      if (changed) this.setState({ items })
-                    }}
-                    onPop={() => {
-                      let changed = false
-                      const { items } = this.state
-                      eachItem(
-                        catindex,
-                        itemindex,
-                        (_item, current, cindex, iindex) => {
-                          if (item.open !== current) {
-                            items[cindex].items[iindex].open = current
-                            changed = true
-                          }
-                        }
-                      )
-                      if (changed) this.setState({ items })
-                    }}
-                    visible={item.visible}
-                    open={item.open}
-                    onDelete={() => {}}
-                    prefix="1"
-                    name={item.name}
-                    // to="/settings"
-                    right={[
-                      {
-                        icon: 'exchange-alt',
-                        color: '#332f99',
-                        click: () => {
-                          this.setState({ bottomBox: true })
-                          console.log('click sub item')
-                        },
-                      },
-                    ]}
-                    buttons={[
-                      {
-                        name: 'BUY',
-                        icon: 'cart-plus',
-                        color: 'rgba(0,255,0,.5)',
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
-            ))}
-          </ScrollView>
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={onRefresh}
+                />
+              }
+              style={svStyles}
+            >
+              {this.state.items.map((cat, catindex) => {
+                if (cat.items.length === 0)
+                  return <View key={`cat_${catindex}`}></View>
+
+                return (
+                  <View key={`cat_${catindex}`}>
+                    <ListHeader color="#4ae53a" text={cat.name} />
+                    {cat.items.map((item, itemindex) => (
+                      <Moveable
+                        key={`item_${catindex}_${itemindex}`}
+                        onRelease={() => {
+                          // console.log("release");
+                          let changed = false
+                          const { items } = this.state
+                          eachItem(
+                            catindex,
+                            itemindex,
+                            (_item, current, cindex, iindex) => {
+                              if (!current) {
+                                items[cindex].items[iindex].visible = true
+                                changed = true
+                              }
+                            }
+                          )
+                          if (changed) this.setState({ items })
+                        }}
+                        onLongPress={() => {
+                          // console.log('longpress')
+                          let changed = false
+                          const { items } = this.state
+                          eachItem(
+                            catindex,
+                            itemindex,
+                            (_item, current, cindex, iindex) => {
+                              if (!current) {
+                                items[cindex].items[iindex].visible = false
+                                changed = true
+                              }
+                            }
+                          )
+                          if (changed) this.setState({ items })
+                        }}
+                        onPop={() => {
+                          let changed = false
+                          const { items } = this.state
+                          eachItem(
+                            catindex,
+                            itemindex,
+                            (_item, current, cindex, iindex) => {
+                              if (item.open !== current) {
+                                items[cindex].items[iindex].open = current
+                                changed = true
+                              }
+                            }
+                          )
+                          if (changed) this.setState({ items })
+                        }}
+                        visible={item.visible}
+                        open={item.open}
+                        onDelete={() => {}}
+                        prefix="1"
+                        name={item.name}
+                        last={itemindex + 1 === cat.items.length}
+                        // to="/settings"
+                        right={[
+                          {
+                            icon: 'exchange-alt',
+                            color: '#332f99',
+                            click: () => this.setOpenSwitchItem(item),
+                          },
+                          {
+                            icon: 'sort',
+                            color: '#4ae53a',
+                            click: () => this.setOpenSwitchItem(item),
+                          },
+                        ]}
+                        buttons={[
+                          {
+                            name: 'BUY',
+                            icon: 'cart-plus',
+                            color: 'rgba(0,255,0,.5)',
+                            onPress: () => this.setItemBought(item),
+                          },
+                        ]}
+                      />
+                    ))}
+                  </View>
+                )
+              })}
+            </ScrollView>
+          </View>
+          <Input
+            prefix={1}
+            onSave={async (name, amount) => {
+              await APIShoppingList.addToList(
+                this.props.id,
+                name,
+                parseInt(amount, 10)
+              )
+              this.reloadList()
+            }}
+          />
+          <BottomBox
+            // animationState={bottomBoxState => this.setState({ bottomBoxState })}
+            title="Listen Optionen"
+            style={{ bottom: -50, zIndex: this.state.settings ? 10000 : -1 }}
+            items={[
+              {
+                active: false,
+                name: 'Delete all items on List',
+                onClick: () => {
+                  ToastAndroid.show('Swipe to delete', 1000)
+                },
+                onDelete: this.deleteItems,
+                icon: 'trash',
+              },
+              {
+                active: false,
+                name: 'Delete bought Items',
+                onClick: () => {
+                  ToastAndroid.show('Swipe to delete', 1000)
+                },
+                onDelete: this.deleteBoughtItems,
+                icon: 'broom',
+              },
+              {
+                active: false,
+                name: 'Share List',
+                onClick: this.showShareContext,
+                icon: 'share-alt',
+              },
+              {
+                active: false,
+                name: 'Delete List',
+                onClick: () => {
+                  ToastAndroid.show('Swipe to delete', 1000)
+                },
+                onDelete: this.delteList,
+                icon: 'times',
+              },
+            ]}
+            onClose={() => {
+              this.setState({ settings: false })
+            }}
+            open={this.state.settings}
+          />
+          <BottomBox
+            items={this.state.lists}
+            onClose={() => {
+              this.setState({ bottomBox: false })
+            }}
+            open={this.state.bottomBox}
+          />
         </SafeAreaView>
-        <Input
-          prefix={1}
-          onSave={async (name, amount) => {
-            await APIShoppingList.addToList(
-              this.props.id,
-              name,
-              parseInt(amount, 10)
-            )
-            this.reloadList()
-          }}
-        />
-        <BottomBox
-          items={this.state.lists}
-          onClose={() => {
-            this.setState({ bottomBox: false })
-          }}
-          open={this.state.bottomBox}
-        />
       </View>
     )
   }
