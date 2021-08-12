@@ -13,7 +13,10 @@ interface IBottomBoxProps {
     name: string
     active: boolean
     onDelete?: () => void
+    icon?: string
   }[]
+  style?: any
+  animationState?: (state: number) => void
 }
 
 export default class BottomBox extends Component<IBottomBoxProps> {
@@ -26,6 +29,7 @@ export default class BottomBox extends Component<IBottomBoxProps> {
   componentDidMount() {
     this.state.fadeAnim.addListener(({ value: fadeVal }) => {
       this.setState({ fadeVal })
+      this.props.animationState?.(fadeVal)
     })
   }
 
@@ -45,11 +49,11 @@ export default class BottomBox extends Component<IBottomBoxProps> {
         style={{
           width: '100%',
           height: GlobalStyles().appHeight,
-          backgroundColor: 'rgba(0,0,0,.3)',
           position: 'absolute',
           bottom: 0,
           opacity: this.state.fadeVal,
           zIndex: this.state.fadeVal === 0 ? -1000 : 1000,
+          ...this.props.style,
         }}
       >
         <Pressable
@@ -57,7 +61,6 @@ export default class BottomBox extends Component<IBottomBoxProps> {
           onPress={() => this.props.onClose?.()}
         >
           <View
-            onTouchStart={e => e.stopPropagation()}
             style={{
               width: '100%',
               position: 'absolute',
@@ -65,19 +68,30 @@ export default class BottomBox extends Component<IBottomBoxProps> {
                 (3 * GlobalStyles().barHeight + GlobalStyles().barHeight) *
                 (1 - this.state.fadeVal)
               ),
+              backgroundColor: '#202020',
             }}
           >
             {this.props.title && (
-              <ListHeader color="#111" text={this.props.title} />
+              <ListHeader
+                fullWidth={true}
+                color="#111"
+                text={this.props.title}
+              />
             )}
             <ScrollView style={{ maxHeight: GlobalStyles().lineHeight * 3.5 }}>
               {this.props.items?.map(item => (
                 <Moveable
+                  style={{ marginLeft: 0, marginRight: 0 }}
+                  fullWidth={true}
+                  // centerText={true}
+                  boldText={true}
+                  bgOpacity="cc"
                   onDelete={item.onDelete}
                   checked={item.active}
                   key={item.name}
                   name={item.name}
                   onClick={item.onClick}
+                  icon={item.icon}
                 />
               ))}
             </ScrollView>
