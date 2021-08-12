@@ -30,6 +30,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
     isTop: true,
     bottomBoxState: 0,
     listName: 'Loading...',
+    listId: 0,
   }
 
   // Delete all items
@@ -61,18 +62,23 @@ export default class List extends Component<IPageListProps, IPageListState> {
     this.setState({ items })
   }
 
-  setOpenSwitchItem(item: IShoppingListItem): void {}
+  setOpenSwitchItem(item: IShoppingListItem): void {
+    this.setState({ bottomBox: true })
+  }
 
   async reloadList() {
     this.setState({ refreshing: true })
-    // const test = await APIShoppingList.list()
-    // console.log('lists', test)
+    const lists = await APIShoppingList.simpleList()
+    console.log('lists', lists)
 
     const data = await APIShoppingList.singleList(this.props.id)
-    // console.log(data)
-    this.setState({ items: data.categories, listName: data.name })
+    this.setState({
+      items: data.categories,
+      listName: data.name,
+      lists,
+      listId: data.id,
+    })
     this.setState({ refreshing: false })
-    // console.log(this.state)
   }
 
   render() {
@@ -101,7 +107,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
           solid={this.state.isTop}
           buttons={[
             {
-              name: 'deleteBought',
+              name: 'openMenu',
               onClick: () => {
                 // console.log('settings')
                 this.setState({ settings: !this.state.settings })
@@ -239,7 +245,12 @@ export default class List extends Component<IPageListProps, IPageListState> {
             open={this.state.settings}
           />
           <BottomBox
-            items={this.state.lists}
+            title="Select new List"
+            items={this.state.lists.map(item => ({
+              active: item.id === this.state.listId,
+              name: item.name,
+              onClick: () => {},
+            }))}
             onClose={() => {
               this.setState({ bottomBox: false })
             }}

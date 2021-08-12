@@ -1,3 +1,4 @@
+import IAPIShoppingListItemResponseItem from './IAPIShoppingListItemResponseItem'
 import IShoppingListCategory from './IShoppingListCategory'
 
 export default interface IPageListState {
@@ -9,6 +10,7 @@ export default interface IPageListState {
   isTop: boolean
   preventScroll: boolean
   listName: string
+  listId: number
   bottomBoxState: number
-  lists: { onClick: () => void; name: string; active: boolean }[]
+  lists: IAPIShoppingListItemResponseItem[]
 }

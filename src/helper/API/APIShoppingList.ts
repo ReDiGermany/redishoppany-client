@@ -1,6 +1,8 @@
 import API from '../API'
 import IShoppingList from '../../interfaces/IShoppingList'
 import IAPIShoppingListResponse from '../../interfaces/IAPIShoppingListResponse'
+import IAPIShoppingListItemResponse from '../../interfaces/IAPIShoppingListItemResponse'
+import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListItemResponseItem'
 
 export default class APIShoppingList {
   public static async create(name: string): Promise<boolean> {
@@ -9,10 +11,30 @@ export default class APIShoppingList {
     return ret
   }
 
-  public static async list(): Promise<IAPIShoppingListResponse> {
+  public static async list(): Promise<IAPIShoppingListItemResponse[]> {
     const ret = (await API.get)<IAPIShoppingListResponse>('/shoppinglist')
 
-    return ret
+    return (await ret).items
+  }
+
+  public static async simpleList(): Promise<
+    IAPIShoppingListItemResponseItem[]
+  > {
+    const ret = (
+      await (
+        await API.get
+      )<IAPIShoppingListResponse>('/shoppinglist')
+    ).items
+
+    const arr: IAPIShoppingListItemResponseItem[] = []
+
+    ret.forEach(grp => {
+      grp.items.forEach(item => {
+        arr.push(item)
+      })
+    })
+
+    return arr
   }
 
   public static async addToList(
