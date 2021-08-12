@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { View, StatusBar as sb } from 'react-native'
 import { AppearanceProvider } from 'react-native-appearance'
-import { Router, Route } from './Router/react-router'
+import { Router, Route, Redirect } from './Router/react-router'
 import About from './pages/About'
 import Foodplan from './pages/Foodplan'
 import Friends from './pages/Friends'
@@ -21,6 +21,7 @@ import AddToFoodplan from './pages/AddToFoodplan'
 import IIndexProps from './interfaces/IIndexProps'
 import IIndexState from './interfaces/IIndexState'
 import Login from './pages/Login/Login'
+import SplashScreen from './SplashScreen'
 
 export default class Index extends Component<IIndexProps, IIndexState> {
   state = {
@@ -33,6 +34,9 @@ export default class Index extends Component<IIndexProps, IIndexState> {
   }
 
   render() {
+    if (!this.props.checkMeDone) return <SplashScreen />
+    if (!this.props.loggedin) return <Redirect to="/login" />
+
     return (
       <AppearanceProvider>
         <StatusBar style="auto" />
