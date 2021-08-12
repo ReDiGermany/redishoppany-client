@@ -8,6 +8,7 @@ import RowFlexStyle from '../../styles/RowFlexStyle'
 import MoveableTextDropdown from './MoveableTextDropdown'
 import { textStyle } from '../../styles/MoveableStyle'
 import IMoveableTextProps from '../../interfaces/IMoveableTextProps'
+import GlobalStyles from '../../styles/GlobalStyles'
 
 export default class MoveableText extends Component<IMoveableTextProps> {
   state = {
@@ -54,6 +55,16 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       style.borderBottomLeftRadius = 10
       style.borderBottomRightRadius = 10
     }
+    if (this.props.bgOpacity !== undefined) {
+      style.backgroundColor = `${GlobalStyles().dark.deep}${
+        this.props.bgOpacity
+      }`
+    }
+    if (this.props.fullWidth ?? false) {
+      style.marginLeft = 0
+    }
+    // console.log(style)
+    // opacity: this.props.bgOpacity,
 
     const box = {
       style,
@@ -78,6 +89,20 @@ export default class MoveableText extends Component<IMoveableTextProps> {
         <Row>
           <Pressable onPress={this.props.onClick} {...link}>
             <Row>
+              {this.props.icon && (
+                <Icon
+                  style={{
+                    color: '#fff',
+                    height: 50,
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    fontSize: 15,
+                    opacity: 0.5,
+                    marginHorizontal: 10,
+                  }}
+                  name={this.props.icon}
+                />
+              )}
               {this.props.prefix && (
                 <MoveableTextPrefix
                   disabled={this.props.disabled}
@@ -91,6 +116,7 @@ export default class MoveableText extends Component<IMoveableTextProps> {
                     ...(this.props.centerText && textStyle.centerText),
                     ...(this.props.disabled && textStyle.disabled),
                     ...(this.props.boldText && textStyle.boldText),
+                    ...(this.props.bgOpacity && {}),
                   }}
                 >
                   {this.props.text}
