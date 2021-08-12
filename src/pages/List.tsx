@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ScrollView,
   ToastAndroid,
+  ImageBackground,
 } from 'react-native'
 import Navigation from '../Navigation'
 import ListHeader from '../ListHeader'
@@ -102,7 +103,14 @@ export default class List extends Component<IPageListProps, IPageListState> {
     // console.log(svStyles)
 
     return (
-      <View style={{ height: GlobalStyles().contentHeight }}>
+      <ImageBackground
+        source={require('../../assets/background.jpg')}
+        resizeMode="cover"
+        style={{
+          width: GlobalStyles().appWidth,
+          height: GlobalStyles().contentHeight,
+        }}
+      >
         <Navigation
           user={this.props.user}
           label={this.state.listName}
@@ -290,7 +298,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
             open={this.state.bottomBox}
           />
         </SafeAreaView>
-      </View>
+      </ImageBackground>
     )
   }
 }
