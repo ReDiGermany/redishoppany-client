@@ -11,6 +11,7 @@ const BottomNavigationStyle = StyleSheet.create({
     backgroundColor: 'transparent',
     width: 60,
     height: 45,
+    textAlign: 'center',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
