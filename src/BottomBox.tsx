@@ -3,21 +3,7 @@ import { View, ScrollView, Animated, Pressable } from 'react-native'
 import ListHeader from './ListHeader'
 import Moveable from './components/Moveable/Moveable'
 import GlobalStyles from './styles/GlobalStyles'
-
-interface IBottomBoxProps {
-  open?: boolean
-  onClose?: () => void
-  title?: string
-  items?: {
-    onClick: () => void
-    name: string
-    active: boolean
-    onDelete?: () => void
-    icon?: string
-  }[]
-  style?: any
-  animationState?: (state: number) => void
-}
+import IBottomBoxProps from './interfaces/IBottomBoxProps'
 
 export default class BottomBox extends Component<IBottomBoxProps> {
   state = {
