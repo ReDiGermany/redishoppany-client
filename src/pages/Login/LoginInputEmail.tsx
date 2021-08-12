@@ -17,7 +17,7 @@ export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
   }
 
   onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
-    console.log('LoginInputEmail', dimensions)
+    // console.log('LoginInputEmail', dimensions)
     this.setState({ dimensions })
   }
 

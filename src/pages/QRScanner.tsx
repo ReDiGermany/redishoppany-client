@@ -11,7 +11,7 @@ interface IQRScannerProps extends IPageProps {
 
 export default class QRScanner extends Component<IQRScannerProps> {
   onSuccess = (e: BarCodeReadEvent) => {
-    console.log(e)
+    // console.log(e)
     // Linking.openURL(e.data).catch((err) =>
     //   console.error("An error occured", err)
     // );
@@ -66,7 +66,7 @@ export default class QRScanner extends Component<IQRScannerProps> {
             this.state.scanned ? undefined : handleBarCodeScanned
           }
           onLayout={async ({ nativeEvent: { layout } }) => {
-            console.log('QR Scanner layout', layout)
+            // console.log('QR Scanner layout', layout)
           }}
           removeClippedSubviews={true}
           style={{

@@ -145,9 +145,10 @@ export default class Recipes extends Component<IRecipesProps, IRecipeState> {
               onClick: () => {
                 // TODO: Add delete API
                 this.setState({ deleteConfirmBox: false })
-                console.log('jetzt Löschen.')
+                // console.log('jetzt Löschen.')
               },
               name: 'Löschen',
+              active: false,
             },
           ]}
         />
@@ -162,6 +163,7 @@ export default class Recipes extends Component<IRecipesProps, IRecipeState> {
               // TODO: Add Share API
             },
             name: `${friend.firstName} ${friend.lastName}`,
+            active: false,
           }))}
         />
       </View>

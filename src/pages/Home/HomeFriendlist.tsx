@@ -154,7 +154,8 @@ export default class Friends extends Component<IPageProps, IPageState> {
     }
 
     const qrCode = {
-      onFail: () => console.log('Das hat leider nicht funktioniert.'),
+      // onFail: () => console.log('Das hat leider nicht funktioniert.'),
+      onFail: () => {},
       onSuccess: this.addFriend,
     }
 

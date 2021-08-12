@@ -46,11 +46,11 @@ export default class Friends extends Component<IPageProps> {
           <ScrollView
             onScrollBeginDrag={() => {
               this.setState({ scrolling: true })
-              console.log('scroll start')
+              // console.log('scroll start')
             }}
             onScrollEndDrag={() => {
               this.setState({ scrolling: false })
-              console.log('scroll stop')
+              // console.log('scroll stop')
             }}
             refreshControl={
               <RefreshControl
@@ -60,11 +60,12 @@ export default class Friends extends Component<IPageProps> {
             }
           >
             <QRCode
+              onSuccess={() => {}}
               onFail={() => {
                 // eslint-disable-next-line no-alert
                 alert('Das hat leider nicht funktioniert.')
               }}
-              onSuccess={email => console.log(email)}
+              // onSuccess={email => console.log(email)}
             />
             <ListHeader text="Freunde" />
             <Moveable name="Freund N." onDelete={() => {}} />
@@ -74,7 +75,14 @@ export default class Friends extends Component<IPageProps> {
             <Moveable
               name="Zalam I."
               onDelete={() => {}}
-              buttons={[{ name: 'accept', color: '#0F0', icon: 'check' }]}
+              buttons={[
+                {
+                  name: 'accept',
+                  color: '#0F0',
+                  icon: 'check',
+                  onPress: () => {},
+                },
+              ]}
             />
             <ListHeader text="Gesendete Anfragen" />
             <Moveable name="Tschink N." onDelete={() => {}} />

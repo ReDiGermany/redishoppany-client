@@ -113,7 +113,7 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
               <View style={imageBox}>
                 <Image
                   {...image(item)}
-                  onError={e => console.log('Image Load Error', e)}
+                  // onError={e => console.log('Image Load Error', e)}
                 />
                 <View style={textBox}>
                   <Text style={nameBox}>{item.name}</Text>

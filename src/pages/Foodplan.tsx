@@ -36,7 +36,7 @@ export default class Foodplan extends Component<IPageProps> {
             {
               name: 'deleteAll',
               onClick: () => {
-                console.log('deleteAll')
+                // console.log('deleteAll')
               },
               icon: 'trash',
             },
@@ -53,11 +53,11 @@ export default class Foodplan extends Component<IPageProps> {
           <ScrollView
             onScrollBeginDrag={() => {
               this.setState({ scrolling: true })
-              console.log('scroll start')
+              // console.log('scroll start')
             }}
             onScrollEndDrag={() => {
               this.setState({ scrolling: false })
-              console.log('scroll stop')
+              // console.log('scroll stop')
             }}
             refreshControl={
               <RefreshControl

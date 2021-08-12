@@ -40,8 +40,8 @@ export default class API {
     // console.log('GETTING::init', uri, auth)
     const ret = await API.axiosInstance.get(uri, auth)
     // console.log('GETTING::ret', ret)
-    if (ret.status < 200 || ret.status > 299)
-      console.log('AXIOS::ERROR::GET', { uri, auth, ret })
+    // if (ret.status < 200 || ret.status > 299)
+    // console.log('AXIOS::ERROR::GET', { uri, auth, ret: JSON.stringify(ret) })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
@@ -52,8 +52,13 @@ export default class API {
     const auth = await API.getAuth()
     // console.log('POSTING', uri, data, auth)
     const ret = await API.axiosInstance.post(uri, data, auth)
-    if (ret.status < 200 || ret.status > 299)
-      console.log('AXIOS::ERROR::POST', { uri, auth, ret, data })
+    // if (ret.status < 200 || ret.status > 299)
+    //   console.log('AXIOS::ERROR::POST', {
+    //     uri,
+    //     auth,
+    //     ret: JSON.stringify(ret),
+    //     data: JSON.stringify(data),
+    //   })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
@@ -64,8 +69,12 @@ export default class API {
     const auth = await API.getAuth()
     // console.log('DELETING', uri, auth)
     const ret = await API.axiosInstance.delete(uri, auth)
-    if (ret.status < 200 || ret.status > 299)
-      console.log('AXIOS::ERROR::DELETE', { uri, auth, ret })
+    // if (ret.status < 200 || ret.status > 299)
+    //   console.log('AXIOS::ERROR::DELETE', {
+    //     uri,
+    //     auth,
+    //     ret: JSON.stringify(ret),
+    //   })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
@@ -76,8 +85,13 @@ export default class API {
     const auth = await API.getAuth()
     // console.log('PUTTING', uri, data, auth)
     const ret = await API.axiosInstance.put(uri, data, auth)
-    if (ret.status < 200 || ret.status > 299)
-      console.log('AXIOS::ERROR::PUT', { uri, auth, ret, data })
+    // if (ret.status < 200 || ret.status > 299)
+    //   console.log('AXIOS::ERROR::PUT', {
+    //     uri,
+    //     auth,
+    //     ret: JSON.stringify(ret),
+    //     data: JSON.stringify(data),
+    //   })
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
 
