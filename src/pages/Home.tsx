@@ -31,6 +31,7 @@ export default class Home extends Component<IPageProps> {
             borderBottomLeftRadius: 30,
             borderBottomRightRadius: 30,
             overflow: 'hidden',
+            height: GlobalStyles().contentHeight,
           }}
         >
           <ImageBackground
