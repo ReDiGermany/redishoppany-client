@@ -27,4 +27,6 @@ const calcText = (inp: string) => {
   return size
 }
 
-export { inArray, inString, calcText }
+const randomColor = () => Math.floor(Math.random() * 16777215).toString(16)
+
+export { inArray, inString, calcText, randomColor }
