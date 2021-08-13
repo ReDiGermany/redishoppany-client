@@ -2,8 +2,16 @@ import API from '../API'
 import IAPICategory from '../../interfaces/IAPICategory'
 
 export default class APICategory {
-  public static async create(name: string, list: number): Promise<boolean> {
-    const ret = (await API.post)<boolean>('/category/create', { name, list })
+  public static async create(
+    name: string,
+    color: string,
+    list: number
+  ): Promise<boolean> {
+    const ret = (await API.post)<boolean>('/category/create', {
+      name,
+      list,
+      color,
+    })
 
     return ret
   }
