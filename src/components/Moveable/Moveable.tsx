@@ -128,6 +128,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
       bgOpacity: this.props.bgOpacity,
       fullWidth: this.props.fullWidth,
       icon: this.props.icon,
+      bgColor: this.props.bgColor,
     }
 
     const getIcon = (

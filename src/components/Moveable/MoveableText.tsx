@@ -63,6 +63,9 @@ export default class MoveableText extends Component<IMoveableTextProps> {
     if (this.props.fullWidth ?? false) {
       style.marginLeft = 0
     }
+    if (this.props.bgColor) {
+      style.backgroundColor = this.props.bgColor
+    }
     // console.log(style)
     // opacity: this.props.bgOpacity,
 
