@@ -5,7 +5,13 @@ export default interface IMoveableTextProps {
   stop?: () => void
   touchStart?: () => void
   text?: string
-  buttons?: { name: string; icon: string; color: string; onPress: () => void }[]
+  buttons?: {
+    name: string
+    icon: string
+    color: string
+    onPress: () => void
+    disabled?: boolean
+  }[]
   prefix?: number | string
   to?: string
   onLongPress?: () => void
@@ -22,5 +28,6 @@ export default interface IMoveableTextProps {
   selectedItem?: number | string
   bgOpacity?: string
   icon?: string
+  bgColor?: string
   fullWidth?: boolean
 }

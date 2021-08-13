@@ -8,6 +8,7 @@ interface IMoveableButtonProps {
   icon: string
   color: string
   onPress?: () => void
+  disabled?: boolean
 }
 
 export default class MoveableButton extends Component<IMoveableButtonProps> {
@@ -16,12 +17,14 @@ export default class MoveableButton extends Component<IMoveableButtonProps> {
       style: textStyle.right.button(this.props.color),
       name: this.props.icon,
       size: 15,
-      onPress: this.props.onPress,
+      onPress: () => {
+        if (!(this.props.disabled ?? false)) this.props.onPress?.()
+      },
     }
     // console.log(icon)
 
     return (
-      <IconBox>
+      <IconBox disabled={this.props.disabled}>
         <Icon {...icon} />
       </IconBox>
     )
