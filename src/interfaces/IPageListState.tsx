@@ -10,6 +10,7 @@ export default interface IPageListState {
   isTop: boolean
   preventScroll: boolean
   listName: string
+  redirect: string
   listId: number
   bottomBoxState: number
   lists: IAPIShoppingListItemResponseItem[]

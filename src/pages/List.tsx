@@ -17,6 +17,7 @@ import BottomBox from '../BottomBox'
 import IShoppingListItem from '../interfaces/IShoppingListItem'
 import IPageListState from '../interfaces/IPageListState'
 import IPageListProps from '../interfaces/IPageListProps'
+import { Redirect } from '../Router/react-router'
 
 export default class List extends Component<IPageListProps, IPageListState> {
   state: IPageListState = {
@@ -30,7 +31,12 @@ export default class List extends Component<IPageListProps, IPageListState> {
     isTop: true,
     bottomBoxState: 0,
     listName: 'Loading...',
+    redirect: '',
     listId: 0,
+  }
+
+  showUpdateCategories() {
+    this.setState({ redirect: `/updatecat/${this.state.listId}` })
   }
 
   // Delete all items
@@ -66,6 +72,8 @@ export default class List extends Component<IPageListProps, IPageListState> {
     this.setState({ bottomBox: true })
   }
 
+  setOpenSortItem(item: IShoppingListItem): void {}
+
   async reloadList() {
     this.setState({ refreshing: true })
     const lists = await APIShoppingList.simpleList()
@@ -82,6 +90,8 @@ export default class List extends Component<IPageListProps, IPageListState> {
   }
 
   render() {
+    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
+
     const onRefresh = async () => {
       await this.reloadList()
     }
@@ -147,7 +157,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
 
                 return (
                   <View key={`cat_${catindex}`}>
-                    <ListHeader color="#4ae53a" text={cat.name} />
+                    <ListHeader color={cat.color} text={cat.name} />
                     {cat.items.map((item, itemindex) => (
                       <Moveable
                         key={`item_${catindex}_${itemindex}`}
@@ -168,7 +178,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
                           {
                             icon: 'sort',
                             color: '#4ae53a',
-                            click: () => this.setOpenSwitchItem(item),
+                            click: () => this.setOpenSortItem(item),
                           },
                         ]}
                         buttons={[
@@ -211,7 +221,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
                 onClick: () => {
                   ToastAndroid.show('Swipe to delete', 1000)
                 },
-                onDelete: this.deleteItems,
+                onDelete: () => this.deleteItems(),
                 icon: 'trash',
               },
               {
@@ -220,13 +230,19 @@ export default class List extends Component<IPageListProps, IPageListState> {
                 onClick: () => {
                   ToastAndroid.show('Swipe to delete', 1000)
                 },
-                onDelete: this.deleteBoughtItems,
-                icon: 'broom',
+                onDelete: () => this.deleteBoughtItems(),
+                icon: 'hand-holding-usd',
+              },
+              {
+                active: false,
+                name: 'Update Categories',
+                onClick: () => this.showUpdateCategories(),
+                icon: 'edit',
               },
               {
                 active: false,
                 name: 'Share List',
-                onClick: this.showShareContext,
+                onClick: () => this.showShareContext(),
                 icon: 'share-alt',
               },
               {
@@ -235,7 +251,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
                 onClick: () => {
                   ToastAndroid.show('Swipe to delete', 1000)
                 },
-                onDelete: this.delteList,
+                onDelete: () => this.delteList(),
                 icon: 'times',
               },
             ]}
