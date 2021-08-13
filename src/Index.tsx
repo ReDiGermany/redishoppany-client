@@ -19,6 +19,7 @@ import IIndexProps from './interfaces/IIndexProps'
 import IIndexState from './interfaces/IIndexState'
 import Login from './pages/Login/Login'
 import SplashScreen from './SplashScreen'
+import UpdateCat from './pages/UpdateCat'
 
 export default class Index extends Component<IIndexProps, IIndexState> {
   state = {
@@ -81,9 +82,14 @@ export default class Index extends Component<IIndexProps, IIndexState> {
         <Route path="/login">
           <Login />
         </Route>
+        <Route
+          path="/updatecat/:id"
+          render={(props: any) => <UpdateCat id={props.match.params.id} />}
+        />
         <Route exact path="/">
           {/* <Settings user={this.state.user} /> */}
-          <Home user={this.state.user} />
+          {/* <Home user={this.state.user} /> */}
+          <UpdateCat user={this.state.user} id={25} />
         </Route>
       </View>
     )
