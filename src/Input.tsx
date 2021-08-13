@@ -20,7 +20,7 @@ interface IInputProps {
 
 export default class Input extends Component<IInputProps> {
   state = {
-    amount: this.props.prefix.toString() ?? '',
+    amount: (this.props.prefix ?? '').toString() ?? '',
     text: '',
     focus: false,
   }
@@ -29,7 +29,7 @@ export default class Input extends Component<IInputProps> {
     const onSubmit = () => {
       this.props.onSave(this.state.text, this.state.amount)
       this.setState({
-        amount: this.props.prefix.toString() ?? '',
+        amount: (this.props.prefix ?? '').toString() ?? '',
         text: '',
         focus: true,
       })
