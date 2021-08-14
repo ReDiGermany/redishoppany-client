@@ -5,20 +5,11 @@ import APICategory from '../helper/API/APICategory'
 import { randomColor } from '../helper/Functions'
 import Input from '../Input'
 import IAPICategory from '../interfaces/IAPICategory'
-import IPageProps from '../interfaces/IPageProps'
 import Language from '../language/Language'
 import Navigation from '../Navigation'
 import GlobalStyles, { KeyboardDetection } from '../styles/GlobalStyles'
-
-interface IUpdateCatProps extends IPageProps {
-  id: number
-}
-interface IUpdateCatState {
-  isTop: boolean
-  keyboardHeight: number
-  refreshing: boolean
-  list: IAPICategory[]
-}
+import IUpdateCatProps from '../interfaces/IUpdateCatProps'
+import IUpdateCatState from '../interfaces/IUpdateCatState'
 
 export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
   state = {
