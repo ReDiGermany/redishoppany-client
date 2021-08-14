@@ -1,6 +1,8 @@
-import { Dimensions, StatusBar } from 'react-native'
+import React from 'react'
+import { Dimensions, Keyboard, StatusBar } from 'react-native'
+import { IKeyboardDetectionProps } from '../interfaces/IKeyboardDetectionProps'
 
-export default () => {
+const GlobalHeight = () => {
   const appHeight =
     Dimensions.get('window').height + (StatusBar.currentHeight ?? 0)
   const appWidth = Dimensions.get('window').width
@@ -36,3 +38,38 @@ export default () => {
     // calculateAble: { ...data.calculateAble, contentHeight },
   }
 }
+
+class KeyboardDetection extends React.Component<IKeyboardDetectionProps> {
+  async componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e =>
+      this.keyboardDidShow(e)
+    )
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', e =>
+      this.keyboardDidHide(e)
+    )
+  }
+
+  keyboardDidShowListener: any = null
+
+  keyboardDidHideListener: any = null
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
+
+  keyboardDidShow(e: any) {
+    this.props.update(e.endCoordinates.height + GlobalHeight().statusbarHeight)
+  }
+
+  keyboardDidHide(e: any) {
+    this.props.update(e.endCoordinates.height)
+  }
+
+  render() {
+    return this.props.children
+  }
+}
+
+export default GlobalHeight
+export { KeyboardDetection }

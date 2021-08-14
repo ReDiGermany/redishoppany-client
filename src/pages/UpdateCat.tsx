@@ -8,13 +8,14 @@ import IAPICategory from '../interfaces/IAPICategory'
 import IPageProps from '../interfaces/IPageProps'
 import Language from '../language/Language'
 import Navigation from '../Navigation'
-import GlobalStyles from '../styles/GlobalStyles'
+import GlobalStyles, { KeyboardDetection } from '../styles/GlobalStyles'
 
 interface IUpdateCatProps extends IPageProps {
   id: number
 }
 interface IUpdateCatState {
   isTop: boolean
+  keyboardHeight: number
   refreshing: boolean
   list: IAPICategory[]
 }
@@ -24,6 +25,7 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
     isTop: true,
     refreshing: false,
     list: [],
+    keyboardHeight: 0,
   }
 
   async componentDidMount() {
@@ -31,69 +33,88 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
   }
 
   async refresh() {
-    this.setState({ refreshing: true })
     const list = await APICategory.list(this.props.id)
+    console.log(list)
     this.setState({ list })
     this.setState({ refreshing: false })
   }
 
+  edit(id: number): void {}
+
+  delete(id: number): void {}
+
   render() {
     return (
-      <View
-        style={{
-          height: GlobalStyles().appHeight - GlobalStyles().statusbarHeight,
-        }}
+      <KeyboardDetection
+        update={keyboardHeight => this.setState({ keyboardHeight })}
       >
-        <Navigation
-          solid={this.state.isTop}
-          label={Language.get('category.update')}
-          simple={true}
-        />
-
-        <View style={{ height: GlobalStyles().contentHeight - 50 }}>
-          <ScrollView
-            refreshControl={
-              <RefreshControl
-                onRefresh={() => this.refresh()}
-                refreshing={this.state.refreshing}
-              />
-            }
-          >
-            {this.state.list.map((item: IAPICategory, index: number) => (
-              <Moveable
-                key={item.id}
-                name={item.name}
-                bgColor={item.color}
-                onDelete={() => this.delete(item.id)}
-                onClick={() => this.edit(item.id)}
-                buttons={[
-                  {
-                    disabled: index === 0,
-                    color: '#fff',
-                    icon: 'arrow-up',
-                    name: 'test',
-                    onPress: () => {},
-                  },
-                  {
-                    color: '#fff',
-                    icon: 'arrow-down',
-                    name: 'test1',
-                    onPress: () => {},
-                    disabled: index + 1 === this.state.list.length,
-                  },
-                ]}
-              />
-            ))}
-          </ScrollView>
-        </View>
-        <Input
-          amountPlaceholder="1"
-          textPlaceholder="New Category"
-          onSave={text => {
-            this.add(text)
+        <View
+          style={{
+            height:
+              GlobalStyles().appHeight -
+              GlobalStyles().statusbarHeight -
+              this.state.keyboardHeight,
           }}
-        />
-      </View>
+        >
+          <Navigation
+            solid={this.state.isTop}
+            label={Language.get('category.update')}
+            simple={true}
+          />
+
+          <View
+            style={{
+              height:
+                GlobalStyles().contentHeight - 50 - this.state.keyboardHeight,
+            }}
+          >
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  onRefresh={() => {
+                    this.setState({ refreshing: true })
+                    this.refresh()
+                  }}
+                  refreshing={this.state.refreshing}
+                />
+              }
+            >
+              {this.state.list.map((item: IAPICategory, index: number) => (
+                <Moveable
+                  key={item.id}
+                  name={item.name}
+                  bgColor={item.color}
+                  onDelete={() => this.delete(item.id)}
+                  onClick={() => this.edit(item.id)}
+                  buttons={[
+                    {
+                      disabled: index === 0,
+                      color: '#fff',
+                      icon: 'arrow-up',
+                      name: 'test',
+                      onPress: () => {},
+                    },
+                    {
+                      color: '#fff',
+                      icon: 'arrow-down',
+                      name: 'test1',
+                      onPress: () => {},
+                      disabled: index + 1 === this.state.list.length,
+                    },
+                  ]}
+                />
+              ))}
+            </ScrollView>
+          </View>
+          <Input
+            amountPlaceholder="1"
+            textPlaceholder="New Category"
+            onSave={text => {
+              this.add(text)
+            }}
+          />
+        </View>
+      </KeyboardDetection>
     )
   }
 
@@ -112,8 +133,4 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
     await APICategory.create(text, item.color, this.props.id)
     await this.refresh()
   }
-
-  edit(id: number): void {}
-
-  delete(id: number): void {}
 }
