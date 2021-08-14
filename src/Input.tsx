@@ -16,13 +16,15 @@ interface IInputProps {
   prefix?: any
   textPlaceholder?: string
   amountPlaceholder?: string
+  text?: string
+  focus?: boolean
 }
 
 export default class Input extends Component<IInputProps> {
   state = {
     amount: (this.props.prefix ?? '').toString() ?? '',
-    text: '',
-    focus: false,
+    text: this.props.text ?? '',
+    focus: this.props.focus ?? false,
   }
 
   render() {
@@ -31,7 +33,7 @@ export default class Input extends Component<IInputProps> {
       this.setState({
         amount: (this.props.prefix ?? '').toString() ?? '',
         text: '',
-        focus: true,
+        focus: this.props.focus ?? false,
       })
     }
     const onChange = (data: any) => {
