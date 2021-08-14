@@ -26,6 +26,7 @@ const textBox = (x: number) =>
 const iconBoxIcon = (width: number) =>
   StyleSheet.create({
     row: {
+      color: '#000',
       textAlign: 'center',
       textAlignVertical: 'center',
       fontSize: (width / 50) * 20,
