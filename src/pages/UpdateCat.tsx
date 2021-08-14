@@ -34,6 +34,22 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
 
   delete(id: number): void {}
 
+  async add(text: string) {
+    // eslint-disable-next-line prefer-destructuring
+    const list: IAPICategory[] = this.state.list
+
+    const item = {
+      id: 0,
+      name: text,
+      color: `#${randomColor()}`,
+    }
+
+    list.push(item)
+    this.setState({ list })
+    await APICategory.create(text, item.color, this.props.id)
+    await this.refresh()
+  }
+
   render() {
     return (
       <KeyboardDetection
@@ -50,7 +66,6 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
           <Navigation
             solid={this.state.isTop}
             label={Language.get('category.update')}
-            simple={true}
           />
 
           <View
@@ -98,30 +113,11 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
             </ScrollView>
           </View>
           <Input
-            amountPlaceholder="1"
             textPlaceholder="New Category"
-            onSave={text => {
-              this.add(text)
-            }}
+            onSave={text => this.add(text)}
           />
         </View>
       </KeyboardDetection>
     )
-  }
-
-  async add(text: string) {
-    // eslint-disable-next-line prefer-destructuring
-    const list: IAPICategory[] = this.state.list
-
-    const item = {
-      id: 0,
-      name: text,
-      color: `#${randomColor()}`,
-    }
-
-    list.push(item)
-    this.setState({ list })
-    await APICategory.create(text, item.color, this.props.id)
-    await this.refresh()
   }
 }
