@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash_white.png",
       "resizeMode": "contain",
@@ -12,6 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
+      "userInterfaceStyle": "dark",
       "bundleIdentifier": "com.redigermany.lisha"
     },
     "android": {
@@ -19,6 +21,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "userInterfaceStyle": "dark",
       "package": "com.redigermany.lisha"
     }
   }
