@@ -1,6 +1,6 @@
 import React from 'react'
 import { Dimensions, Keyboard, StatusBar } from 'react-native'
-import { IKeyboardDetectionProps } from '../interfaces/IKeyboardDetectionProps'
+import IKeyboardDetectionProps from '../interfaces/IKeyboardDetectionProps'
 
 const GlobalHeight = () => {
   const appHeight =
