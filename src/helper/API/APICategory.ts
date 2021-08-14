@@ -27,4 +27,16 @@ export default class APICategory {
 
     return ret
   }
+
+  public static async update(item: IAPICategory): Promise<boolean> {
+    const ret = (await API.post)<boolean>(`/category/update/${item.id}`, item)
+
+    return ret
+  }
+
+  public static async delete(id: number): Promise<boolean> {
+    const ret = (await API.delete)<boolean>(`/category/${id}`)
+
+    return ret
+  }
 }
