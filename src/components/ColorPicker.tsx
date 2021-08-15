@@ -19,7 +19,7 @@ export default class ColorPicker extends Component<IColorPickerProps> {
 
     const onTouchStart = (e: any) => {
       this.parseValue(e.nativeEvent.pageX)
-      this.props.onStart()
+      this.props.onStart?.()
     }
     const onTouchMove = (e: any) => this.parseValue(e.nativeEvent.pageX)
     const onTouchEnd = (e: any) => {

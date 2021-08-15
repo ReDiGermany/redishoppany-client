@@ -83,7 +83,7 @@ export default class CategoryUpdater extends Component<ICategoryUpdaterProps> {
         icon: 'palette',
         name: 'changeColorPalette',
         onPress: () => {
-          this.props.onStart()
+          this.props.onStart?.()
           this.setState({
             colorSelectorOpen: !this.state.colorSelectorOpen,
           })

@@ -4,7 +4,7 @@ export default interface ICategoryUpdaterProps {
   item: IAPICategory
   index: number
   maxItems: number
-  onStart: () => void
+  onStart?: () => void
   onEnd: (_item: IAPICategory) => void
   onDelete: () => void
   onEditName: () => void

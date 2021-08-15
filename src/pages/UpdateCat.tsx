@@ -43,8 +43,7 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
   }
 
   async add(text: string) {
-    // eslint-disable-next-line prefer-destructuring
-    const list: IAPICategory[] = this.state.list
+    const { list } = this.state
 
     const item = {
       id: 0,
@@ -67,126 +66,117 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
   }
 
   render() {
-    return (
-      <KeyboardDetection
-        update={keyboardHeight => this.setState({ keyboardHeight })}
-      >
-        <View
-          style={{
-            height:
-              GlobalStyles().appHeight -
-              GlobalStyles().statusbarHeight -
-              this.state.keyboardHeight,
-          }}
-        >
-          <Navigation
-            solid={this.state.isTop}
-            label={Language.get('category.update')}
-          />
+    const { activeItem, isActiveItem } = this.state
 
-          <View
-            style={{
-              height:
-                GlobalStyles().contentHeight - 50 - this.state.keyboardHeight,
-            }}
-          >
-            <ScrollView
-              onScroll={n => {
-                this.setState({ yoffset: n.nativeEvent.contentOffset.y })
-              }}
-              scrollEnabled={!this.state.preventScroll}
-              refreshControl={
-                <RefreshControl
-                  onRefresh={() => {
-                    this.setState({ refreshing: true })
-                    this.refresh()
-                  }}
-                  enabled={!this.state.preventScroll}
-                  refreshing={this.state.refreshing}
-                />
-              }
-            >
+    const keyboardDetection = {
+      update: (keyboardHeight: any) => this.setState({ keyboardHeight }),
+    }
+
+    const outerBox = {
+      style: {
+        height:
+          GlobalStyles().appHeight -
+          GlobalStyles().statusbarHeight -
+          this.state.keyboardHeight,
+      },
+    }
+
+    const navigation = {
+      solid: this.state.isTop,
+      label: Language.get('category.update'),
+    }
+
+    const innerBox = {
+      style: {
+        height: GlobalStyles().contentHeight - 50 - this.state.keyboardHeight,
+      },
+    }
+
+    const scrollView = {
+      onScroll: (n: any) => {
+        this.setState({ yoffset: n.nativeEvent.contentOffset.y })
+      },
+      scrollEnabled: !this.state.preventScroll,
+      refreshControl: (
+        <RefreshControl
+          onRefresh={() => {
+            this.setState({ refreshing: true })
+            this.refresh()
+          }}
+          enabled={!this.state.preventScroll}
+          refreshing={this.state.refreshing}
+        />
+      ),
+    }
+
+    const categoryUpdater = (item: any, index: number) => ({
+      onSort: async (y: number) => {
+        if (this.state.preventScroll) {
+          const bh = GlobalStyles().barHeight
+          const title = GlobalStyles().statusbarHeight + bh - this.state.yoffset
+          const pos = Math.floor((y - title) / bh)
+          const { list } = this.state
+          const itm = list[pos]
+          list[pos] = item
+          list[index] = itm
+          this.setState({ list, preventScroll: false })
+          await APICategory.sort(
+            this.props.id,
+            list.map(nitem => nitem.id)
+          )
+          await this.refresh()
+        }
+      },
+      onEditName: () =>
+        this.setState({
+          isActiveItem: true,
+          activeItem: index,
+        }),
+      onLongPress: () => this.setState({ preventScroll: true }),
+      onEnd: async (newItem: any) => {
+        this.setState({ preventScroll: false, isActiveItem: false })
+        await this.update(newItem, index)
+      },
+      key: item.id,
+      item,
+      index,
+      maxItems: this.state.list.length,
+      onDelete: async () => this.delete(item.id, index),
+      selectorOpen: isActiveItem && activeItem === index,
+    })
+
+    const input = {
+      key: isActiveItem ? this.state.list[activeItem].name : '',
+      text: isActiveItem ? this.state.list[activeItem].name : '',
+      focus: isActiveItem,
+      textPlaceholder: isActiveItem ? 'Edit Category' : 'New Category',
+      onSave: async (text: string) => {
+        if (isActiveItem) {
+          const { list } = this.state
+          list[activeItem].name = text
+          this.setState({
+            preventScroll: false,
+            isActiveItem: false,
+            list,
+          })
+          await this.update(list[activeItem], activeItem)
+          await this.refresh()
+        } else this.add(text)
+      },
+    }
+
+    return (
+      <KeyboardDetection {...keyboardDetection}>
+        <View {...outerBox}>
+          <Navigation {...navigation} />
+          <View {...innerBox}>
+            <ScrollView {...scrollView}>
               {this.state.list.map((item: IAPICategory, index: number) => (
-                <CategoryUpdater
-                  onSort={async y => {
-                    if (this.state.preventScroll) {
-                      const bh = GlobalStyles().barHeight
-                      const title =
-                        GlobalStyles().statusbarHeight + bh - this.state.yoffset
-                      const pos = Math.floor((y - title) / bh)
-                      const { list } = this.state
-                      const itm = list[pos]
-                      list[pos] = item
-                      list[index] = itm
-                      this.setState({ list, preventScroll: false })
-                      await APICategory.sort(
-                        this.props.id,
-                        list.map(nitem => nitem.id)
-                      )
-                      await this.refresh()
-                    }
-                  }}
-                  onEditName={() => {
-                    this.setState({
-                      isActiveItem: true,
-                      activeItem: index,
-                    })
-                  }}
-                  onLongPress={() => {
-                    this.setState({ preventScroll: true })
-                  }}
-                  onStart={() => {}}
-                  onEnd={async newItem => {
-                    // console.log('onEnd')
-                    this.setState({ preventScroll: false, isActiveItem: false })
-                    await this.update(newItem, index)
-                  }}
-                  key={item.id}
-                  item={item}
-                  index={index}
-                  maxItems={this.state.list.length}
-                  onDelete={async () => {
-                    await this.delete(item.id, index)
-                  }}
-                  selectorOpen={
-                    this.state.isActiveItem && this.state.activeItem === index
-                  }
-                />
+                <CategoryUpdater {...categoryUpdater(item, index)} />
               ))}
             </ScrollView>
           </View>
-          <Input
-            key={
-              this.state.isActiveItem
-                ? this.state.list[this.state.activeItem].name
-                : ''
-            }
-            text={
-              this.state.isActiveItem
-                ? this.state.list[this.state.activeItem].name
-                : ''
-            }
-            focus={this.state.isActiveItem}
-            textPlaceholder={
-              this.state.isActiveItem ? 'Edit Category' : 'New Category'
-            }
-            onSave={async text => {
-              if (this.state.isActiveItem) {
-                const { list } = this.state
-                list[this.state.activeItem].name = text
-                this.setState({
-                  preventScroll: false,
-                  isActiveItem: false,
-                  list,
-                })
-                await this.update(
-                  list[this.state.activeItem],
-                  this.state.activeItem
-                )
-                await this.refresh()
-              } else this.add(text)
-            }}
-          />
+          <Input {...input} />
         </View>
       </KeyboardDetection>
     )
