@@ -45,41 +45,41 @@ export default class BottomNavigation extends Component<IBottomNavigationProps> 
   render() {
     return (
       <Row style={BottomNavigationStyle.row}>
-        {this.state.items.map((item, index) => (
-          <Pressable
-            key={item.name.toString()}
-            style={{
+        {this.state.items.map((item, index) => {
+          const active = this.state.active === index
+
+          const pressable = {
+            key: item.name.toString(),
+            style: {
               ...BottomNavigationStyle.button,
-              ...(this.state.active === index
-                ? BottomNavigationStyle.activeButton
-                : {}),
-            }}
-            onPress={() => {
+              ...(active && BottomNavigationStyle.activeButton),
+            },
+            onPress: () => {
               this.props.navUpdate(index)
               this.setState({ active: index })
-            }}
-          >
-            <Icon
-              style={{
-                ...BottomNavigationStyle.icon,
-                ...(this.state.active === index
-                  ? BottomNavigationStyle.activeIcon
-                  : {}),
-              }}
-              name={item.icon}
-            />
-            <Text
-              style={{
-                ...BottomNavigationStyle.text,
-                ...(this.state.active === index
-                  ? BottomNavigationStyle.activeText
-                  : {}),
-              }}
-            >
-              {item.name.toString()}
-            </Text>
-          </Pressable>
-        ))}
+            },
+          }
+
+          const icon = {
+            style: {
+              ...BottomNavigationStyle.icon,
+              ...(active && BottomNavigationStyle.activeIcon),
+            },
+            name: item.icon,
+          }
+
+          const textStyle = {
+            ...BottomNavigationStyle.text,
+            ...(active && BottomNavigationStyle.activeText),
+          }
+
+          return (
+            <Pressable {...pressable}>
+              <Icon {...icon} />
+              <Text style={textStyle}>{item.name.toString()}</Text>
+            </Pressable>
+          )
+        })}
       </Row>
     )
   }
