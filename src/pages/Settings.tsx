@@ -4,7 +4,6 @@ import BottomBox from '../BottomBox'
 import Moveable from '../components/Moveable/Moveable'
 import APIFoodplan from '../helper/API/APIFoodplan'
 import APIShareFoodplan from '../helper/API/APIShareFoodplan'
-import IAPIShareFoodplanFriends from '../interfaces/IAPIShareFoodplanFriends'
 import IFoodplanPlan from '../interfaces/IFoodplanPlan'
 import IPageProps from '../interfaces/IPageProps'
 import Language from '../language/Language'
@@ -12,14 +11,10 @@ import ListHeader from '../ListHeader'
 import Navigation from '../Navigation'
 import { Redirect } from '../Router/react-router'
 import GlobalStyles from '../styles/GlobalStyles'
+import ISettingsState from '../interfaces/ISettingsState'
 
-interface ISettingsState {
-  plans: IFoodplanPlan[]
-  shareFoodplanBox: boolean
-  foodplanFriends: IAPIShareFoodplanFriends[]
-  redirect: string
-}
-
+// TODO: fill content!
+// TODO: Active Foodplan => BottomBox
 export default class Settings extends Component<IPageProps, ISettingsState> {
   state: ISettingsState = {
     plans: [],
