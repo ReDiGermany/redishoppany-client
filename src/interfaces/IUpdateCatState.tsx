@@ -6,6 +6,7 @@ export default interface IUpdateCatState {
   color: string
   keyboardHeight: number
   activeItem: number
+  yoffset: number
   isActiveItem: boolean
   refreshing: boolean
   list: IAPICategory[]

@@ -19,6 +19,7 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
     list: [],
     keyboardHeight: 0,
     activeItem: 0,
+    yoffset: 0,
     isActiveItem: false,
     color: '',
   }
@@ -33,8 +34,12 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
     this.setState({ refreshing: false })
   }
 
-  async delete(id: number) {
+  async delete(id: number, index: number) {
     await APICategory.delete(id)
+    const { list } = this.state
+    list.splice(index, 1)
+    this.setState({ list })
+    await this.refresh()
   }
 
   async add(text: string) {
@@ -86,6 +91,9 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
             }}
           >
             <ScrollView
+              onScroll={n => {
+                this.setState({ yoffset: n.nativeEvent.contentOffset.y })
+              }}
               scrollEnabled={!this.state.preventScroll}
               refreshControl={
                 <RefreshControl
@@ -93,40 +101,52 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
                     this.setState({ refreshing: true })
                     this.refresh()
                   }}
+                  enabled={!this.state.preventScroll}
                   refreshing={this.state.refreshing}
                 />
               }
             >
               {this.state.list.map((item: IAPICategory, index: number) => (
                 <CategoryUpdater
+                  onSort={async y => {
+                    if (this.state.preventScroll) {
+                      const bh = GlobalStyles().barHeight
+                      const title =
+                        GlobalStyles().statusbarHeight + bh - this.state.yoffset
+                      const pos = Math.floor((y - title) / bh)
+                      const { list } = this.state
+                      const itm = list[pos]
+                      list[pos] = item
+                      list[index] = itm
+                      this.setState({ list, preventScroll: false })
+                      await APICategory.sort(
+                        this.props.id,
+                        list.map(nitem => nitem.id)
+                      )
+                      await this.refresh()
+                    }
+                  }}
                   onEditName={() => {
                     this.setState({
                       isActiveItem: true,
                       activeItem: index,
                     })
                   }}
-                  onStart={() =>
-                    this.setState({
-                      // preventScroll: true,
-                      // isActiveItem: true,
-                      // activeItem: index,
-                    })
-                  }
+                  onLongPress={() => {
+                    this.setState({ preventScroll: true })
+                  }}
+                  onStart={() => {}}
                   onEnd={async newItem => {
+                    // console.log('onEnd')
                     this.setState({ preventScroll: false, isActiveItem: false })
                     await this.update(newItem, index)
                   }}
-                  key={
-                    item.id +
-                    (this.state.isActiveItem && this.state.activeItem === index
-                      ? '1'
-                      : '0')
-                  }
+                  key={item.id}
                   item={item}
                   index={index}
                   maxItems={this.state.list.length}
                   onDelete={async () => {
-                    await this.delete(item.id)
+                    await this.delete(item.id, index)
                   }}
                   selectorOpen={
                     this.state.isActiveItem && this.state.activeItem === index
@@ -157,11 +177,13 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
                 this.setState({
                   preventScroll: false,
                   isActiveItem: false,
+                  list,
                 })
                 await this.update(
                   list[this.state.activeItem],
                   this.state.activeItem
                 )
+                await this.refresh()
               } else this.add(text)
             }}
           />

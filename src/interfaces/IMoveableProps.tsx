@@ -32,4 +32,6 @@ export default interface IMoveableProps {
   icon?: string
   bgColor?: string
   onMoving?: (left: boolean, right: boolean) => void
+  onSort?: (posY: number) => void
+  onEnd?: () => void
 }

@@ -17,6 +17,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
     isRight: false,
     movingLeft: false,
     movingRight: false,
+    longPress: false,
   }
 
   initX = 0
@@ -25,6 +26,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
 
   handle = (e: any) => {
     const actual = Math.round(e.nativeEvent.pageX)
+
     let posX = Math.round(actual - this.initX)
 
     if (posX > 0 && !this.props.onDelete) return
@@ -43,7 +45,11 @@ export default class Moveable extends React.Component<IMoveableProps> {
 
     if (!this.state.moving) this.props.onPop?.()
     this.props.onMoving?.(posX <= -20, posX >= 20)
-    this.setState({ posX, movingLeft: posX <= -20, movingRight: posX >= 20 })
+    this.setState({
+      posX,
+      movingLeft: posX <= -20,
+      movingRight: posX >= 20,
+    })
   }
 
   start = (initX: number, initY: number) => {
@@ -101,10 +107,17 @@ export default class Moveable extends React.Component<IMoveableProps> {
 
   render() {
     const moveableText = {
-      onLongPress: this.props.onLongPress,
+      onLongPress: () => {
+        // console.log('onLongPress')
+        this.props.onLongPress?.()
+        // this.setState({ longPress: true })
+        // console.log('onLongPress')
+      },
       onRelease: () => {
         this.stop()
         this.props.onRelease?.()
+        // this.setState({ longPress: false })
+        // console.log('onLongPress off')
       },
       touchStart: this.resetMovement,
       to: this.props.to,
@@ -129,6 +142,8 @@ export default class Moveable extends React.Component<IMoveableProps> {
       fullWidth: this.props.fullWidth,
       icon: this.props.icon,
       bgColor: this.props.bgColor,
+      onSort: this.props.onSort,
+      onEnd: this.props.onEnd,
     }
 
     const getIcon = (
@@ -174,6 +189,17 @@ export default class Moveable extends React.Component<IMoveableProps> {
           ...borderStyle,
           ...(this.props.disabled ?? false ? { height: 30 } : {}),
           ...(this.props.fullWidth ? { marginLeft: 0, marginRight: 0 } : {}),
+          ...(this.state.longPress
+            ? {
+                position: 'absolute',
+                top: this.state.posY,
+                transform: [{ scale: 1.1 }],
+              }
+            : {
+                position: undefined,
+                top: 0,
+                transform: [{ scale: 1 }],
+              }),
         }}
       >
         {this.state.posX > 0 && this.props.onDelete && (

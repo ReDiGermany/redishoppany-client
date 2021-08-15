@@ -17,6 +17,8 @@ interface ICategoryUpdaterProps {
   onEnd: (item: IAPICategory) => void
   onDelete: () => void
   onEditName: () => void
+  onSort: (pos: number) => void
+  onLongPress?: () => void
   selectorOpen: boolean
 }
 
@@ -27,6 +29,8 @@ export default class CategoryUpdater extends Component<ICategoryUpdaterProps> {
     colors: [],
     colors2: [],
     openColorPicker: false,
+    onLongPress: false,
+    sortPos: 0,
   }
 
   componentDidMount() {
@@ -53,42 +57,60 @@ export default class CategoryUpdater extends Component<ICategoryUpdaterProps> {
     }).item
 
     return (
-      <View key={this.state.item.id}>
+      <View
+        key={this.state.item.id}
+        style={{ zIndex: this.state.onLongPress ? 10000 : 0 }}
+      >
         <Moveable
+          onSort={y => {
+            this.setState({
+              sortPos: y,
+            })
+          }}
+          onLongPress={() => {
+            this.props.onLongPress?.()
+            this.setState({ sortItem: this.props.index, onLongPress: true })
+          }}
+          onEnd={() => {
+            this.setState({ onLongPress: false })
+            this.props.onSort(this.state.sortPos)
+          }}
           large={true}
           bgColor={this.state.item.color}
           name={this.state.item.name}
           onDelete={() => this.props.onDelete()}
+          // buttons={[
+          //   {
+          //     disabled: this.props.index === 0,
+          //     color: '#fff',
+          //     icon: 'arrow-up',
+          //     name: 'test',
+          //     onPress: () => {},
+          //   },
+          //   {
+          //     color: '#fff',
+          //     icon: 'arrow-down',
+          //     name: 'test1',
+          //     onPress: () => {},
+          //     disabled: this.props.index + 1 === this.props.maxItems,
+          //   },
+          // ]}
           buttons={[
             {
-              disabled: this.props.index === 0,
+              disabled: false,
               color: '#fff',
-              icon: 'arrow-up',
-              name: 'test',
-              onPress: () => {},
-            },
-            {
-              color: '#fff',
-              icon: 'arrow-down',
-              name: 'test1',
-              onPress: () => {},
-              disabled: this.props.index + 1 === this.props.maxItems,
-            },
-          ]}
-          right={[
-            {
-              color: '#111111',
               icon: 'pen',
-              //   name: 'changeName',
-              click: () => {
+              name: 'changeName',
+              onPress: () => {
                 this.props.onEditName()
               },
             },
             {
-              color: '#111111',
+              disabled: false,
+              color: '#fff',
               icon: 'palette',
-              //   name: 'changeColorPalette',
-              click: () => {
+              name: 'changeColorPalette',
+              onPress: () => {
                 this.props.onStart()
                 this.setState({
                   colorSelectorOpen: !this.state.colorSelectorOpen,

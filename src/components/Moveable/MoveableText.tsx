@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, ViewStyle } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Row from '../Row'
 import MoveableButton from './MoveableButton'
@@ -12,35 +12,43 @@ import GlobalStyles from '../../styles/GlobalStyles'
 
 export default class MoveableText extends Component<IMoveableTextProps> {
   state = {
-    longPressTimer: setTimeout(() => {}, 0),
+    longPress: false,
+    posY: 0,
+    startY: 0,
   }
+
+  timer: any = null
 
   render() {
     const onTouchEnd = () => {
-      clearTimeout(this.state.longPressTimer)
+      // console.log('onTouchEnd')
+      clearTimeout(this.timer)
       this.props.onRelease?.()
+      this.setState({ longPress: false, posY: 0, startY: 0 })
     }
 
     const onTouchStart = () => {
+      // console.log('onTouchStart')
+      this.timer = setTimeout(() => {
+        // console.log('longpress!?')
+        this.setState({ longPress: true })
+        this.props.onLongPress?.()
+      }, 500)
       this.props.touchStart?.()
-      this.setState({
-        longPressTimer: setTimeout(() => {
-          this.props.onLongPress?.()
-        }, 1000),
-      })
     }
 
     const onResponderGrant = (e: any) => {
-      const initX = parseInt(e.nativeEvent.pageX, 10)
-      const initY = parseInt(e.nativeEvent.pageY, 10)
-      this.props.onStart?.(initX, initY)
+      const startX = parseInt(e.nativeEvent.pageX, 10)
+      const startY = parseInt(e.nativeEvent.pageY, 10)
+      this.setState({ startY })
+      this.props.onStart?.(startX, startY)
     }
 
     const link = {
       style: RowFlexStyle,
     }
 
-    const style = {
+    let style: ViewStyle = {
       ...textStyle.box(this.props.posX),
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
@@ -66,6 +74,32 @@ export default class MoveableText extends Component<IMoveableTextProps> {
     if (this.props.bgColor) {
       style.backgroundColor = this.props.bgColor
     }
+
+    const isSorting = this.state.longPress && this.props.onSort !== undefined
+
+    if (isSorting) {
+      style = {
+        ...style,
+        transform: [{ scale: 1.03 }],
+        position: 'absolute',
+        top: this.state.posY - this.state.startY,
+        zIndex: 30000,
+        height: GlobalStyles().lineHeight,
+
+        borderRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+      }
+    }
     // console.log(style)
     // opacity: this.props.bgOpacity,
 
@@ -76,8 +110,15 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       onTouchEnd,
       onTouchCancel: onTouchEnd,
       onTouchStart,
-      onResponderEnd: () => this.props.onRelease?.(),
-      onResponderMove: (e: any) => this.props.handle?.(e),
+      onResponderEnd: () => this.props.onEnd?.(),
+      onResponderMove: (e: any) => {
+        if (!this.state.longPress) {
+          this.props.handle?.(e)
+        } else if (this.props.onSort !== undefined) {
+          this.setState({ posY: e.nativeEvent.pageY })
+          this.props.onSort?.(this.state.posY)
+        }
+      },
       onResponderTerminate: () => this.props.onRelease?.(),
       onResponderRelease: () => {
         this.props.onRelease?.()
@@ -118,7 +159,8 @@ export default class MoveableText extends Component<IMoveableTextProps> {
                     ...textStyle.text,
                     ...(this.props.centerText && textStyle.centerText),
                     ...(this.props.disabled && textStyle.disabled),
-                    ...(this.props.boldText && textStyle.boldText),
+                    ...((this.props.boldText || isSorting) &&
+                      textStyle.boldText),
                     ...(this.props.bgOpacity && {}),
                   }}
                 >
@@ -134,9 +176,10 @@ export default class MoveableText extends Component<IMoveableTextProps> {
               />
             )}
           </Pressable>
-          {this.props.buttons?.map(btn => (
-            <MoveableButton key={btn.name} {...btn} />
-          ))}
+          {!isSorting &&
+            this.props.buttons?.map(btn => (
+              <MoveableButton key={btn.name} {...btn} />
+            ))}
           {this.props.checked && (
             <Icon name="check" size={20} style={textStyle.checkIcon} />
           )}
