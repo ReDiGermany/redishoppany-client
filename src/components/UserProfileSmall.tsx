@@ -1,15 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import IPageProps from '../interfaces/IPageProps'
 import { Link } from '../Router/react-router'
 import ColumnStyle from '../styles/ColumnStyle'
 import { profileStyle } from '../styles/SidebarStyle'
+import IUserProfileSmall from '../styles/IUserProfileSmall'
 import Row from './Row'
-
-interface IUserProfileSmall extends IPageProps {
-  solid?: boolean
-}
 
 export default class UserProfileSmall extends Component<IUserProfileSmall> {
   render() {
@@ -17,13 +13,12 @@ export default class UserProfileSmall extends Component<IUserProfileSmall> {
       style: profileStyle.bell,
       name: 'bell',
     }
+    const rowStyle = {
+      backgroundColor: !(this.props.solid ?? false) && '#202020',
+    }
 
     return (
-      <Row
-        style={{
-          ...(this.props.solid ?? false ? {} : { backgroundColor: '#202020' }),
-        }}
-      >
+      <Row style={rowStyle}>
         <View style={profileStyle.image}></View>
         <View style={ColumnStyle}>
           <Text style={profileStyle.name}>
