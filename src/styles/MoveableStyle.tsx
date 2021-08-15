@@ -61,7 +61,7 @@ const deleteBox = (x: number) =>
     },
   }).row
 
-const buttonIcon = (color: string) =>
+const buttonIcon = (color: string, textColor: string) =>
   StyleSheet.create({
     box: {
       borderRadius: 5,
@@ -73,6 +73,7 @@ const buttonIcon = (color: string) =>
       backgroundColor: color,
       textAlignVertical: 'center',
       textAlign: 'center',
+      color: textColor,
     },
   }).box
 
