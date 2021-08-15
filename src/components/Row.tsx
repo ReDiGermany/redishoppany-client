@@ -5,10 +5,8 @@ import IRow from '../interfaces/IRow'
 
 export default class Row extends Component<IRow> {
   render() {
-    return (
-      <View style={{ ...RowStyle, ...this.props.style }}>
-        {this.props.children}
-      </View>
-    )
+    const style = { ...RowStyle, ...this.props.style }
+
+    return <View style={style}>{this.props.children}</View>
   }
 }
