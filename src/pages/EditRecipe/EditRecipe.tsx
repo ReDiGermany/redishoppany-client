@@ -1,22 +1,14 @@
 import React, { Component } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import {
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from 'react-native'
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native'
 import TextField from '../../components/TextField'
 import IPageProps from '../../interfaces/IPageProps'
 import Navigation from '../../Navigation'
 import { container } from '../../styles/RecipesListStyle'
-import GlobalStyles from '../../styles/GlobalStyles'
 import Ingredient from './Ingredient'
 
 interface IEditRecipeProps extends IPageProps {
-  id?: number
+  id?: string
 }
 
 interface IEditRecipeState {
@@ -112,7 +104,12 @@ export default class EditRecipe extends Component<
               }}
             >
               <Pressable
-                style={{ height: 50, width: '49%', backgroundColor: '#4ae53a' }}
+                style={{
+                  height: 50,
+                  borderRadius: 5,
+                  width: '49%',
+                  backgroundColor: '#4ae53a',
+                }}
                 onPress={onSubmit}
               >
                 <Text style={{ textAlign: 'center', lineHeight: 50 }}>
@@ -120,7 +117,12 @@ export default class EditRecipe extends Component<
                 </Text>
               </Pressable>
               <Pressable
-                style={{ height: 50, width: '49%', backgroundColor: '#ff6600' }}
+                style={{
+                  height: 50,
+                  borderRadius: 5,
+                  width: '49%',
+                  backgroundColor: '#ff6600',
+                }}
                 onPress={onSubmit}
               >
                 <Text style={{ textAlign: 'center', lineHeight: 50 }}>

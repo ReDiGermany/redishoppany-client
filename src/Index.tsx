@@ -6,7 +6,7 @@ import Imprint from './pages/Imprint'
 import List from './pages/List'
 import Settings from './pages/Settings'
 import Notifications from './pages/Notifications'
-import Recipe from './pages/Recipe/Recipe'
+import Recipe from './pages/Recipe'
 import Logout from './pages/Logout'
 import APIUser from './helper/API/APIUser'
 import EditRecipe from './pages/EditRecipe/EditRecipe'
@@ -56,6 +56,14 @@ export default class Index extends Component<IIndexProps, IIndexState> {
           <Notifications user={this.state.user} />
         </Route>
         <Route path="/recipe/add">
+          <EditRecipe user={this.state.user} />
+        </Route>
+        <Route
+          path="/recipe/edit/:id"
+          render={props => (
+            <EditRecipe user={this.state.user} id={props.match.params.id} />
+          )}
+        >
           <EditRecipe user={this.state.user} />
         </Route>
         <Route

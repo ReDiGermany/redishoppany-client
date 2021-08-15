@@ -8,9 +8,9 @@ import {
   SafeAreaView,
   Pressable,
 } from 'react-native'
-import BottomBox from '../../BottomBox'
-import Navigation from '../../Navigation'
-import GlobalStyles from '../../styles/GlobalStyles'
+import BottomBox from '../BottomBox'
+import Navigation from '../Navigation'
+import GlobalStyles from '../styles/GlobalStyles'
 import {
   btn,
   btnBox,
@@ -26,10 +26,11 @@ import {
   textBox,
   titleInfo,
   titleText,
-} from '../../styles/RecipeStyle'
-import IPageProps from '../../interfaces/IPageProps'
-import APIFriends from '../../helper/API/APIFriends'
-import IFriend from '../../interfaces/IFriend'
+} from '../styles/RecipeStyle'
+import IPageProps from '../interfaces/IPageProps'
+import APIFriends from '../helper/API/APIFriends'
+import IFriend from '../interfaces/IFriend'
+import { Redirect } from '../Router/react-router'
 
 interface IRecipeState {
   deleteConfirmBox: boolean
@@ -38,6 +39,7 @@ interface IRecipeState {
   ingredients: string[]
   text: string
   friends: IFriend[]
+  redirect: string
 }
 
 interface IRecipesProps extends IPageProps {
@@ -60,10 +62,13 @@ export default class Recipes extends Component<IRecipesProps, IRecipeState> {
       'test2',
       'test3',
     ],
+    redirect: '',
     text: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
   }
 
   render() {
+    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
+
     // TODO: Add recipe API
     const url =
       'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg'
@@ -120,7 +125,12 @@ export default class Recipes extends Component<IRecipesProps, IRecipeState> {
               </Text>
             </View>
             <View style={btnBox}>
-              <Pressable style={btn} onPress={() => {}}>
+              <Pressable
+                style={btn}
+                onPress={() =>
+                  this.setState({ redirect: `/recipe/edit/${this.props.id}` })
+                }
+              >
                 <Icon style={[btnIcon, btnEdit]} size={18} name="pen" />
               </Pressable>
               <Pressable
