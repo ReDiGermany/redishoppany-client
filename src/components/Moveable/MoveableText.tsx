@@ -21,16 +21,13 @@ export default class MoveableText extends Component<IMoveableTextProps> {
 
   render() {
     const onTouchEnd = () => {
-      // console.log('onTouchEnd')
       clearTimeout(this.timer)
       this.props.onRelease?.()
       this.setState({ longPress: false, posY: 0, startY: 0 })
     }
 
     const onTouchStart = () => {
-      // console.log('onTouchStart')
       this.timer = setTimeout(() => {
-        // console.log('longpress!?')
         this.setState({ longPress: true })
         this.props.onLongPress?.()
       }, 500)
@@ -54,26 +51,26 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       borderBottomRightRadius: 0,
       borderRadius: 0,
     }
-    if (this.props.posX === 0 && (this.props.large ?? false) === true) {
-      style.borderRadius = 10
-      style.borderBottomLeftRadius = 10
-      style.borderBottomRightRadius = 10
-    }
-    if (this.props.last ?? false) {
-      style.borderBottomLeftRadius = 10
-      style.borderBottomRightRadius = 10
-    }
-    if (this.props.bgOpacity !== undefined) {
+    if (this.props.posX === 0 && (this.props.large ?? false) === true)
+      style = {
+        ...style,
+        borderRadius: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+      }
+
+    if (this.props.last ?? false)
+      style = {
+        ...style,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+      }
+    if (this.props.bgOpacity !== undefined)
       style.backgroundColor = `${GlobalStyles().dark.deep}${
         this.props.bgOpacity
       }`
-    }
-    if (this.props.fullWidth ?? false) {
-      style.marginLeft = 0
-    }
-    if (this.props.bgColor) {
-      style.backgroundColor = this.props.bgColor
-    }
+    if (this.props.fullWidth ?? false) style.marginLeft = 0
+    if (this.props.bgColor) style.backgroundColor = this.props.bgColor
 
     const isSorting = this.state.longPress && this.props.onSort !== undefined
 
@@ -100,8 +97,6 @@ export default class MoveableText extends Component<IMoveableTextProps> {
         elevation: 5,
       }
     }
-    // console.log(style)
-    // opacity: this.props.bgOpacity,
 
     const box = {
       style,
@@ -128,24 +123,20 @@ export default class MoveableText extends Component<IMoveableTextProps> {
       onResponderReject: () => this.props.onRelease?.(),
     }
 
+    const fullTextStyle = {
+      ...textStyle.text,
+      ...(this.props.centerText && textStyle.centerText),
+      ...(this.props.disabled && textStyle.disabled),
+      ...((this.props.boldText || isSorting) && textStyle.boldText),
+    }
+
     return (
       <View {...box}>
         <Row>
           <Pressable onPress={this.props.onClick} {...link}>
             <Row>
               {this.props.icon && (
-                <Icon
-                  style={{
-                    color: '#fff',
-                    height: 50,
-                    textAlign: 'center',
-                    textAlignVertical: 'center',
-                    fontSize: 15,
-                    opacity: 0.5,
-                    marginHorizontal: 10,
-                  }}
-                  name={this.props.icon}
-                />
+                <Icon style={textStyle.textIcon} name={this.props.icon} />
               )}
               {this.props.prefix && (
                 <MoveableTextPrefix
@@ -154,18 +145,7 @@ export default class MoveableText extends Component<IMoveableTextProps> {
                 />
               )}
               {this.props.text && (
-                <Text
-                  style={{
-                    ...textStyle.text,
-                    ...(this.props.centerText && textStyle.centerText),
-                    ...(this.props.disabled && textStyle.disabled),
-                    ...((this.props.boldText || isSorting) &&
-                      textStyle.boldText),
-                    ...(this.props.bgOpacity && {}),
-                  }}
-                >
-                  {this.props.text}
-                </Text>
+                <Text style={fullTextStyle}>{this.props.text}</Text>
               )}
             </Row>
             {this.props.dropdownItems && this.props.dropdownSelected && (

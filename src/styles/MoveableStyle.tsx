@@ -133,11 +133,21 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
   },
+  textIcon: {
+    color: '#fff',
+    height: 50,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: 15,
+    opacity: 0.5,
+    marginHorizontal: 10,
+  },
 })
 
 const textStyle = {
   box: textBox,
   text: textBoxText,
+  textIcon: styles.textIcon,
   checkIcon: styles.checkIcon,
   centerText: styles.centerText,
   disabled: styles.disabled,
