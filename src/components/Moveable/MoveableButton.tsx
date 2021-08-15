@@ -2,14 +2,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import React, { Component } from 'react'
 import IconBox from '../IconBox'
 import { textStyle } from '../../styles/MoveableStyle'
-
-interface IMoveableButtonProps {
-  name: string
-  icon: string
-  color: string
-  onPress?: () => void
-  disabled?: boolean
-}
+import IMoveableButtonProps from '../../interfaces/IMoveableButtonProps'
 
 export default class MoveableButton extends Component<IMoveableButtonProps> {
   render() {
@@ -21,7 +14,6 @@ export default class MoveableButton extends Component<IMoveableButtonProps> {
         if (!(this.props.disabled ?? false)) this.props.onPress?.()
       },
     }
-    // console.log(icon)
 
     return (
       <IconBox disabled={this.props.disabled}>
