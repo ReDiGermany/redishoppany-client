@@ -1,3 +1,3 @@
-export interface ILoginHeadingProps {
+export default interface ILoginHeadingProps {
   title: string
 }

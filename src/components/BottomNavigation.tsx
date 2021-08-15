@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Language from '../language/Language'
 import BottomNavigationStyle from '../styles/BottomNavigationStyle'
-import { IBottomNavigationProps } from '../interfaces/IBottomNavigationProps'
+import IBottomNavigationProps from '../interfaces/IBottomNavigationProps'
 import Row from './Row'
 
 export default class BottomNavigation extends Component<IBottomNavigationProps> {

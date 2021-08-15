@@ -1,4 +1,4 @@
-export interface IAPIShareFoodplanFriends {
+export default interface IAPIShareFoodplanFriends {
   id: number
   friend: {
     id: number

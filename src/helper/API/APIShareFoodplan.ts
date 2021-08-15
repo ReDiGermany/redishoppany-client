@@ -1,5 +1,5 @@
 import API from '../API'
-import { IAPIShareFoodplanFriends } from '../../interfaces/IAPIShareFoodplanFriends'
+import IAPIShareFoodplanFriends from '../../interfaces/IAPIShareFoodplanFriends'
 
 export default class APIShareFoodplan {
   public static async invite(id: number): Promise<boolean> {

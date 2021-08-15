@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
-import { ILoginHeadingProps } from '../../interfaces/ILoginHeadingProps'
+import ILoginHeadingProps from '../../interfaces/ILoginHeadingProps'
 import LoginHeadingStyles from '../../styles/LineLoginHeadingStyles'
 
 export default class LoginHeading extends Component<ILoginHeadingProps> {

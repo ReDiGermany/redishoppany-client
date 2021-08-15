@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Dimensions, TextInput } from 'react-native'
 import IScreen from '../../interfaces/IScreen'
 import loginStyles from '../../styles/LoginStyle'
-import { ILoginInputEmailProps } from '../../interfaces/ILoginInputEmailProps'
+import ILoginInputEmailProps from '../../interfaces/ILoginInputEmailProps'
 import { mailRegex } from '../../helper/Constants'
 import Language from '../../language/Language'
 
