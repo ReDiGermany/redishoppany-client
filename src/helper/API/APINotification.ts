@@ -1,11 +1,5 @@
 import API from '../API'
-
-interface IAPINotification {
-  id: number
-  name: string
-  info: string
-  seen: boolean
-}
+import IAPINotification from '../../interfaces/IAPINotification'
 
 export default class APINotification {
   public static async list(): Promise<IAPINotification[]> {

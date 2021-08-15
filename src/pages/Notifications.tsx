@@ -1,73 +1,90 @@
 import React, { Component } from 'react'
 import { View, RefreshControl, SafeAreaView, ScrollView } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Moveable from '../components/Moveable/Moveable'
+import APINotification from '../helper/API/APINotification'
 import IPageProps from '../interfaces/IPageProps'
 import Navigation from '../Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
+import { INotificationPageState } from '../interfaces/INotificationPageState'
+import IAPINotification from '../interfaces/IAPINotification'
 
-export default class Notifications extends Component<IPageProps> {
-  state = {
-    notifications: [
-      { name: 'Freundschaftsanfrage von Max K.', disabled: false },
-      { name: 'test notification', disabled: true },
-    ],
+export default class Notifications extends Component<
+  IPageProps,
+  INotificationPageState
+> {
+  state: INotificationPageState = {
+    notifications: [],
     refreshing: false,
   }
 
+  async refresh() {
+    const notifications = await APINotification.list()
+    this.setState({ refreshing: false, notifications })
+    await AsyncStorage.setItem('notifications', JSON.stringify(notifications))
+  }
+
+  async componentDidMount() {
+    const notifications = await AsyncStorage.getItem('notifications')
+    if (notifications)
+      this.setState({ notifications: JSON.parse(notifications) })
+    this.refresh()
+  }
+
+  async delete(item: IAPINotification) {
+    await APINotification.delete(item.id)
+    await this.refresh()
+  }
+
+  async deleteAll() {
+    await APINotification.deleteAll()
+    await this.refresh()
+  }
+
   render() {
-    const onRefresh = () => {
-      this.setState({ refreshing: true })
-      setTimeout(() => {
-        this.setState({ refreshing: false })
-      }, 1000)
+    const navigation = {
+      user: this.props.user,
+      label: 'Benachrichtigungen',
+      buttons: [
+        {
+          name: 'deleteAll',
+          onClick: () => this.deleteAll(),
+          icon: 'trash',
+        },
+      ],
+    }
+
+    const safeView = {
+      style: {
+        height:
+          GlobalStyles().appHeight -
+          GlobalStyles().statusbarHeight -
+          GlobalStyles().barHeight,
+      },
+    }
+
+    const refreshControl = {
+      refreshing: this.state.refreshing,
+      onRefresh: async () => {
+        this.setState({ refreshing: true })
+        await this.refresh()
+      },
+    }
+
+    const scrollView = {
+      refreshControl: <RefreshControl {...refreshControl} />,
     }
 
     return (
       <View>
-        <Navigation
-          user={this.props.user}
-          label="Benachrichtigungen"
-          // badge="10"
-          buttons={[
-            {
-              name: 'deleteAll',
-              onClick: () => {
-                // console.log('deleteAll')
-              },
-              icon: 'trash',
-            },
-          ]}
-        />
-        <SafeAreaView
-          style={{
-            height:
-              GlobalStyles().appHeight -
-              GlobalStyles().barHeight -
-              GlobalStyles().statusbarHeight,
-          }}
-        >
-          <ScrollView
-            onScrollBeginDrag={() => {
-              this.setState({ scrolling: true })
-              // console.log('scroll start')
-            }}
-            onScrollEndDrag={() => {
-              this.setState({ scrolling: false })
-              // console.log('scroll stop')
-            }}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={onRefresh}
-              />
-            }
-          >
+        <Navigation {...navigation} />
+        <SafeAreaView {...safeView}>
+          <ScrollView {...scrollView}>
             {this.state.notifications.map(item => (
               <Moveable
                 key={item.name}
-                onDelete={() => {}}
+                onDelete={() => this.delete(item)}
                 name={item.name}
-                // to="/settings"
               />
             ))}
           </ScrollView>
