@@ -65,17 +65,16 @@ export default class QRCode extends Component<IQRCodeScanned> {
       },
     }
 
+    const style = {
+      ...QRCodeStyles.icon,
+      ...(this.state.scanner ? { color: '#fff' } : { color: '#000' }),
+    }
+
     return (
       <View style={QRCodeStyles.container}>
         {QRContent}
         <Pressable {...pressable}>
-          <Icon
-            style={{
-              ...QRCodeStyles.icon,
-              ...(this.state.scanner ? { color: '#fff' } : { color: '#000' }),
-            }}
-            name={this.state.scanner ? 'times' : 'camera'}
-          />
+          <Icon style={style} name={this.state.scanner ? 'times' : 'camera'} />
         </Pressable>
       </View>
     )
