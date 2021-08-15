@@ -88,8 +88,7 @@ export default class Index extends Component<IIndexProps, IIndexState> {
         />
         <Route exact path="/">
           {/* <Settings user={this.state.user} /> */}
-          {/* <Home user={this.state.user} /> */}
-          <UpdateCat user={this.state.user} id={25} />
+          <Home user={this.state.user} />
         </Route>
       </View>
     )
