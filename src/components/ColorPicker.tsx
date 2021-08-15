@@ -2,12 +2,8 @@ import React, { Component } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { HSLToHex } from '../helper/Functions'
 import GlobalStyles from '../styles/GlobalStyles'
-
-interface IColorPickerProps {
-  onChange: (value: string, x: number) => void
-  onStart: () => void
-  onEnd: () => void
-}
+import IColorPickerProps from '../interfaces/IColorPickerProps'
+import ColorPickerStyles from '../styles/ColorPickerStyles'
 
 export default class ColorPicker extends Component<IColorPickerProps> {
   parseValue(x: number) {
@@ -19,33 +15,28 @@ export default class ColorPicker extends Component<IColorPickerProps> {
 
   render() {
     const colors: string[] = []
-    for (let i = 0; i < 9; i++) {
-      colors.push(HSLToHex(359 * (0.125 * i)))
+    for (let i = 0; i < 9; i++) colors.push(HSLToHex(359 * (0.125 * i)))
+
+    const onTouchStart = (e: any) => {
+      this.parseValue(e.nativeEvent.pageX)
+      this.props.onStart()
+    }
+    const onTouchMove = (e: any) => this.parseValue(e.nativeEvent.pageX)
+    const onTouchEnd = (e: any) => {
+      this.parseValue(e.nativeEvent.pageX)
+      this.props.onEnd()
     }
 
-    return (
-      <>
-        <LinearGradient
-          colors={colors}
-          style={{
-            marginBottom: 10,
-            marginHorizontal: 10,
-            height: 50,
-            borderRadius: 5,
-          }}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          onTouchStart={e => {
-            this.parseValue(e.nativeEvent.pageX)
-            this.props.onStart()
-          }}
-          onTouchMove={e => this.parseValue(e.nativeEvent.pageX)}
-          onTouchEnd={e => {
-            this.parseValue(e.nativeEvent.pageX)
-            this.props.onEnd()
-          }}
-        ></LinearGradient>
-      </>
-    )
+    const linearGradient = {
+      colors,
+      style: ColorPickerStyles,
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 0 },
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+    }
+
+    return <LinearGradient {...linearGradient} />
   }
 }
