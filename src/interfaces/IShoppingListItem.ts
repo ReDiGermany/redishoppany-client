@@ -4,5 +4,6 @@ export default interface IShoppingListItem {
   open: boolean
   id: number
   amount: number
+  catId: number
   inCart: boolean
 }
