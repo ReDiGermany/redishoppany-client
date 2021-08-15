@@ -3,23 +3,7 @@ import { View, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { GetLuma } from '../../helper/Functions'
 import { rightIconStyle } from '../../styles/MoveableStyle'
-
-interface IMoveableIconProps {
-  initX: number
-  initY: number
-  posX: number
-  posY: number
-  moving: boolean
-  isLeft: boolean
-  isRight: boolean
-  last?: boolean
-  color: string
-  index: number
-  // right?: { icon: string; color: string; click: () => void }[];
-  length: number
-  icon: string
-  click: () => void
-}
+import IMoveableIconProps from '../../interfaces/IMoveableIconProps'
 
 export default class MoveableIcon extends Component<IMoveableIconProps> {
   render() {
@@ -33,17 +17,15 @@ export default class MoveableIcon extends Component<IMoveableIconProps> {
       size: 20,
     }
 
+    const viewStyle = rightIconStyle.box(
+      width,
+      right,
+      this.props.color,
+      this.props.last
+    )
+
     return (
-      <View
-        style={{
-          ...rightIconStyle.box(
-            width,
-            right,
-            this.props.color,
-            this.props.last
-          ),
-        }}
-      >
+      <View style={viewStyle}>
         <Pressable onPress={this.props.click}>
           <Icon {...icon} />
         </Pressable>
