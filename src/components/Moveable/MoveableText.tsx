@@ -156,6 +156,16 @@ export default class MoveableText extends Component<IMoveableTextProps> {
               />
             )}
           </Pressable>
+          {this.props.badge ? (
+            <Text style={textStyle.badge}>{this.props.badge.toString()}</Text>
+          ) : (
+            <></>
+          )}
+          {this.props.shared ? (
+            <Text style={textStyle.shared}>shared</Text>
+          ) : (
+            <></>
+          )}
           {!isSorting &&
             this.props.buttons?.map(btn => (
               <MoveableButton key={btn.name} {...btn} />

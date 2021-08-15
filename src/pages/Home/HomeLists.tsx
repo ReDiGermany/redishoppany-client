@@ -50,6 +50,7 @@ export default class HomeList extends Component<IPageProps> {
   render() {
     if (this.state.redirect !== '')
       return <Redirect push to={this.state.redirect} />
+
     const buttons: INavigationPropsButton[] = [
       {
         icon: 'plus',
@@ -57,6 +58,7 @@ export default class HomeList extends Component<IPageProps> {
         onClick: () => this.setState({ add: !this.state.add }),
       },
     ]
+
     if (this.props.user?.notificationCount)
       buttons.unshift({
         icon: 'bell',
@@ -67,6 +69,8 @@ export default class HomeList extends Component<IPageProps> {
           text: this.props.user?.notificationCount.toString(),
         },
       })
+
+    // console.log(this.props.user)
 
     return (
       <>
@@ -111,6 +115,8 @@ export default class HomeList extends Component<IPageProps> {
                     name: item.name,
                     onClick: () =>
                       this.setState({ redirect: `/list/${item.id}` }),
+                    badge: item.count,
+                    shared: item.shared,
                   }
 
                   return <Moveable key={item.name} {...moveable} />

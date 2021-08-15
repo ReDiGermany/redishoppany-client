@@ -32,4 +32,6 @@ export default interface IMoveableTextProps {
   fullWidth?: boolean
   onSort?: (_posY: number) => void
   onEnd?: () => void
+  badge?: number | string
+  shared?: boolean
 }

@@ -34,4 +34,6 @@ export default interface IMoveableProps {
   onMoving?: (_left: boolean, _right: boolean) => void
   onSort?: (_posY: number) => void
   onEnd?: () => void
+  badge?: number | string
+  shared?: boolean
 }

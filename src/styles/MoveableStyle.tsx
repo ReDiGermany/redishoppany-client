@@ -143,6 +143,28 @@ const styles = StyleSheet.create({
     opacity: 0.5,
     marginHorizontal: 10,
   },
+  badge: {
+    color: '#fff',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    width: 50,
+    opacity: 0.4,
+  },
+  shared: {
+    color: '#4ae53a',
+    borderColor: '#4ae53a',
+    borderWidth: 1,
+    fontSize: 10,
+    textTransform: 'uppercase',
+    height: 20,
+    borderRadius: 5,
+    marginTop: 15,
+    marginRight: 15,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    opacity: 0.4,
+    paddingHorizontal: 5,
+  },
 })
 
 const textStyle = {
@@ -153,6 +175,8 @@ const textStyle = {
   centerText: styles.centerText,
   disabled: styles.disabled,
   boldText: styles.boldText,
+  badge: styles.badge,
+  shared: styles.shared,
   right: {
     button: buttonIcon,
   },
