@@ -7,7 +7,6 @@ import Friends from './pages/Friends'
 import Imprint from './pages/Imprint'
 import List from './pages/List'
 import Settings from './pages/Settings'
-import Recipes from './pages/Recipes'
 import Notifications from './pages/Notifications'
 import Recipe from './pages/Recipe/Recipe'
 import Logout from './pages/Logout'
@@ -63,9 +62,6 @@ export default class Index extends Component<IIndexProps, IIndexState> {
         </Route>
         <Route path="/notifications">
           <Notifications user={this.state.user} />
-        </Route>
-        <Route path="/recipes">
-          <Recipes user={this.state.user} />
         </Route>
         <Route path="/recipe/add">
           <EditRecipe user={this.state.user} />
