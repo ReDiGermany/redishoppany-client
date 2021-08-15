@@ -7,6 +7,7 @@ import {
   ToastAndroid,
   ImageBackground,
 } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Navigation from '../Navigation'
 import ListHeader from '../ListHeader'
 import GlobalStyles from '../styles/GlobalStyles'
@@ -19,6 +20,7 @@ import IPageListState from '../interfaces/IPageListState'
 import IPageListProps from '../interfaces/IPageListProps'
 import { Redirect } from '../Router/react-router'
 
+// TODO: Finalize
 export default class List extends Component<IPageListProps, IPageListState> {
   state: IPageListState = {
     items: [],
@@ -39,15 +41,15 @@ export default class List extends Component<IPageListProps, IPageListState> {
     this.setState({ redirect: `/updatecat/${this.state.listId}` })
   }
 
-  // Delete all items
-  deleteItems() {
-    // TODO: API Call
-    // APIShoppingList.
+  async deleteItems() {
+    await APIShoppingList.deleteAllItems(this.props.id)
+    this.setState({ items: [], lists: [] })
+    await this.refresh()
   }
 
   async deleteBoughtItems() {
     await APIShoppingList.deleteBoughtItems(this.props.id)
-    this.reloadList()
+    this.refresh()
   }
 
   showShareContext() {}
@@ -55,45 +57,93 @@ export default class List extends Component<IPageListProps, IPageListState> {
   delteList() {}
 
   async componentDidMount() {
-    await this.reloadList()
+    const listName =
+      (await AsyncStorage.getItem(`listname-${this.props.id}`)) ?? 'Loading..'
+    this.setState({ listName })
+    const lists = await AsyncStorage.getItem('lists')
+    if (lists) this.setState({ lists: JSON.parse(lists) })
+    const items = await AsyncStorage.getItem(`list-${this.props.id}`)
+    if (items) this.setState({ items: JSON.parse(items) })
+    this.refresh()
   }
 
-  setItemBought(
+  async setItemBought(
     item: IShoppingListItem,
     itemindex: number,
     catindex: number
-  ): void {
+  ) {
     const { items } = this.state
-    items[catindex].items[itemindex].inCart = true
+    const itm = items[catindex].items[itemindex]
+    itm.inCart = true
+    items[items.length - 1].items.push(itm)
+    items[catindex].items.splice(itemindex, 1)
     this.setState({ items })
+    await APIShoppingList.setItemBought(item.id)
+    this.refresh()
   }
 
-  setOpenSwitchItem(item: IShoppingListItem): void {
+  async setItemUnBought(
+    item: IShoppingListItem,
+    itemindex: number,
+    catindex: number
+  ) {
+    const { items } = this.state
+    const itm = items[catindex].items[itemindex]
+    itm.inCart = false
+    items[item.catId].items.push(itm)
+    items[items.length - 1].items.splice(itemindex, 1)
+    this.setState({ items })
+    await APIShoppingList.setItemUnBought(item.id)
+    this.refresh()
+  }
+
+  setOpenSwitchItem(_item: IShoppingListItem): void {
     this.setState({ bottomBox: true })
   }
 
-  setOpenSortItem(item: IShoppingListItem): void {}
+  setOpenSortItem(_item: IShoppingListItem): void {}
 
-  async reloadList() {
-    this.setState({ refreshing: true })
-    const lists = await APIShoppingList.simpleList()
-    console.log('lists', lists)
-
+  async refresh() {
     const data = await APIShoppingList.singleList(this.props.id)
+
+    data.categories.forEach((cat, catIdx) => {
+      const items: any[] = []
+      cat.items.forEach(item => {
+        if (item.inCart) {
+          data.categories[data.categories.length - 1].items.push({
+            ...item,
+            catId: catIdx,
+          })
+        } else {
+          items.push({ ...item, catId: catIdx })
+        }
+      })
+      if (catIdx !== data.categories.length - 1)
+        data.categories[catIdx].items = items
+    })
     this.setState({
       items: data.categories,
       listName: data.name,
-      lists,
       listId: data.id,
     })
-    this.setState({ refreshing: false })
+
+    const lists = await APIShoppingList.simpleList()
+
+    this.setState({ refreshing: false, lists })
+    await AsyncStorage.setItem('lists', JSON.stringify(lists))
+    await AsyncStorage.setItem(
+      `list-${this.props.id}`,
+      JSON.stringify(data.categories)
+    )
+    await AsyncStorage.setItem(`listname-${this.props.id}`, data.name)
   }
 
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
     const onRefresh = async () => {
-      await this.reloadList()
+      this.setState({ refreshing: true })
+      await this.refresh()
     }
 
     const svStyles: any = {
@@ -189,7 +239,13 @@ export default class List extends Component<IPageListProps, IPageListState> {
                               ? 'rgba(255,0,0,.5)'
                               : 'rgba(0,255,0,.5)',
                             onPress: () =>
-                              this.setItemBought(item, itemindex, catindex),
+                              item.inCart
+                                ? this.setItemUnBought(
+                                    item,
+                                    itemindex,
+                                    catindex
+                                  )
+                                : this.setItemBought(item, itemindex, catindex),
                           },
                         ]}
                       />
@@ -208,7 +264,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
                 name,
                 parseInt(amount, 10)
               )
-              this.reloadList()
+              this.refresh()
             }}
           />
           <BottomBox
