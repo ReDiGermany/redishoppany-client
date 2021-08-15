@@ -5,6 +5,12 @@ import IAPIShoppingListItemResponse from '../../interfaces/IAPIShoppingListItemR
 import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListItemResponseItem'
 
 export default class APIShoppingList {
+  public static async deleteAllItems(id: number): Promise<boolean> {
+    const ret = (await API.get)<boolean>(`/shoppinglist/clear/${id}`)
+
+    return ret
+  }
+
   public static async create(name: string): Promise<boolean> {
     const ret = (await API.post)<boolean>('/shoppinglist/create', { name })
 
