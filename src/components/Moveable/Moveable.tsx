@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, View } from 'react-native'
+import { Pressable, View, ViewStyle } from 'react-native'
 import { boxStyle } from '../../styles/MoveableStyle'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import MoveableDeleteIcon from './MoveableDeleteIcon'
@@ -38,8 +38,6 @@ export default class Moveable extends React.Component<IMoveableProps> {
       posX = -50 * (this.props.right?.length ?? 0)
     }
 
-    // console.log("move", posX, { isRight, isLeft });
-
     if (this.state.isRight && posX < 0) posX = 0
     if (this.state.isLeft && posX > 0) posX = 0
 
@@ -53,7 +51,6 @@ export default class Moveable extends React.Component<IMoveableProps> {
   }
 
   start = (initX: number, initY: number) => {
-    // console.log("start", initX);
     this.initX = initX
     this.initY = initY
     this.setState({
@@ -105,103 +102,64 @@ export default class Moveable extends React.Component<IMoveableProps> {
       posY: 0,
     })
 
+  getIcon(
+    item: { icon: string; color: string; click: () => void },
+    index: number,
+    last: boolean
+  ) {
+    const moveableIcon = {
+      key: index,
+      length: this.props.right?.length ?? 0,
+      index,
+      ...item,
+      ...this.state,
+      last,
+    }
+
+    if (this.state.posX < 0) return <MoveableIcon {...moveableIcon} />
+
+    return <View key={index}></View>
+  }
+
   render() {
     const moveableText = {
-      onLongPress: () => {
-        // console.log('onLongPress')
-        this.props.onLongPress?.()
-        // this.setState({ longPress: true })
-        // console.log('onLongPress')
-      },
+      onLongPress: () => this.props.onLongPress?.(),
       onRelease: () => {
         this.stop()
         this.props.onRelease?.()
-        // this.setState({ longPress: false })
-        // console.log('onLongPress off')
       },
       touchStart: this.resetMovement,
-      to: this.props.to,
-      prefix: this.props.prefix,
       text: this.props.name,
       stop: this.stop,
       handle: this.handle,
       onStart: this.start,
       posX: this.state.posX,
-      buttons: this.props.buttons,
-      dropdownItems: this.props.dropdownItems,
-      dropdownSelected: this.props.dropdownSelected,
-      checked: this.props.checked,
-      onClick: this.props.onClick,
-      centerText: this.props.centerText,
-      large: this.props.large,
-      last: this.props.last,
-      disabled: this.props.disabled,
-      boldText: this.props.boldText,
-      selectedItem: this.props.selectedItem,
-      bgOpacity: this.props.bgOpacity,
-      fullWidth: this.props.fullWidth,
-      icon: this.props.icon,
-      bgColor: this.props.bgColor,
-      onSort: this.props.onSort,
-      onEnd: this.props.onEnd,
+      ...this.props,
     }
 
-    const getIcon = (
-      item: { icon: string; color: string; click: () => void },
-      index: number,
-      last: boolean
-    ) => {
-      const moveableIcon = {
-        key: index,
-        length: this.props.right?.length ?? 0,
-        index,
-        ...item,
-        ...this.state,
-        last,
-      }
-
-      if (this.state.posX < 0) return <MoveableIcon {...moveableIcon} />
-
-      return <View key={index}></View>
-    }
-
-    const borderStyle = {
+    let style: ViewStyle = {
+      ...boxStyle(this.props.visible ?? true, this.props.large ?? false),
+      ...this.props.style,
       borderBottomWidth: 0,
       borderBottomColor: '#00000080',
+      marginHorizontal: this.state.posX === 0 ? 10 : 0,
     }
 
-    if (
-      (this.props.last ?? false) === false &&
-      (this.props.large ?? false) === false
-    ) {
-      borderStyle.borderBottomWidth = 2
-    }
+    if (this.props.disabled ?? false) style.height = 30
+    if (!this.props.fullWidth ?? false) style.marginHorizontal = 0
+    if (this.state.longPress)
+      style = {
+        ...style,
+        position: 'absolute',
+        top: this.state.posY,
+        transform: [{ scale: 1.1 }],
+      }
+
+    if (!(this.props.last ?? false) && !(this.props.large ?? false))
+      style.borderBottomWidth = 2
 
     return (
-      <Pressable
-        onPress={this.props.onClick}
-        style={{
-          ...boxStyle(this.props.visible ?? true, this.props.large ?? false),
-          ...this.props.style,
-          ...(this.state.posX === 0
-            ? { marginLeft: 10, marginRight: 10 }
-            : { marginLeft: 0, marginRight: 0 }),
-          ...borderStyle,
-          ...(this.props.disabled ?? false ? { height: 30 } : {}),
-          ...(this.props.fullWidth ? { marginLeft: 0, marginRight: 0 } : {}),
-          ...(this.state.longPress
-            ? {
-                position: 'absolute',
-                top: this.state.posY,
-                transform: [{ scale: 1.1 }],
-              }
-            : {
-                position: undefined,
-                top: 0,
-                transform: [{ scale: 1 }],
-              }),
-        }}
-      >
+      <Pressable onPress={this.props.onClick} style={style}>
         {this.state.posX > 0 && this.props.onDelete && (
           <MoveableDeleteIcon
             onPress={this.props.onDelete}
@@ -210,7 +168,7 @@ export default class Moveable extends React.Component<IMoveableProps> {
         )}
         <MoveableText {...moveableText} />
         {this.props.right?.map((item, index) =>
-          getIcon(item, index, index === 0)
+          this.getIcon(item, index, index === 0)
         )}
       </Pressable>
     )
