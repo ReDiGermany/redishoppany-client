@@ -235,9 +235,7 @@ export default class List extends Component<IPageListProps, IPageListState> {
                           {
                             name: 'BUY',
                             icon: item.inCart ? 'times' : 'cart-plus',
-                            color: item.inCart
-                              ? 'rgba(255,0,0,.5)'
-                              : 'rgba(0,255,0,.5)',
+                            color: item.inCart ? '#800f0f' : '#2a7d0e',
                             onPress: () =>
                               item.inCart
                                 ? this.setItemUnBought(
