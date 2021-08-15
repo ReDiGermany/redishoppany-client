@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import { Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { deleteIconStyle } from '../../styles/MoveableStyle'
-
-interface IMoveableDeleteIconProps {
-  posX: number
-  onPress: () => void
-}
+import IMoveableDeleteIconProps from '../../interfaces/IMoveableDeleteIconProps'
 
 export default class MoveableDeleteIcon extends Component<IMoveableDeleteIconProps> {
   render() {
