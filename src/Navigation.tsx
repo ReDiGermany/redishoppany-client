@@ -17,10 +17,7 @@ export default class Navigation extends Component<INavigationProps> {
     if (this.state.back) return <Redirect to="/" />
 
     const navigationTitle = {
-      label: this.props.label,
-      badge: this.props.badge,
-      simple: this.props.simple,
-      subTitle: this.props.subTitle,
+      ...this.props,
       onPress: () => this.setState({ back: true }),
     }
 
@@ -30,27 +27,23 @@ export default class Navigation extends Component<INavigationProps> {
       style: IconBoxStyle,
     })
 
+    const ContainerStyle = {
+      ...NavigationBarStyle.container,
+      ...(this.props.solid ?? true ? {} : { backgroundColor: '#202020' }),
+    }
+
+    const bS = (item: any) => ({
+      ...NavigationBarStyle.badge,
+      backgroundColor: item.badge.color,
+    })
+
     return (
       <View>
-        <View
-          style={{
-            ...NavigationBarStyle.container,
-            ...(this.props.solid ?? true ? {} : { backgroundColor: '#202020' }),
-          }}
-        >
+        <View style={ContainerStyle}>
           <NavigationTitle {...navigationTitle} />
           {this.props.buttons?.map(item => (
             <Pressable {...pressable(item)}>
-              {item.badge && (
-                <Text
-                  style={{
-                    ...NavigationBarStyle.badge,
-                    backgroundColor: item.badge.color,
-                  }}
-                >
-                  {item.badge.text}
-                </Text>
-              )}
+              {item.badge && <Text style={bS(item)}>{item.badge.text}</Text>}
               <Text style={NavigationButtonIconStyle}>
                 <Icon name={item.icon} size={15} />
               </Text>
