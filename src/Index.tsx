@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
-import Foodplan from './pages/Foodplan'
-import Friends from './pages/Friends'
 import Imprint from './pages/Imprint'
 import List from './pages/List'
 import Settings from './pages/Settings'
@@ -41,12 +39,6 @@ export default class Index extends Component<IIndexProps, IIndexState> {
         </Route>
         <Route path="/foodplan/add">
           <AddToFoodplan user={this.state.user} />
-        </Route>
-        <Route path="/foodplan">
-          <Foodplan user={this.state.user} />
-        </Route>
-        <Route path="/friends">
-          <Friends user={this.state.user} />
         </Route>
         <Route path="/imprint">
           <Imprint user={this.state.user} />
