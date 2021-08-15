@@ -3,6 +3,7 @@ import IShoppingList from '../../interfaces/IShoppingList'
 import IAPIShoppingListResponse from '../../interfaces/IAPIShoppingListResponse'
 import IAPIShoppingListItemResponse from '../../interfaces/IAPIShoppingListItemResponse'
 import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListItemResponseItem'
+import Language from '../../language/Language'
 
 export default class APIShoppingList {
   public static async deleteAllItems(id: number): Promise<boolean> {
@@ -60,6 +61,13 @@ export default class APIShoppingList {
   public static async singleList(id: number): Promise<IShoppingList> {
     const ret = (await API.get)<IShoppingList>(`/shoppinglist/${id}`)
 
+    ;(await ret).categories.push({
+      color: '#111',
+      id: -1,
+      items: [],
+      name: Language.get('items.bought'),
+    })
+
     return ret
   }
 
@@ -95,7 +103,7 @@ export default class APIShoppingList {
     return ret
   }
 
-  public static async setItemUnbought(itemId: number): Promise<boolean> {
+  public static async setItemUnBought(itemId: number): Promise<boolean> {
     const ret = (await API.putNoArgs)<boolean>(
       `/shoppinglist/item/uncart/${itemId}`
     )
