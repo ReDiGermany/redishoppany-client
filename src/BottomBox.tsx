@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { View, ScrollView, Animated, Pressable } from 'react-native'
 import ListHeader from './ListHeader'
 import Moveable from './components/Moveable/Moveable'
-import GlobalStyles from './styles/GlobalStyles'
 import IBottomBoxProps from './interfaces/IBottomBoxProps'
+import * as BottomBoxStyles from './styles/BottomBoxStyles'
 
 export default class BottomBox extends Component<IBottomBoxProps> {
   state = {
@@ -20,65 +20,51 @@ export default class BottomBox extends Component<IBottomBoxProps> {
   }
 
   componentDidUpdate(prevProps: IBottomBoxProps) {
-    if (prevProps.open !== this.props.open) {
+    if (prevProps.open !== this.props.open)
       Animated.timing(this.state.fadeAnim, {
         toValue: this.props.open ? 1 : 0,
         duration: 100,
         useNativeDriver: true,
       }).start()
-    }
   }
 
   render() {
+    const outerBox = {
+      style: BottomBoxStyles.outerBox(this.state.fadeVal, this.props.style),
+    }
+
+    const pressable = {
+      style: BottomBoxStyles.pressable,
+      onPress: () => this.props.onClose?.(),
+    }
+
+    const listHeader = {
+      fullWidth: true,
+      color: '#111',
+      text: this.props.title ?? '',
+    }
+
+    const moveable = (item: any) => ({
+      style: BottomBoxStyles.moveable,
+      fullWidth: true,
+      boldText: true,
+      bgOpacity: 'cc',
+      onDelete: item.onDelete,
+      checked: item.active,
+      key: item.name,
+      name: item.name,
+      onClick: item.onClick,
+      icon: item.icon,
+    })
+
     return (
-      <View
-        style={{
-          width: '100%',
-          height: GlobalStyles().appHeight,
-          position: 'absolute',
-          bottom: 0,
-          opacity: this.state.fadeVal,
-          zIndex: this.state.fadeVal === 0 ? -1000 : 1000,
-          ...this.props.style,
-        }}
-      >
-        <Pressable
-          style={{ width: '100%', height: '100%' }}
-          onPress={() => this.props.onClose?.()}
-        >
-          <View
-            style={{
-              width: '100%',
-              position: 'absolute',
-              bottom: -(
-                (3 * GlobalStyles().barHeight + GlobalStyles().barHeight) *
-                (1 - this.state.fadeVal)
-              ),
-              backgroundColor: '#202020',
-            }}
-          >
-            {this.props.title && (
-              <ListHeader
-                fullWidth={true}
-                color="#111"
-                text={this.props.title}
-              />
-            )}
-            <ScrollView style={{ maxHeight: GlobalStyles().lineHeight * 3.5 }}>
+      <View {...outerBox}>
+        <Pressable {...pressable}>
+          <View style={BottomBoxStyles.innerBox(this.state.fadeVal)}>
+            {this.props.title && <ListHeader {...listHeader} />}
+            <ScrollView style={BottomBoxStyles.scrollView}>
               {this.props.items?.map(item => (
-                <Moveable
-                  style={{ marginLeft: 0, marginRight: 0 }}
-                  fullWidth={true}
-                  // centerText={true}
-                  boldText={true}
-                  bgOpacity="cc"
-                  onDelete={item.onDelete}
-                  checked={item.active}
-                  key={item.name}
-                  name={item.name}
-                  onClick={item.onClick}
-                  icon={item.icon}
-                />
+                <Moveable {...moveable(item)} />
               ))}
             </ScrollView>
           </View>
