@@ -63,9 +63,7 @@ export default class Index extends Component<IIndexProps, IIndexState> {
           render={props => (
             <EditRecipe user={this.state.user} id={props.match.params.id} />
           )}
-        >
-          <EditRecipe user={this.state.user} />
-        </Route>
+        />
         <Route
           path="/recipe/:id"
           render={(props: any) => (
