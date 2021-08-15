@@ -26,6 +26,7 @@ export default class TextField extends Component<
           onSubmitEditing={this.props.onSubmit}
           onChange={d => this.props.onChange(d.nativeEvent.text)}
           placeholder={this.props.name}
+          placeholderTextColor={'#ffffff80'}
         />
       </View>
     )
