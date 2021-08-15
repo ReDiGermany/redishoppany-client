@@ -19,6 +19,8 @@ import IShoppingListItem from '../interfaces/IShoppingListItem'
 import IPageListState from '../interfaces/IPageListState'
 import IPageListProps from '../interfaces/IPageListProps'
 import { Redirect } from '../Router/react-router'
+import IShoppingListCategory from '../interfaces/IShoppingListCategory'
+import APICategory from '../helper/API/APICategory'
 
 // TODO: Finalize
 export default class List extends Component<IPageListProps, IPageListState> {
@@ -35,6 +37,11 @@ export default class List extends Component<IPageListProps, IPageListState> {
     listName: 'Loading...',
     redirect: '',
     listId: 0,
+    newCatBox: false,
+    moveToListBox: false,
+    newCatItem: undefined,
+    newItemList: undefined,
+    newListCats: [],
   }
 
   showUpdateCategories() {
@@ -97,11 +104,14 @@ export default class List extends Component<IPageListProps, IPageListState> {
     this.refresh()
   }
 
-  setOpenSwitchItem(_item: IShoppingListItem): void {
-    this.setState({ bottomBox: true })
+  setOpenSwitchItem(item: IShoppingListItem): void {
+    this.setState({ bottomBox: true, newItemList: item })
   }
 
-  setOpenSortItem(_item: IShoppingListItem): void {}
+  async setOpenSortItem(item: IShoppingListItem) {
+    this.setState({ newCatBox: true, newCatItem: item })
+    // await APIShoppingList.moveItemToCat()
+  }
 
   async refresh() {
     const data = await APIShoppingList.singleList(this.props.id)
@@ -138,6 +148,15 @@ export default class List extends Component<IPageListProps, IPageListState> {
     await AsyncStorage.setItem(`listname-${this.props.id}`, data.name)
   }
 
+  async updateItemCategory(cat: IShoppingListCategory) {
+    const d = await APIShoppingList.updateItemCategory(
+      this.state.newCatItem?.id ?? 0,
+      cat.id
+    )
+    this.setState({ items: [], refreshing: true })
+    await this.refresh()
+  }
+
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
@@ -149,8 +168,6 @@ export default class List extends Component<IPageListProps, IPageListState> {
     const svStyles: any = {
       overflow: 'hidden',
     }
-
-    // console.log(svStyles)
 
     return (
       <ImageBackground
@@ -169,7 +186,6 @@ export default class List extends Component<IPageListProps, IPageListState> {
             {
               name: 'openMenu',
               onClick: () => {
-                // console.log('settings')
                 this.setState({ settings: !this.state.settings })
               },
               icon: 'ellipsis-v',
@@ -319,15 +335,58 @@ export default class List extends Component<IPageListProps, IPageListState> {
             items={this.state.lists.map(item => ({
               active: item.id === this.state.listId,
               name: item.name,
-              onClick: () => {},
+              onClick: () => {
+                this.moveItemToOtherList(item.id)
+              },
             }))}
             onClose={() => {
               this.setState({ bottomBox: false })
             }}
             open={this.state.bottomBox}
           />
+          <BottomBox
+            title="Select new Cat for item"
+            items={this.state.newListCats.map((cat, idx) => ({
+              active: idx === this.state.newItemList?.catId,
+              name: cat.name,
+              onClick: async () => {
+                await APIShoppingList.moveItemToList(
+                  this.state.newItemList?.id ?? 0,
+                  cat.id
+                )
+                this.setState({ items: [] })
+                this.refresh()
+              },
+            }))}
+            onClose={() => {
+              this.setState({ moveToListBox: false })
+            }}
+            open={this.state.moveToListBox}
+          />
+          <BottomBox
+            title="Select new Cat"
+            items={this.state.items
+              .filter(cat => cat.id > 0)
+              .map((cat, idx) => ({
+                active: idx === this.state.newCatItem?.catId,
+                name: cat.name,
+                onClick: async () => {
+                  this.setState({ newCatBox: false })
+                  await this.updateItemCategory(cat)
+                },
+              }))}
+            onClose={() => {
+              this.setState({ newCatBox: false })
+            }}
+            open={this.state.newCatBox}
+          />
         </SafeAreaView>
       </ImageBackground>
     )
+  }
+
+  async moveItemToOtherList(listId: number) {
+    const newListCats = await APICategory.list(listId)
+    this.setState({ newListCats, bottomBox: false, moveToListBox: true })
   }
 }

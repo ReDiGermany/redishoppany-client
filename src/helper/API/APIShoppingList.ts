@@ -6,6 +6,18 @@ import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListI
 import Language from '../../language/Language'
 
 export default class APIShoppingList {
+  public static async updateItemCategory(
+    itemId: number,
+    catId: number
+  ): Promise<boolean> {
+    const ret = (await API.post)<boolean>('/shoppinglist/updatecat', {
+      itemId,
+      catId,
+    })
+
+    return ret
+  }
+
   public static async deleteAllItems(id: number): Promise<boolean> {
     const ret = (await API.get)<boolean>(`/shoppinglist/clear/${id}`)
 
