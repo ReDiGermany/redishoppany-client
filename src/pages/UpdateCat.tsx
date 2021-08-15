@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { RefreshControl, ScrollView, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import APICategory from '../helper/API/APICategory'
 import { randomColor } from '../helper/Functions'
 import Input from '../Input'
@@ -25,13 +26,16 @@ export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
   }
 
   async componentDidMount() {
-    this.refresh()
+    const list = await AsyncStorage.getItem(`cat-${this.props.id}`)
+    if (list) this.setState({ list: JSON.parse(list) })
+    await this.refresh()
   }
 
   async refresh() {
     const list = await APICategory.list(this.props.id)
     this.setState({ list })
     this.setState({ refreshing: false })
+    await AsyncStorage.setItem(`cat-${this.props.id}`, JSON.stringify(list))
   }
 
   async delete(id: number, index: number) {
