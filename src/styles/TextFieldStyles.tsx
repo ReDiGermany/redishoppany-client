@@ -8,6 +8,7 @@ const TextFieldStyles = StyleSheet.create({
     backgroundColor: '#111',
     padding: 10,
     marginTop: 10,
+    borderRadius: 5,
   },
 })
 
