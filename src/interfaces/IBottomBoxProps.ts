@@ -10,5 +10,5 @@ export default interface IBottomBoxProps {
     icon?: string
   }[]
   style?: any
-  animationState?: (state: number) => void
+  animationState?: (_state: number) => void
 }

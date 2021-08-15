@@ -1,4 +1,4 @@
 export interface IBottomNavigationProps {
-  navUpdate: (index: number) => void
+  navUpdate: (_index: number) => void
   active: number
 }

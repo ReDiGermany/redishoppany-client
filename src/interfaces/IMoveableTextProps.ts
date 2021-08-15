@@ -30,6 +30,6 @@ export default interface IMoveableTextProps {
   icon?: string
   bgColor?: string
   fullWidth?: boolean
-  onSort?: (posY: number) => void
+  onSort?: (_posY: number) => void
   onEnd?: () => void
 }

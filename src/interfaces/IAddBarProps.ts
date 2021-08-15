@@ -4,6 +4,6 @@ export default interface IAddBarProps {
   placeholder: string
   type?: 'email' | 'text'
   icon?: string
-  onChange?: (text: string) => void
-  onType?: (text: string) => void
+  onChange?: (_text: string) => void
+  onType?: (_text: string) => void
 }

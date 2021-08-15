@@ -14,7 +14,7 @@ export default class UserProfileSmall extends Component<IUserProfileSmall> {
       name: 'bell',
     }
     const rowStyle = {
-      backgroundColor: !(this.props.solid ?? false) && '#202020',
+      backgroundColor: !(this.props.solid ?? false) ? '#202020' : 'transparent',
     }
 
     return (

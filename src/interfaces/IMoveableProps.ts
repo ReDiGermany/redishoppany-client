@@ -31,7 +31,7 @@ export default interface IMoveableProps {
   fullWidth?: boolean
   icon?: string
   bgColor?: string
-  onMoving?: (left: boolean, right: boolean) => void
-  onSort?: (posY: number) => void
+  onMoving?: (_left: boolean, _right: boolean) => void
+  onSort?: (_posY: number) => void
   onEnd?: () => void
 }
