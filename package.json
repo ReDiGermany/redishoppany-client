@@ -53,6 +53,7 @@
     "expo-updates": "~0.8.1",
     "exponent": "^14.0.0",
     "fs": "^0.0.1-security",
+    "metro": "^0.66.2",
     "metro-config": "^0.66.2",
     "path": "^0.12.7",
     "postcss": "^8.3.0",
