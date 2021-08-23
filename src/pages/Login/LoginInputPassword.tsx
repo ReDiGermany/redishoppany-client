@@ -21,7 +21,9 @@ export default class LoginInputPassword extends Component<ILoginInputPasswordPro
           this.setState({ value, valid: true })
           this.props.onChange(value, true)
         }}
-        placeholder={Language.get('password')}
+        placeholder={Language.get(
+          this.props.repeat ? 'password.repeat' : 'password'
+        )}
         secureTextEntry={true}
       />
     )

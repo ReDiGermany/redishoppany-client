@@ -30,8 +30,8 @@ export default class APIUser {
     })
 
     if (ret.status === 202) {
-      AsyncStorage.setItem('redishoppany-token', ret.data.data.token)
-      AsyncStorage.setItem('redishoppany-email', email)
+      await AsyncStorage.setItem('redishoppany-token', ret.data.data.token)
+      await AsyncStorage.setItem('redishoppany-email', email)
     }
 
     return ret.status === 202

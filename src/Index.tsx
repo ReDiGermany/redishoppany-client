@@ -17,25 +17,35 @@ import IIndexState from './interfaces/IIndexState'
 import Login from './pages/Login/Login'
 import SplashScreen from './SplashScreen'
 import UpdateCat from './pages/UpdateCat'
+import Register from './pages/Register'
 
 export default class Index extends Component<IIndexProps, IIndexState> {
   state = {
     user: undefined,
+    checkMeDone: this.props.checkMeDone,
+    loggedin: this.props.loggedin,
   }
 
   async componentDidMount() {
-    const user = await APIUser.getMe()
-    this.setState({ user })
+    try {
+      const user = await APIUser.getMe()
+      this.setState({ user, checkMeDone: true, loggedin: true })
+    } catch (e) {
+      console.log('error logging in', e)
+      this.setState({ checkMeDone: true, loggedin: false })
+    }
   }
 
   render() {
-    if (!this.props.checkMeDone) return <SplashScreen />
-    if (!this.props.loggedin) return <Redirect to="/login" />
+    if (!this.state.checkMeDone) return <SplashScreen />
 
     return (
       <View>
         <Route path="/about">
           <About user={this.state.user} />
+        </Route>
+        <Route path="/register">
+          <Register />
         </Route>
         <Route path="/foodplan/add">
           <AddToFoodplan user={this.state.user} />
@@ -81,8 +91,12 @@ export default class Index extends Component<IIndexProps, IIndexState> {
           render={(props: any) => <UpdateCat id={props.match.params.id} />}
         />
         <Route exact path="/">
+          {this.state.loggedin ? (
+            <Home user={this.state.user} />
+          ) : (
+            <Redirect to="/login" />
+          )}
           {/* <Settings user={this.state.user} /> */}
-          <Home user={this.state.user} />
         </Route>
       </View>
     )

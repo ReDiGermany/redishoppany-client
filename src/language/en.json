@@ -27,6 +27,7 @@
   "welcome.headline": "Welcome to LiSha",
   "welcome.subline": "Your List Sharing App",
   "password": "password",
+  "password.repeat": "password repeat",
   "login.please": "Login",
   "login": "Go!",
   "login.checking": "Checking login...",
