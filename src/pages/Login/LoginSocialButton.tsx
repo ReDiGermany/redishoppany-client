@@ -22,11 +22,12 @@ export default class LoginSocialButton extends Component<ILoginSocialButtonProps
         onPress={() => {
           this.setState({ icon: 'hourglass', pressed: true })
           setTimeout(() => {
+            this.props.onPress?.()
             this.setState({ icon: 'check', pressed: false })
             setTimeout(() => {
               this.setState({ icon: this.props.icon })
             }, 1000)
-          }, 3000)
+          }, 1000)
         }}
       >
         <Icon style={loginStyles().vendorLoginIcon} name={this.state.icon} />

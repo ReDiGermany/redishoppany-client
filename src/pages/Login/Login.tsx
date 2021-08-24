@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, SafeAreaView } from 'react-native'
-import * as WebBrowser from 'expo-web-browser'
+import * as Linking from 'expo-linking'
+import * as AuthSession from 'expo-auth-session'
 import Row from '../../components/Row'
 import LoginTitle from './LoginTitle'
 import LoginInputEmail from './LoginInputEmail'
@@ -20,6 +21,9 @@ import ILoginProps from '../../interfaces/ILoginProps'
 // import IScreen from '../../interfaces/IScreen'
 import Language from '../../language/Language'
 import BackgroundImage from '../../components/BackgroundImage'
+import { PreInfoAlert, PreWarningAlert } from '../../helper/DefinedAlerts'
+import { filterFacebookRedirectUrl } from '../../helper/Functions'
+import { FB_APP_ID } from '../../helper/Constants'
 
 export default class Login extends Component<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -35,23 +39,44 @@ export default class Login extends Component<ILoginProps, ILoginState> {
       text: '',
       info: undefined,
     },
-    // dimensions: {
-    //   window: undefined,
-    //   screen: undefined,
-    // },
   }
 
-  // onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
-  //   this.setState({ dimensions })
-  // }
+  PreWarningAlert(pre: string) {
+    this.setState({
+      alert: PreWarningAlert(pre, 'text', 'info'),
+    })
+  }
 
-  // componentDidMount() {
-  //   Dimensions.addEventListener('change', this.onChange)
-  // }
-
-  // componentWillUnmount() {
-  //   Dimensions.removeEventListener('change', this.onChange)
-  // }
+  handleFacebookPressAsync = async () => {
+    try {
+      const redirectUrl = 'https://auth.expo.io/@redigermany/lisha' // AuthSession.getRedirectUrl()
+      const authUrl = `https://www.facebook.com/v2.8/dialog/oauth?response_type=token&client_id=${FB_APP_ID}&scope=email&redirect_uri=${redirectUrl}`
+      const result = await AuthSession.startAsync({ authUrl })
+      if ('url' in result && result.errorCode === null) {
+        const token = filterFacebookRedirectUrl(result.url)
+        if (token !== null) {
+          try {
+            this.setState({
+              alert: PreInfoAlert('login.facebook.check.', 'text', 'info'),
+            })
+            const tokenResult = await APIUser.checkFacebookToken(token)
+            setTimeout(() => {
+              if (typeof tokenResult === 'boolean') {
+                this.PreWarningAlert('login.facebook.error.email.')
+              } else {
+                console.log(tokenResult)
+              }
+            }, 2000)
+          } catch (E) {
+            this.PreWarningAlert('login.facebook.error.')
+          }
+        } else this.PreWarningAlert('login.facebook.error.')
+      } else this.PreWarningAlert('login.facebook.error.')
+    } catch (e) {
+      console.log(e.message)
+      this.PreWarningAlert('login.facebook.error.')
+    }
+  }
 
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
@@ -69,16 +94,22 @@ export default class Login extends Component<ILoginProps, ILoginState> {
         const { email, password } = this.state
         this.setState({ loginChecking: true })
 
-        const loggedin = await APIUser.checkLogin(email, password).catch(() => {
+        const loggedin = await APIUser.checkLogin(email, password)
+
+        if (loggedin) {
+          const alert: ILoginStateAlert = {
+            type: 'success',
+            text: 'Willkommen!',
+          }
+          this.setState({ loggedin, alert, loginChecking: false })
+        } else {
           const alert: ILoginStateAlert = {
             type: 'error',
             text: 'Logindaten waren falsch!',
             info: 'Bitte versuche es erneut.',
           }
-          this.setState({ alert })
-        })
-        if (loggedin) this.setState({ loggedin })
-        this.setState({ loginChecking: false })
+          this.setState({ alert, loginChecking: false })
+        }
       }
     }
 
@@ -90,7 +121,12 @@ export default class Login extends Component<ILoginProps, ILoginState> {
       <SafeAreaView style={loginStyles().body}>
         <BackgroundImage>
           {!this.state.loginChecking && this.state.alert.text !== '' && (
-            <Alert {...alert} />
+            <Alert
+              onClose={() =>
+                this.setState({ alert: { text: '', type: 'success' } })
+              }
+              {...alert}
+            />
           )}
           <View
             style={{
@@ -127,13 +163,16 @@ export default class Login extends Component<ILoginProps, ILoginState> {
                 icon="google"
               />
               <LoginSocialButton
-                onUrl={_url => {}}
+                onPress={this.handleFacebookPressAsync}
+                // onUrl={handleFacebookPressAsync}
                 url="/login/vendor/facebook"
                 color="#3b5998"
                 icon="facebook-f"
               />
               <LoginSocialButton
-                onUrl={_url => {}}
+                onUrl={_url => {
+                  Linking.openSettings()
+                }}
                 url="/login/vendor/twitter"
                 color="#1da1f2"
                 icon="twitter"
@@ -149,13 +188,7 @@ export default class Login extends Component<ILoginProps, ILoginState> {
                 title={Language.get('register')}
               />
               <LoginLongButton
-                onPress={async () => {
-                  const result = await WebBrowser.openBrowserAsync(
-                    'https://expo.dev'
-                  )
-                  console.log(result)
-                  // setResult(result);
-                }}
+                onPress={() => {}}
                 icon="user-secret"
                 title={Language.get('login.anonym')}
               />

@@ -80,7 +80,10 @@
     "react-router-dom": "^5.2.0",
     "react-router-native": "^5.2.0",
     "rn-nodeify": "^10.3.0",
-    "react-native-safe-area-context": "3.2.0"
+    "react-native-safe-area-context": "3.2.0",
+    "expo-auth-session": "~3.3.1",
+    "expo-random": "~11.2.0",
+    "expo-linking": "~2.3.1"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

@@ -22,6 +22,7 @@ export const {
     backgroundColor: '#111',
     padding: 20,
     paddingTop: 20 + GlobalStyles().statusbarHeight,
+    marginTop: GlobalStyles().statusbarHeight * -1,
     borderBottomWidth: 2,
   },
   errorColor: { borderBottomColor: '#f00' },

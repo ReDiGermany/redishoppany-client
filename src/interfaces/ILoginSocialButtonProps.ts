@@ -2,5 +2,6 @@ export default interface ILoginSocialButtonProps {
   icon: string
   color: string
   url: string
-  onUrl: (url: string) => void
+  onPress?: () => void
+  onUrl?: (url: string) => void
 }
