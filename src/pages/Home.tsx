@@ -32,20 +32,35 @@ export default class Home extends Component<IPageProps> {
       innerView: {
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-        overflow: 'hidden',
-        height: GlobalStyles().contentHeight,
+
+        height: GlobalStyles().contentHeight - GlobalStyles().lineHeight,
       },
     })
 
     return (
       <View style={styles.outerView}>
-        <View style={styles.innerView}>
-          <BackgroundImage>
-            {active === 0 && <HomeList user={this.props.user} />}
-            {active === 1 && <HomeFoodplan user={this.props.user} />}
-            {active === 2 && <HomeRecipes user={this.props.user} />}
-            {active === 3 && <HomeFriendlist user={this.props.user} />}
-          </BackgroundImage>
+        <View
+          style={{
+            ...styles.innerView,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 6,
+            },
+            shadowOpacity: 0.37,
+            shadowRadius: 7.49,
+
+            elevation: 12,
+          }}
+        >
+          <View style={{ ...styles.innerView, overflow: 'hidden' }}>
+            <BackgroundImage>
+              {active === 0 && <HomeList user={this.props.user} />}
+              {active === 1 && <HomeFoodplan user={this.props.user} />}
+              {active === 2 && <HomeRecipes user={this.props.user} />}
+              {active === 3 && <HomeFriendlist user={this.props.user} />}
+            </BackgroundImage>
+          </View>
         </View>
         <BottomNavigation
           active={active}

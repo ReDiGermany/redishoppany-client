@@ -1,13 +1,17 @@
 import React from 'react'
 import { Dimensions, Keyboard, StatusBar } from 'react-native'
+import { initialWindowMetrics } from 'react-native-safe-area-context'
 import IKeyboardDetectionProps from '../interfaces/IKeyboardDetectionProps'
 
 const GlobalHeight = () => {
+  const screenHeight = Dimensions.get('screen').height
+  const windowHeight = Dimensions.get('window').height
+  const statusbarHeight = StatusBar.currentHeight ?? 0
   const appHeight =
-    Dimensions.get('window').height + (StatusBar.currentHeight ?? 0)
+    initialWindowMetrics === null
+      ? windowHeight
+      : initialWindowMetrics.frame.height
   const appWidth = Dimensions.get('window').width
-
-  // window.ResizeObserver = { new (callback: ResizeObserverCallback): ResizeObserver; prototype: ResizeObserver; }
 
   const data = {
     dark: {
@@ -22,15 +26,18 @@ const GlobalHeight = () => {
       red: '#A00000',
     },
     appWidth,
+    windowHeight,
+    screenHeight,
     lineHeight: 50,
     barHeight: 60,
     appHeight,
-    statusbarHeight: StatusBar.currentHeight ?? 0,
+    statusbarHeight,
     contentHeight: 0,
   }
 
   const contentHeight =
-    data.appHeight - data.barHeight - data.statusbarHeight + 10
+    (initialWindowMetrics?.frame.height ?? 0) -
+    (initialWindowMetrics?.insets.top ?? 0)
 
   return {
     ...data,

@@ -88,7 +88,8 @@ export default class HomeList extends Component<IPageProps> {
             })
           }
           style={{
-            height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
+            height:
+              GlobalStyles().contentHeight - GlobalStyles().barHeight - 20,
           }}
         >
           <AddBar
