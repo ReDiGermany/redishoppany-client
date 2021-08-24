@@ -10,32 +10,42 @@ export default class APIRecipe {
     text: string,
     items: IAPIRecipeDetailsItem[]
   ): Promise<boolean> {
-    const ret = (await API.post)<boolean>('/recipe/create', {
+    const ret = await API.post<boolean>('/recipe/create', {
       name,
       time,
       text,
       items,
     })
 
-    return ret
+    return ret ?? false
   }
 
   public static async list(): Promise<IAPIRecipe[]> {
-    const ret = (await API.get)<IAPIRecipe[]>('/recipe')
+    const ret = await API.get<IAPIRecipe[]>('/recipe')
 
-    return ret
+    return ret ?? []
+  }
+
+  private static defaultGetSingle: IAPIRecipeDetails = {
+    id: -1,
+    image: '',
+    lastCooked: '',
+    name: '',
+    owner: false,
+    text: '',
+    time: '',
   }
 
   public static async getSingle(id: number): Promise<IAPIRecipeDetails> {
     const ret = await API.get<IAPIRecipeDetails>(`/recipe/${id}`)
 
-    return ret
+    return ret ?? this.defaultGetSingle
   }
 
   public static async delete(id: number): Promise<boolean> {
     const ret = await API.delete<boolean>(`/recipe/delete/${id}`)
 
-    return ret
+    return ret ?? false
   }
 
   public static async edit(
@@ -53,12 +63,12 @@ export default class APIRecipe {
       items,
     })
 
-    return ret
+    return ret ?? false
   }
 
   public static async search(name: string): Promise<IAPIRecipeDetails[]> {
     const ret = await API.put<IAPIRecipeDetails[]>('/recipe/find', { name })
 
-    return ret
+    return ret ?? []
   }
 }

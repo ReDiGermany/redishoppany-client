@@ -10,44 +10,49 @@ export default class APIShoppingList {
     itemId: number,
     catId: number
   ): Promise<boolean> {
-    const ret = (await API.post)<boolean>('/shoppinglist/updatecat', {
+    const ret = await API.post<boolean>('/shoppinglist/updatecat', {
       itemId,
       catId,
     })
 
-    return ret
+    return ret ?? false
   }
 
   public static async deleteAllItems(id: number): Promise<boolean> {
-    const ret = (await API.get)<boolean>(`/shoppinglist/clear/${id}`)
+    const ret = await API.get<boolean>(`/shoppinglist/clear/${id}`)
 
-    return ret
+    return ret ?? false
   }
 
   public static async create(name: string): Promise<boolean> {
-    const ret = (await API.post)<boolean>('/shoppinglist/create', { name })
+    const ret = await API.post<boolean>('/shoppinglist/create', { name })
 
-    return ret
+    return ret ?? false
   }
 
   public static async list(): Promise<IAPIShoppingListItemResponse[]> {
-    const ret = (await API.get)<IAPIShoppingListResponse>('/shoppinglist')
+    const ret =
+      (await API.get<IAPIShoppingListResponse>('/shoppinglist')) ??
+      this.defaultSimpleList
 
-    return (await ret).items
+    return ret.items
+  }
+
+  private static defaultSimpleList: IAPIShoppingListResponse = {
+    items: [],
+    page: { count: 0, page: 0, limit: 0 },
   }
 
   public static async simpleList(): Promise<
     IAPIShoppingListItemResponseItem[]
   > {
-    const ret = (
-      await (
-        await API.get
-      )<IAPIShoppingListResponse>('/shoppinglist')
-    ).items
+    const ret =
+      (await API.get<IAPIShoppingListResponse>('/shoppinglist')) ??
+      this.defaultSimpleList
 
     const arr: IAPIShoppingListItemResponseItem[] = []
 
-    ret.forEach(grp => {
+    ret.items.forEach(grp => {
       grp.items.forEach(item => {
         arr.push(item)
       })
@@ -61,19 +66,28 @@ export default class APIShoppingList {
     name: string,
     amount: number
   ): Promise<boolean> {
-    const ret = (await API.post)<boolean>(`/shoppinglist/item/add`, {
+    const ret = await API.post<boolean>(`/shoppinglist/item/add`, {
       listId,
       name,
       amount,
     })
 
-    return ret
+    return ret ?? false
+  }
+
+  // TODO: Check
+  private static defaultSingleList: IShoppingList = {
+    categories: [],
+    id: -1,
+    name: '',
   }
 
   public static async singleList(id: number): Promise<IShoppingList> {
-    const ret = (await API.get)<IShoppingList>(`/shoppinglist/${id}`)
+    const ret =
+      (await API.get<IShoppingList>(`/shoppinglist/${id}`)) ??
+      APIShoppingList.defaultSingleList
 
-    ;(await ret).categories.push({
+    ret.categories.push({
       color: '#111',
       id: -1,
       items: [],
@@ -84,50 +98,50 @@ export default class APIShoppingList {
   }
 
   public static async deleteItemFromList(id: number): Promise<boolean> {
-    const ret = (await API.delete)<boolean>(`/shoppinglist/${id}`)
+    const ret = await API.delete<boolean>(`/shoppinglist/${id}`)
 
-    return ret
+    return ret ?? false
   }
 
   public static async deleteList(id: number): Promise<boolean> {
-    const ret = (await API.delete)<boolean>(`/shoppinglist/deletelist/${id}`)
+    const ret = await API.delete<boolean>(`/shoppinglist/deletelist/${id}`)
 
-    return ret
+    return ret ?? false
   }
 
   public static async moveItemToList(
     itemId: number,
     catId: number
   ): Promise<boolean> {
-    const ret = (await API.put)<boolean>(`/shoppinglist/item`, {
+    const ret = await API.put<boolean>(`/shoppinglist/item`, {
       itemId,
       catId,
     })
 
-    return ret
+    return ret ?? false
   }
 
   public static async setItemBought(itemId: number): Promise<boolean> {
-    const ret = (await API.putNoArgs)<boolean>(
+    const ret = await API.putNoArgs<boolean>(
       `/shoppinglist/item/cart/${itemId}`
     )
 
-    return ret
+    return ret ?? false
   }
 
   public static async setItemUnBought(itemId: number): Promise<boolean> {
-    const ret = (await API.putNoArgs)<boolean>(
+    const ret = await API.putNoArgs<boolean>(
       `/shoppinglist/item/uncart/${itemId}`
     )
 
-    return ret
+    return ret ?? false
   }
 
   public static async deleteBoughtItems(itemId: number): Promise<boolean> {
-    const ret = (await API.putNoArgs)<boolean>(
+    const ret = await API.putNoArgs<boolean>(
       `/shoppinglist/deletebought/${itemId}`
     )
 
-    return ret
+    return ret ?? false
   }
 }

@@ -7,36 +7,36 @@ export default class APICategory {
     color: string,
     list: number
   ): Promise<boolean> {
-    const ret = (await API.post)<boolean>('/category/create', {
+    const ret = await API.post<boolean>('/category/create', {
       name,
       list,
       color,
     })
 
-    return ret
+    return ret ?? false
   }
 
   public static async sort(listId: number, ids: number[]): Promise<boolean> {
-    const ret = (await API.put)<boolean>(`/category/${listId}`, { ids })
+    const ret = await API.put<boolean>(`/category/${listId}`, { ids })
 
-    return ret
+    return ret ?? false
   }
 
   public static async list(listId: number): Promise<IAPICategory[]> {
-    const ret = (await API.get)<IAPICategory[]>(`/category/${listId}`)
+    const ret = await API.get<IAPICategory[]>(`/category/${listId}`)
 
-    return ret
+    return ret ?? []
   }
 
   public static async update(item: IAPICategory): Promise<boolean> {
-    const ret = (await API.post)<boolean>(`/category/update/${item.id}`, item)
+    const ret = await API.post<boolean>(`/category/update/${item.id}`, item)
 
-    return ret
+    return ret ?? false
   }
 
   public static async delete(id: number): Promise<boolean> {
-    const ret = (await API.delete)<boolean>(`/category/${id}`)
+    const ret = await API.delete<boolean>(`/category/${id}`)
 
-    return ret
+    return ret ?? false
   }
 }

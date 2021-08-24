@@ -11,21 +11,21 @@ export default class APIFoodplan {
     recipe: number,
     date?: string
   ): Promise<boolean> {
-    const ret = (await API.post)<boolean>('/foodplan/add', { recipe, date })
+    const ret = await API.post<boolean>('/foodplan/add', { recipe, date })
 
-    return ret
+    return ret ?? false
   }
 
   public static async list(): Promise<IFoodplanKw[]> {
-    const ret = (await API.get)<IFoodplanKw[]>('/foodplan')
+    const ret = await API.get<IFoodplanKw[]>('/foodplan')
 
-    return ret
+    return ret ?? []
   }
 
   public static async remove(id: number): Promise<boolean> {
-    const ret = (await API.delete)<boolean>(`/foodplan/delete/${id}`)
+    const ret = await API.delete<boolean>(`/foodplan/delete/${id}`)
 
-    return ret
+    return ret ?? false
   }
 
   public static async addToCart(
@@ -34,24 +34,24 @@ export default class APIFoodplan {
   ): Promise<boolean> {
     const ret = await API.post<boolean>('/foodplan/cart', { itemId, listId })
 
-    return ret
+    return ret ?? false
   }
 
   public static async sort(nums: number[]): Promise<boolean> {
     const ret = await API.post<boolean>('/foodplan/sort', nums)
 
-    return ret
+    return ret ?? false
   }
 
   public static async changePlan(id: number): Promise<boolean> {
     const ret = await API.put<boolean>('/foodplan/plans', { id })
 
-    return ret
+    return ret ?? false
   }
 
   public static async listPlans(): Promise<IFoodplanPlan[]> {
     const ret = await API.get<IFoodplanPlan[]>('/foodplan/plans')
 
-    return ret
+    return ret ?? []
   }
 }

@@ -3,21 +3,21 @@ import IAPIUserMe from '../../interfaces/IAPIUserMe'
 import API from '../API'
 
 export default class APIUser {
-  public static async getMe(): Promise<IAPIUserMe> {
+  public static async getMe(): Promise<IAPIUserMe | boolean> {
     const ret = await API.get<IAPIUserMe>('/user/me')
 
-    return ret
+    return ret ?? false
   }
 
   public static async getMeByToken(
     password: string,
     username: string
-  ): Promise<IAPIUserMe> {
+  ): Promise<IAPIUserMe | boolean> {
     const ret = await API.axiosInstance.get<IAPIUserMe>('/user/me', {
       auth: { password, username },
     })
 
-    return ret.data
+    return ret.data ?? false
   }
 
   public static async checkLogin(
@@ -40,7 +40,7 @@ export default class APIUser {
   public static async logout(): Promise<boolean> {
     const ret = await API.get<boolean>('/user/logout')
 
-    return ret
+    return ret ?? false
   }
 
   public static async register(
@@ -58,6 +58,6 @@ export default class APIUser {
       passwordConfirm,
     })
 
-    return ret
+    return ret ?? false
   }
 }
