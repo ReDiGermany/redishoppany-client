@@ -1,4 +1,4 @@
-const inArray = (c: any, items: any[]) => {
+export const inArray = (c: any, items: any[]) => {
   for (let i = 0; i < items.length; i++) {
     if (c === items[i]) return true
   }
@@ -6,9 +6,9 @@ const inArray = (c: any, items: any[]) => {
   return false
 }
 
-const inString = (c: any, items: string) => inArray(c, items.split(''))
+export const inString = (c: any, items: string) => inArray(c, items.split(''))
 
-const calcText = (inp: string) => {
+export const calcText = (inp: string) => {
   let size = 0
 
   for (let i = 0; i < inp.length; i++) {
@@ -33,11 +33,11 @@ const forceFullHex = (inp: string) => {
   return '0'.repeat(6 - inp.length) + inp
 }
 
-const getColorByMultiplyer = (m: number) =>
+export const getColorByMultiplyer = (m: number) =>
   forceFullHex(Math.floor((m > 1 ? 1 : m) * 16777215).toString(16))
 
 // https://css-tricks.com/converting-color-spaces-in-javascript/
-const HSLToHex = (h: number) => {
+export const HSLToHex = (h: number) => {
   const s = 0.5
   const l = 0.5
 
@@ -86,10 +86,10 @@ const HSLToHex = (h: number) => {
   return `#${retR}${retG}${retB}`
 }
 
-const randomColor = () => HSLToHex(Math.random() * 359)
+export const randomColor = () => HSLToHex(Math.random() * 359)
 
 // https://stackoverflow.com/a/12043228
-const GetLuma = (inp: string) => {
+export const GetLuma = (inp: string) => {
   let c = inp
   if (inp.startsWith('#')) c = inp.substring(1) // strip #
   const rgb = parseInt(c, 16) // convert rrggbb to decimal
@@ -105,12 +105,30 @@ const GetLuma = (inp: string) => {
   return luma
 }
 
-export {
-  inArray,
-  inString,
-  calcText,
-  randomColor,
-  getColorByMultiplyer,
-  HSLToHex,
-  GetLuma,
+export const filterFacebookRedirectUrl = (url: string): string | null => {
+  const parseUrl = url.split('#')[1]
+  const token = parseUrl
+    .split('&')
+    .map(item => {
+      const q = item.split('=')
+      if (q[0] === 'access_token') return q[1]
+
+      return null
+    })
+    .filter(item => item !== null)
+  if (token.length) return token[0]
+
+  return null
+}
+
+export const randomString = (length: number) => {
+  let result = ''
+  const characters =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+
+  return result
 }
