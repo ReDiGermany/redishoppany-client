@@ -59,5 +59,13 @@
   "register.400.text": "There was something wrong with your password.",
   "register.400.info": "Maybe it didn't match?",
   "register.500.text": "Internal Server Error",
-  "register.500.info": "Please try again."
+  "register.500.info": "Please try again.",
+
+  "login.facebook.error.text": "Fehler beim einloggen",
+  "login.facebook.error.info": "Bitte versuche es erneut!",
+  "login.facebook.error.email.text": "Fehler beim einloggen",
+  "login.facebook.error.email.info": "Bitte erlaube das E-Mail auslesen und versuche es erneut!",
+  "login.facebook.check.text": "Überprüfe Daten",
+  "login.facebook.check.info": "Dies kann einige Sekunden dauern!",
+  "login.facebook.success": "Willkommen (zurück)!"
 }
