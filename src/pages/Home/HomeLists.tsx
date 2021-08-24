@@ -44,7 +44,8 @@ export default class HomeList extends Component<IPageProps> {
   async addList(name: string) {
     await APIShoppingList.create(name)
     const user = await APIUser.getMe()
-    this.setState({ lists: user.lists, add: false })
+    if (typeof user !== 'boolean')
+      this.setState({ lists: user.lists, add: false })
   }
 
   render() {
