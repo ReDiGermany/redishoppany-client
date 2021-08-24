@@ -51,6 +51,7 @@
     "expo-splash-screen": "~0.11.2",
     "expo-status-bar": "~1.0.4",
     "expo-updates": "~0.8.1",
+    "expo-web-browser": "^9.2.0",
     "exponent": "^14.0.0",
     "fs": "^0.0.1-security",
     "metro": "^0.66.2",
