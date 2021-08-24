@@ -1,4 +1,4 @@
-import IPageProps from '../interfaces/IPageProps'
+import IPageProps from './IPageProps'
 
 export default interface IUserProfileSmall extends IPageProps {
   solid?: boolean

@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Link } from '../Router/react-router'
 import ColumnStyle from '../styles/ColumnStyle'
 import { profileStyle } from '../styles/SidebarStyle'
-import IUserProfileSmall from '../styles/IUserProfileSmall'
+import IUserProfileSmall from '../interfaces/IUserProfileSmall'
 import Row from './Row'
 
 export default class UserProfileSmall extends Component<IUserProfileSmall> {
