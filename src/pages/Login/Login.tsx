@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, SafeAreaView, Dimensions } from 'react-native'
+import { View, SafeAreaView } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 import Row from '../../components/Row'
 import LoginTitle from './LoginTitle'
@@ -17,7 +17,7 @@ import Alert from '../../components/Alert'
 import ILoginStateAlert from '../../interfaces/ILoginStateAlert'
 import ILoginState from '../../interfaces/ILoginState'
 import ILoginProps from '../../interfaces/ILoginProps'
-import IScreen from '../../interfaces/IScreen'
+// import IScreen from '../../interfaces/IScreen'
 import Language from '../../language/Language'
 import BackgroundImage from '../../components/BackgroundImage'
 
@@ -35,23 +35,23 @@ export default class Login extends Component<ILoginProps, ILoginState> {
       text: '',
       info: undefined,
     },
-    dimensions: {
-      window: undefined,
-      screen: undefined,
-    },
+    // dimensions: {
+    //   window: undefined,
+    //   screen: undefined,
+    // },
   }
 
-  onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
-    this.setState({ dimensions })
-  }
+  // onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
+  //   this.setState({ dimensions })
+  // }
 
-  componentDidMount() {
-    Dimensions.addEventListener('change', this.onChange)
-  }
+  // componentDidMount() {
+  //   Dimensions.addEventListener('change', this.onChange)
+  // }
 
-  componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.onChange)
-  }
+  // componentWillUnmount() {
+  //   Dimensions.removeEventListener('change', this.onChange)
+  // }
 
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
@@ -77,17 +77,12 @@ export default class Login extends Component<ILoginProps, ILoginState> {
           }
           this.setState({ alert })
         })
-        console.log('loginresult', loggedin, { email, password })
         if (loggedin) this.setState({ loggedin })
         this.setState({ loginChecking: false })
       }
     }
 
-    if (this.state.loggedin) {
-      console.log('ok')
-
-      return <Redirect to="/" />
-    }
+    if (this.state.loggedin) return <Redirect to="/" />
 
     const { alert } = this.state
 

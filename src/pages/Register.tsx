@@ -7,8 +7,8 @@ import APIUser from '../helper/API/APIUser'
 import {
   ErrorAlert,
   PreErrorAlert,
+  PreSuccessAlert,
   PreWarningAlert,
-  SuccessAlert,
   WarningAlert,
 } from '../helper/DefinedAlerts'
 import Navigation from '../Navigation'
@@ -20,6 +20,7 @@ import LoginInputEmail from './Login/LoginInputEmail'
 import LoginInputPassword from './Login/LoginInputPassword'
 import RegisterTitle from './Login/RegisterTitle'
 import IRegisterState from '../interfaces/IRegisterState'
+import { Redirect } from '../Router/react-router'
 
 export default class Register extends Component<
   IRegisterProps,
@@ -30,10 +31,11 @@ export default class Register extends Component<
     lastName: '',
     password: '',
     passwordRepeat: '',
+    redirect: '',
     keyboardHeight: 0,
     email: '',
     checking: false,
-    disabled: true,
+    disabled: false,
     emailValid: true,
     alert: {
       type: 'error',
@@ -47,10 +49,17 @@ export default class Register extends Component<
     this.setState({
       alert: PreWarningAlert(`register.${pre}.`, 'text', 'info'),
     })
+    this.ResetAlert()
+  }
+
+  ResetAlert() {
+    setTimeout(() => {
+      this.setState({ checking: false, disabled: false })
+    }, 1 * 1000)
   }
 
   async submit() {
-    this.setState({ checking: true })
+    this.setState({ checking: true, disabled: true })
 
     const { firstName, lastName, email, password, passwordRepeat } = this.state
 
@@ -74,9 +83,18 @@ export default class Register extends Component<
       )
 
       if (account) {
-        const alert = SuccessAlert('register.welcome')
-        alert.text.replaceAll('%firstname%', firstName)
+        const alert = PreSuccessAlert('register.welcome.', 'text', 'info')
+        const { text } = alert
+
+        console.log({ alert, text })
+        const t = text.replace('%firstname%', firstName)
+        alert.text = t
+        console.log({ alert, t })
         this.setState({ alert })
+
+        setTimeout(async () => {
+          this.setState({ redirect: '/' })
+        }, 3 * 1000)
       } else {
         this.setState({ alert: WarningAlert('register.unsuccess') })
       }
@@ -96,10 +114,13 @@ export default class Register extends Component<
           },
         })
       }
+      this.ResetAlert()
     }
   }
 
   render() {
+    if (this.state.redirect) return <Redirect to={this.state.redirect} />
+
     const keyboardDetection = {
       update: (keyboardHeight: any) => this.setState({ keyboardHeight }),
     }
@@ -130,11 +151,13 @@ export default class Register extends Component<
           <ScrollView {...outerBox}>
             <RegisterTitle />
             <LoginInput
+              value="Max"
               onChange={firstName => this.setState({ firstName })}
               onSubmit={() => this.submit()}
               placeholder="Vorname"
             />
             <LoginInput
+              value="Kruggel"
               onChange={lastName => this.setState({ lastName })}
               onSubmit={() => this.submit()}
               placeholder="Nachname"
@@ -153,18 +176,21 @@ export default class Register extends Component<
               abgekürzt!
             </Text>
             <LoginInputEmail
+              value="max@kruggel.it"
               onChange={(email, emailValid) =>
                 this.setState({ email, emailValid })
               }
               onSubmit={() => this.submit()}
             />
             <LoginInputPassword
+              value="asdasdasd"
               onChange={(password, passwordValid) =>
                 this.setState({ password, passwordValid })
               }
               onSubmit={() => this.submit()}
             />
             <LoginInputPassword
+              value="asdasdasd"
               repeat={true}
               onChange={(passwordRepeat, passwordRepeatValid) =>
                 this.setState({ passwordRepeat, passwordRepeatValid })
@@ -174,8 +200,8 @@ export default class Register extends Component<
             <LoginButton
               checking={this.state.checking}
               onSubmit={() => this.submit()}
-              // disabled={this.state.disabled}
-              disabled={false}
+              disabled={this.state.disabled}
+              // disabled={false}
             />
           </ScrollView>
         </BackgroundImage>

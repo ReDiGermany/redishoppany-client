@@ -5,6 +5,7 @@ export default interface IRegisterState {
   lastName: string
   password: string
   passwordRepeat: string
+  redirect: string
   email: string
   keyboardHeight: number
   checking: boolean
