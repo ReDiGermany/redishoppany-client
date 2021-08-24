@@ -2,9 +2,10 @@
 
 buildscript {
     ext {
-        compileSdkVersion   = 27
-        targetSdkVersion    = 27
-        buildToolsVersion   = "27.0.3"
+        minSdkVersion = 29
+        compileSdkVersion   = 29
+        targetSdkVersion    = 29
+        buildToolsVersion   = "29.0.2"
     }
     repositories {
         google()
@@ -33,5 +34,9 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://www.jitpack.io' }
+        maven {
+            // expo-camera bundles a custom com.google.android:cameraview
+            url "$rootDir/../node_modules/expo-camera/android/maven"
+        }
     }
 }

@@ -6,7 +6,6 @@ import android.net.Uri;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -29,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -45,9 +45,9 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       List<ReactPackage> packages = new PackageList(this).getPackages();
-      packages.add(new BlurViewPackage());
+      // packages.add(new BlurViewPackage());
+      // packages.add(new ExtraDimensionsPackage());
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
-      System.out.println(packages)
       return packages;
     }
 
