@@ -95,6 +95,17 @@ export default class HomeList extends Component<IPageProps> {
             visible={this.state.add}
             onChange={name => this.addList(name)}
           />
+          {this.state.lists.length === 0 && (
+            <Moveable
+              name="Nothing here. Add a new List!"
+              large={true}
+              centerText={true}
+              boldText={true}
+              onClick={() => {
+                this.setState({ add: true })
+              }}
+            />
+          )}
           {this.state.lists.map((list, index) => {
             const title =
               index > 0 ? (
