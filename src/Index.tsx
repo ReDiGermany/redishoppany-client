@@ -27,12 +27,12 @@ export default class Index extends Component<IIndexProps, IIndexState> {
   }
 
   async componentDidMount() {
-    try {
-      const user = await APIUser.getMe()
-      this.setState({ user, checkMeDone: true, loggedin: true })
-    } catch (e) {
-      console.log('error logging in', e)
+    const user = await APIUser.getMe()
+    if (typeof user === 'boolean') {
+      console.log('[index.tsx] error logging in. Wrong credentials?')
       this.setState({ checkMeDone: true, loggedin: false })
+    } else {
+      this.setState({ user, checkMeDone: true, loggedin: true })
     }
   }
 
