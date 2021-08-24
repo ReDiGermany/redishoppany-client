@@ -4,20 +4,30 @@ import loginStyles from '../../styles/LoginStyle'
 import ILoginInputPasswordProps from '../../interfaces/ILoginInputPasswordProps'
 
 export default class LoginInput extends Component<ILoginInputPasswordProps> {
-  state = { valid: undefined, value: '' }
+  state = {
+    valid: this.props.value === undefined ? undefined : true,
+    value: this.props.value ?? '',
+  }
+
+  componentDidMount() {
+    if (this.props.value !== undefined) this.onChange(this.props.value, true)
+  }
 
   render() {
     return (
       <TextInput
+        defaultValue={this.props.value}
         placeholderTextColor="rgba(255,255,255,.5)"
         style={loginStyles().input}
         onSubmitEditing={this.props.onSubmit}
-        onChangeText={value => {
-          this.setState({ value, valid: true })
-          this.props.onChange(value, true)
-        }}
+        onChangeText={value => this.onChange(value, true)}
         placeholder={this.props.placeholder ?? ''}
       />
     )
+  }
+
+  onChange(value: string, valid: boolean) {
+    this.setState({ value, valid })
+    this.props.onChange(value, valid)
   }
 }

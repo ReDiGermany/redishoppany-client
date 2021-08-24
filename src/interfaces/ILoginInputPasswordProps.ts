@@ -3,4 +3,5 @@ export default interface ILoginInputPasswordProps {
   onSubmit: () => void
   repeat?: boolean
   placeholder?: string
+  value?: string
 }

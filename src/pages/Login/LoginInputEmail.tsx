@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, TextInput } from 'react-native'
-import IScreen from '../../interfaces/IScreen'
+import { TextInput } from 'react-native'
 import loginStyles from '../../styles/LoginStyle'
 import ILoginInputEmailProps from '../../interfaces/ILoginInputEmailProps'
 import { mailRegex } from '../../helper/Constants'
@@ -8,25 +7,29 @@ import Language from '../../language/Language'
 
 export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
   state = {
-    valid: undefined,
-    value: '',
+    valid: this.props.value === undefined ? undefined : true,
+    value: this.props.value ?? '',
     dimensions: {
       window: undefined,
       screen: undefined,
     },
   }
 
-  onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
-    // console.log('LoginInputEmail', dimensions)
-    this.setState({ dimensions })
-  }
+  // onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
+  //   // console.log('LoginInputEmail', dimensions)
+  //   this.setState({ dimensions })
+  // }
+
+  // componentDidMount() {
+  //   Dimensions.addEventListener('change', this.onChange)
+  // }
+
+  // componentWillUnmount() {
+  //   Dimensions.removeEventListener('change', this.onChange)
+  // }
 
   componentDidMount() {
-    Dimensions.addEventListener('change', this.onChange)
-  }
-
-  componentWillUnmount() {
-    Dimensions.removeEventListener('change', this.onChange)
+    if (this.props.value !== undefined) this.onChange(this.props.value)
   }
 
   render() {
@@ -36,17 +39,20 @@ export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
 
     return (
       <TextInput
+        defaultValue={this.props.value}
         placeholderTextColor="rgba(255,255,255,.5)"
         style={[loginStyles().input, loginStyles()[style]]}
         onSubmitEditing={this.props.onSubmit}
-        onChangeText={value => {
-          const valid = value !== '' && value.match(mailRegex) !== null
-          this.setState({ value, valid })
-          this.props.onChange(value, valid)
-        }}
+        onChangeText={value => this.onChange(value)}
         placeholder={Language.get('email')}
         keyboardType="email-address"
       />
     )
+  }
+
+  onChange(value: string): void {
+    const valid = value !== '' && value.match(mailRegex) !== null
+    this.setState({ value, valid })
+    this.props.onChange(value, valid)
   }
 }

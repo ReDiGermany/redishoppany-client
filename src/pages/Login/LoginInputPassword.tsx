@@ -5,27 +5,36 @@ import loginStyles from '../../styles/LoginStyle'
 import ILoginInputPasswordProps from '../../interfaces/ILoginInputPasswordProps'
 
 export default class LoginInputPassword extends Component<ILoginInputPasswordProps> {
-  state = { valid: undefined, value: '' }
+  state = {
+    valid: this.props.value === undefined ? undefined : true,
+    value: this.props.value ?? '',
+  }
+
+  componentDidMount() {
+    if (this.props.value !== undefined) this.onChange(this.props.value)
+  }
 
   render() {
     let style: 'unknown' | 'valid' | 'invalid' = 'unknown'
     if (this.state.valid !== undefined)
       style = this.state.valid ? 'valid' : 'invalid'
+    const lang = this.props.repeat ? 'password.repeat' : 'password'
 
     return (
       <TextInput
+        defaultValue={this.props.value}
         placeholderTextColor="rgba(255,255,255,.5)"
         style={[loginStyles().input, loginStyles()[style]]}
         onSubmitEditing={this.props.onSubmit}
-        onChangeText={value => {
-          this.setState({ value, valid: value.length >= 8 })
-          this.props.onChange(value, true)
-        }}
-        placeholder={Language.get(
-          this.props.repeat ? 'password.repeat' : 'password'
-        )}
+        onChangeText={value => this.onChange(value)}
+        placeholder={Language.get(lang)}
         secureTextEntry={true}
       />
     )
+  }
+
+  onChange(value: string): void {
+    this.setState({ value, valid: value.length >= 8 })
+    this.props.onChange(value, value.length >= 8)
   }
 }
