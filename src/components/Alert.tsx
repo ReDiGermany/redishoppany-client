@@ -8,8 +8,8 @@ import {
   animateAble,
   text,
   info,
+  box,
 } from '../styles/AelrtStyle'
-import { box } from '../styles/InputStyle'
 import IAlertProps from '../interfaces/IAlertProps'
 
 export default class Alert extends Component<IAlertProps> {
@@ -36,6 +36,9 @@ export default class Alert extends Component<IAlertProps> {
       duration: 300,
       useNativeDriver: true,
     }).start()
+    setTimeout(() => {
+      this.props.onClose?.()
+    }, 300)
   }
 
   render() {
@@ -45,7 +48,8 @@ export default class Alert extends Component<IAlertProps> {
       info: infoColor,
       success: successColor,
     }
-    const marginTop = -100 * (1 - this.state.fadeVal)
+    const marginTop =
+      -100 * (1 - this.state.fadeVal) - (this.props.yOffset ?? 0)
     const opacity = this.state.fadeVal
 
     return (
