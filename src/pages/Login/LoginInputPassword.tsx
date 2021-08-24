@@ -18,7 +18,7 @@ export default class LoginInputPassword extends Component<ILoginInputPasswordPro
         style={[loginStyles().input, loginStyles()[style]]}
         onSubmitEditing={this.props.onSubmit}
         onChangeText={value => {
-          this.setState({ value, valid: true })
+          this.setState({ value, valid: value.length >= 8 })
           this.props.onChange(value, true)
         }}
         placeholder={Language.get(
