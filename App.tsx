@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { AppearanceProvider } from 'react-native-appearance'
 import { StatusBar } from 'expo-status-bar'
 import { View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Index from './src/Index'
 import APIUser from './src/helper/API/APIUser'
@@ -33,12 +34,14 @@ export default class App extends Component {
   render() {
     return (
       <AppearanceProvider>
-        <StatusBar style="auto" />
-        <View style={MainWindowStyles.container}>
-          <Router>
-            <Index {...this.state} />
-          </Router>
-        </View>
+        <SafeAreaView>
+          <StatusBar style="light" />
+          <View style={MainWindowStyles.container}>
+            <Router>
+              <Index {...this.state} />
+            </Router>
+          </View>
+        </SafeAreaView>
       </AppearanceProvider>
     )
   }
