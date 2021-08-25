@@ -28,18 +28,22 @@
   "welcome.subline": "Your List Sharing App",
   "password": "password",
   "password.repeat": "password repeat",
-  "login.please": "Login",
-  "login": "Go!",
-  "login.checking": "Checking login...",
-  "login.via": "or login via",
-  "login.noaccount": "no account?",
-  "register": "register",
-  "login.anonym": "use anonymously",
   "app.loading": "Loading...",
   "category.update": "Update Categories",
   "items.bought": "Items Bought",
   "imprint.text": "Angaben gemäß § 5 TMG:\n\nMax Kruggel\nJahnstraße 18\n58511 Lüdenscheid\n\nKontakt:\nTelefon: +49 157 89186966\nE-Mail: kontakt@lisha-app.com",
 
+  "login.please": "Login",
+  "login": "Go!",
+  "login.checking": "Checking login...",
+  "login.via": "or login via",
+  "login.noaccount": "no account?",
+  "login.anonym": "use anonymously",
+  "login.welcome": "Willkommen",
+  "login.wrong.credentials.text": "Logindaten waren falsch!",
+  "login.wrong.credentials.info": "Bitte versuche es erneut.",
+
+  "register": "register",
   "register.no.firstname.text": "Please fill in your first name",
   "register.no.firstname.info": "to register your account",
   "register.no.lastname.text": "Please fill in your last name",
@@ -67,5 +71,7 @@
   "login.facebook.error.email.info": "Bitte erlaube das E-Mail auslesen und versuche es erneut!",
   "login.facebook.check.text": "Überprüfe Daten",
   "login.facebook.check.info": "Dies kann einige Sekunden dauern!",
-  "login.facebook.success": "Willkommen (zurück)!"
+  "login.facebook.success": "Willkommen (zurück)!",
+  "login.facebook.success.text": "Account Angelegt",
+  "login.facebook.success.info": "Logge ein."
 }
