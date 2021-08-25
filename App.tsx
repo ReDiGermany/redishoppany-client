@@ -25,10 +25,12 @@ export default class App extends Component {
   async componentDidMount() {
     const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
     const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
-    const me = await APIUser.getMeByToken(token, email)
-    if (typeof me === 'boolean')
-      this.setState({ checkMeDone: true, loggedin: false })
-    else this.setState({ checkMeDone: true, loggedin: me !== undefined })
+    if (token !== '' && email !== '') {
+      const me = await APIUser.getMeByToken(token, email)
+      if (typeof me === 'boolean')
+        this.setState({ checkMeDone: true, loggedin: false })
+      else this.setState({ checkMeDone: true, loggedin: me !== undefined })
+    } else this.setState({ checkMeDone: true, loggedin: false })
   }
 
   render() {
