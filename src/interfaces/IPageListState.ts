@@ -1,3 +1,4 @@
+import IAlertProps from './IAlertProps'
 import IAPICategory from './IAPICategory'
 import IAPIShoppingListItemResponseItem from './IAPIShoppingListItemResponseItem'
 import IShoppingListCategory from './IShoppingListCategory'
@@ -21,4 +22,6 @@ export default interface IPageListState {
   lists: IAPIShoppingListItemResponseItem[]
   newCatItem?: IShoppingListItem
   newItemList?: IShoppingListItem
+  alert: IAlertProps
+  keyboardHeight: number
 }
