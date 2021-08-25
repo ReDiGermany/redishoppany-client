@@ -56,7 +56,12 @@ export default class Home extends SafeComponent<IPageProps> {
         >
           <View style={{ ...styles.innerView, overflow: 'hidden' }}>
             <BackgroundImage>
-              {active === 0 && <HomeList user={this.props.user} />}
+              {active === 0 && (
+                <HomeList
+                  onReload={() => this.props.onReload?.()}
+                  user={this.props.user}
+                />
+              )}
               {active === 1 && <HomeFoodplan user={this.props.user} />}
               {active === 2 && <HomeRecipes user={this.props.user} />}
               {active === 3 && <HomeFriendlist user={this.props.user} />}
