@@ -49,65 +49,62 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   render() {
     if (!this.state.checkMeDone) return <SplashScreen />
 
+    const { user } = this.state
+
     return (
       <View>
-        <Route path="/about">
-          <About user={this.state.user} />
-        </Route>
-        <Route path="/register">
-          <Register />
-        </Route>
-        <Route path="/foodplan/add">
-          <AddToFoodplan user={this.state.user} />
-        </Route>
-        <Route path="/imprint">
-          <Imprint user={this.state.user} />
-        </Route>
+        <Route path="/about" render={() => <About user={user} />} />
+        <Route path="/register" render={() => <Register />} />
+        <Route
+          path="/foodplan/add"
+          render={() => <AddToFoodplan user={user} />}
+        />
+        <Route path="/imprint" render={() => <Imprint user={user} />} />
         <Route
           path="/list/:id"
           render={(props: any) => (
-            <List user={this.state.user} id={props.match.params.id} />
+            <List user={user} id={props.match.params.id} />
           )}
-        ></Route>
-        <Route path="/settings">
-          <Settings user={this.state.user} />
-        </Route>
-        <Route path="/notifications">
-          <Notifications user={this.state.user} />
-        </Route>
-        <Route path="/recipe/add">
-          <EditRecipe user={this.state.user} />
-        </Route>
+        />
+        <Route path="/settings" render={() => <Settings user={user} />} />
+        <Route
+          path="/notifications"
+          render={() => <Notifications user={user} />}
+        />
+        <Route path="/recipe/add" render={() => <EditRecipe user={user} />} />
         <Route
           path="/recipe/edit/:id"
           render={props => (
-            <EditRecipe user={this.state.user} id={props.match.params.id} />
+            <EditRecipe user={user} id={props.match.params.id} />
           )}
         />
         <Route
           path="/recipe/:id"
           render={(props: any) => (
-            <Recipe user={this.state.user} id={props.match.params.id} />
+            <Recipe user={user} id={props.match.params.id} />
           )}
         />
-        <Route path="/logout">
-          <Logout user={this.state.user} />
-        </Route>
-        <Route path="/login">
-          <Login onReloadMe={() => this.reloadMe(false)} />
-        </Route>
+        <Route path="/logout" render={() => <Logout user={user} />} />
+        <Route
+          path="/login"
+          render={() => <Login onReloadMe={() => this.reloadMe(false)} />}
+        />
         <Route
           path="/updatecat/:id"
           render={(props: any) => <UpdateCat id={props.match.params.id} />}
         />
-        <Route exact path="/">
-          {this.state.loggedin ? (
-            <Home user={this.state.user} />
-          ) : (
-            <Redirect to="/login" />
-          )}
-          {/* <Settings user={this.state.user} /> */}
-        </Route>
+        <Route
+          exact
+          path="/"
+          render={() =>
+            this.state.loggedin ? (
+              <Home user={user} />
+            ) : (
+              <Redirect to="/login" />
+            )
+          }
+        />
+        {/* <Settings user={this.state.user} /> */}
       </View>
     )
   }
