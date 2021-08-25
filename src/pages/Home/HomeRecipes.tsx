@@ -36,14 +36,21 @@ export default class Recipes extends Component<IPageProps, IRecipesState> {
       const recipes = await AsyncStorage.getItem('recipeList')
       if (recipes !== null) {
         const rec: IAPIRecipe[] = JSON.parse(recipes)
-        rec.forEach((item, idx) => {
-          if (
-            typeof item.image === 'number' ||
-            ('uri' in item.image && item.image.uri === '')
-          )
-            rec[idx].image = recipeImageNotFound
-          else rec[idx].image = { uri: item.image }
-        })
+        let image: string | number | { uri: string } = -1
+        try {
+          rec.forEach((item, idx) => {
+            image = item.image
+            if (
+              typeof image === 'number' ||
+              (typeof image === 'string' && image === '') ||
+              (typeof image === 'object' && 'uri' in image && image.uri === '')
+            )
+              rec[idx].image = recipeImageNotFound
+            else rec[idx].image = { uri: item.image }
+          })
+        } catch (e) {
+          console.log('HomeRecipes.tsx', { e, rec, image })
+        }
         this.setState({ recipes: rec })
       }
     })()
