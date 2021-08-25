@@ -91,7 +91,9 @@ export const randomColor = () => HSLToHex(Math.random() * 359)
 // https://stackoverflow.com/a/12043228
 export const GetLuma = (inp: string) => {
   let c = inp
-  if (inp.startsWith('#')) c = inp.substring(1) // strip #
+  if (c.length === 4)
+    c = c.replace(/#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])/, '#$1$1$2$2$3$3')
+  if (c.startsWith('#')) c = c.substring(1) // strip #
   const rgb = parseInt(c, 16) // convert rrggbb to decimal
   // eslint-disable-next-line no-bitwise
   const r = (rgb >> 16) & 0xff // extract red
