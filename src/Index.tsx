@@ -1,5 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
 import Imprint from './pages/Imprint'
@@ -28,13 +29,17 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   }
 
   async reloadMe(updateAll: boolean) {
-    const user = await APIUser.getMe()
-    if (typeof user === 'boolean') {
-      console.log('[index.tsx] error logging in. Wrong credentials?')
-      if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
-    } else {
-      this.setState({ user, checkMeDone: true, loggedin: true })
-    }
+    const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
+    const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
+    if (token !== '' && email !== '') {
+      const user = await APIUser.getMe()
+      if (typeof user === 'boolean') {
+        console.log('[index.tsx] error logging in. Wrong credentials?')
+        if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
+      } else {
+        this.setState({ user, checkMeDone: true, loggedin: true })
+      }
+    } else if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
   }
 
   async componentDidMount() {
