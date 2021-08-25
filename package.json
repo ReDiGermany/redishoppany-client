@@ -9,6 +9,7 @@
   "version": "0.0.1",
   "scripts": {
     "start": "expo start",
+    "emulator": "emulator.bat",
     "android": "expo build:android",
     "ios": "expo build:ios",
     "rn:start": "react-native start",
