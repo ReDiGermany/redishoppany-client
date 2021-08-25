@@ -1,5 +1,5 @@
 import React from 'react'
-import { RefreshControl, ScrollView, View } from 'react-native'
+import { RefreshControl, ScrollView, View, ViewStyle } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import APICategory from '../helper/API/APICategory'
 import { randomColor } from '../helper/Functions'
@@ -12,6 +12,7 @@ import IUpdateCatProps from '../interfaces/IUpdateCatProps'
 import IUpdateCatState from '../interfaces/IUpdateCatState'
 import CategoryUpdater from '../components/CategoryUpdater'
 import SafeComponent from '../components/SafeComponent'
+import INavigationProps from '../interfaces/INavigationProps'
 
 export default class Index extends SafeComponent<
   IUpdateCatProps,
@@ -36,9 +37,9 @@ export default class Index extends SafeComponent<
   }
 
   async refresh() {
+    // this.setState({ list: [] })
     const list = await APICategory.list(this.props.id)
-    this.setState({ list })
-    this.setState({ refreshing: false })
+    this.setState({ list, refreshing: false })
     await AsyncStorage.setItem(`cat-${this.props.id}`, JSON.stringify(list))
   }
 
@@ -67,6 +68,7 @@ export default class Index extends SafeComponent<
 
   async update(item: IAPICategory, index: number) {
     const { list } = this.state
+    // console.log({ list, item, index })
     list[index] = item
     this.setState({ list })
     await APICategory.update(item)
@@ -80,24 +82,20 @@ export default class Index extends SafeComponent<
       update: (keyboardHeight: any) => this.setState({ keyboardHeight }),
     }
 
-    const outerBox = {
-      style: {
-        height:
-          GlobalStyles().appHeight -
-          GlobalStyles().statusbarHeight -
-          this.state.keyboardHeight,
-      },
+    const outerBox: ViewStyle = {
+      height: GlobalStyles().contentHeight - this.state.keyboardHeight,
     }
 
-    const navigation = {
+    const navigation: INavigationProps = {
       solid: this.state.isTop,
       label: Language.get('category.update'),
     }
-
-    const innerBox = {
-      style: {
-        height: GlobalStyles().contentHeight - 50 - this.state.keyboardHeight,
-      },
+    const innerBox: ViewStyle = {
+      height:
+        GlobalStyles().contentHeight -
+        this.state.keyboardHeight -
+        GlobalStyles().barHeight -
+        GlobalStyles().lineHeight,
     }
 
     const scrollView = {
@@ -108,7 +106,7 @@ export default class Index extends SafeComponent<
       refreshControl: (
         <RefreshControl
           onRefresh={() => {
-            this.setState({ refreshing: true })
+            this.setState({ refreshing: true, list: [] })
             this.refresh()
           }}
           enabled={!this.state.preventScroll}
@@ -145,7 +143,6 @@ export default class Index extends SafeComponent<
         this.setState({ preventScroll: false, isActiveItem: false })
         await this.update(newItem, index)
       },
-      key: item.id,
       item,
       index,
       maxItems: this.state.list.length,
@@ -175,12 +172,15 @@ export default class Index extends SafeComponent<
 
     return (
       <KeyboardDetection {...keyboardDetection}>
-        <View {...outerBox}>
+        <View style={outerBox}>
           <Navigation {...navigation} />
-          <View {...innerBox}>
+          <View style={innerBox}>
             <ScrollView {...scrollView}>
               {this.state.list.map((item: IAPICategory, index: number) => (
-                <CategoryUpdater {...categoryUpdater(item, index)} />
+                <CategoryUpdater
+                  key={item.id}
+                  {...categoryUpdater(item, index)}
+                />
               ))}
             </ScrollView>
           </View>
