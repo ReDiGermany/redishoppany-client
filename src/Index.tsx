@@ -20,6 +20,7 @@ import SplashScreen from './SplashScreen'
 import UpdateCat from './pages/UpdateCat'
 import Register from './pages/Register'
 import SafeComponent from './components/SafeComponent'
+import Reload from './pages/Reload'
 
 export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   state = {
@@ -53,6 +54,10 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
 
     return (
       <View>
+        <Route
+          path="/reload"
+          render={() => <Reload onReload={async () => this.reloadMe(false)} />}
+        />
         <Route path="/about" render={() => <About user={user} />} />
         <Route path="/register" render={() => <Register />} />
         <Route
@@ -98,7 +103,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
           path="/"
           render={() =>
             this.state.loggedin ? (
-              <Home user={user} />
+              <Home onReload={async () => this.reloadMe(false)} user={user} />
             ) : (
               <Redirect to="/login" />
             )
