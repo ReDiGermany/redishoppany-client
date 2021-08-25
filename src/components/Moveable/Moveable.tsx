@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Pressable, View, ViewStyle } from 'react-native'
 import { boxStyle } from '../../styles/MoveableStyle'
 import IMoveableProps from '../../interfaces/IMoveableProps'
@@ -6,7 +6,7 @@ import MoveableDeleteIcon from './MoveableDeleteIcon'
 import MoveableIcon from './MoveableIcon'
 import MoveableText from './MoveableText'
 
-export default class Moveable extends React.Component<IMoveableProps> {
+export default class Moveable extends Component<IMoveableProps> {
   state = {
     initX: 0,
     initY: 0,
