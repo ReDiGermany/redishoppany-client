@@ -1,5 +1,11 @@
 import React from 'react'
-import { Text, View, Dimensions, ScrollView } from 'react-native'
+import {
+  Text,
+  View,
+  Dimensions,
+  ScrollView,
+  RefreshControl,
+} from 'react-native'
 import AddBar from '../../components/AddBar'
 import Moveable from '../../components/Moveable/Moveable'
 import Row from '../../components/Row'
@@ -49,12 +55,6 @@ export default class HomeList extends SafeComponent<IPageProps> {
       this.setState({ lists: user.lists, add: false })
   }
 
-  componentWillUnmount() {
-    // https://stackoverflow.com/a/61055910
-    // fix Warning: Can't perform a React state update on an unmounted component
-    this.setState = (_state, _callback) => {}
-  }
-
   render() {
     if (this.state.redirect !== '')
       return <Redirect push to={this.state.redirect} />
@@ -89,6 +89,12 @@ export default class HomeList extends SafeComponent<IPageProps> {
           buttons={buttons}
         />
         <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={() => this.props.onReload?.()}
+            />
+          }
           onScroll={e =>
             this.setState({
               isTop: e.nativeEvent.contentOffset.y <= 0,
