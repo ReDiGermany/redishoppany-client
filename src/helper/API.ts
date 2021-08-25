@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Constants from 'expo-constants'
 
 // Error Handling from https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
 
@@ -9,6 +10,8 @@ export default class API {
       baseURL: 'https://api.lisha-app.com',
       // baseURL: 'http://192.168.0.30:3001',
       timeout: 1000,
+      httpAgent: Constants.default.deviceName,
+      httpsAgent: Constants.default.deviceName,
     })
   }
 
