@@ -73,5 +73,11 @@
   "login.facebook.check.info": "Dies kann einige Sekunden dauern!",
   "login.facebook.success": "Willkommen (zurück)!",
   "login.facebook.success.text": "Account Angelegt",
-  "login.facebook.success.info": "Logge ein."
+  "login.facebook.success.info": "Logge ein.",
+
+  "shoppinglist.delete.failed.text": "Fehler beim löschen",
+  "shoppinglist.delete.failed.info": "Bitte versuche es erneut!",
+
+  "list.items.cleared": "Die Liste wurde geleert",
+  "list.items.bought.cleared": "Die gekauften Dinge wurden gelöscht."
 }
