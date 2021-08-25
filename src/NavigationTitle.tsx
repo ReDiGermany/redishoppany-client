@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Pressable, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import BadgeStyle from './styles/BadgeStyle'
@@ -10,8 +10,9 @@ import GlobalStyles from './styles/GlobalStyles'
 import INavigationTitleProps from './interfaces/INavigationTitleProps'
 import WebStyle from './helper/WebStyle'
 import NavigationTitleStyle from './styles/NavigationTitleStyle'
+import SafeComponent from './components/SafeComponent'
 
-export default class NavigationTitle extends Component<INavigationTitleProps> {
+export default class NavigationTitle extends SafeComponent<INavigationTitleProps> {
   render() {
     const barIcon = {
       onPress: this.props.onPress,

@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import MoveableTextDropdownStyles from '../../styles/MoveableTextDropdownStyles'
 import IMoveableTextDropdownProps from '../../interfaces/IMoveableTextDropdownProps'
+import SafeComponent from '../SafeComponent'
 
-export default class MoveableTextDropdown extends Component<IMoveableTextDropdownProps> {
+export default class MoveableTextDropdown extends SafeComponent<IMoveableTextDropdownProps> {
   state = {
     selectedItem:
       this.props.selectedItem ??

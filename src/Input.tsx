@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Pressable, TextInput, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import SafeComponent from './components/SafeComponent'
 import IInputProps from './interfaces/IInputProps'
 import {
   box,
@@ -11,7 +12,7 @@ import {
   textBlockNoPrefix,
 } from './styles/InputStyle'
 
-export default class Input extends Component<IInputProps> {
+export default class Input extends SafeComponent<IInputProps> {
   state = {
     amount: (this.props.prefix ?? '').toString(),
     text: this.props.text ?? '',

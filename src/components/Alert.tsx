@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Animated, Pressable, Text } from 'react-native'
 import {
   errorColor,
@@ -11,8 +11,9 @@ import {
   box,
 } from '../styles/AelrtStyle'
 import IAlertProps from '../interfaces/IAlertProps'
+import SafeComponent from './SafeComponent'
 
-export default class Alert extends Component<IAlertProps> {
+export default class Alert extends SafeComponent<IAlertProps> {
   state = {
     fadeAnim: new Animated.Value(0),
     fadeVal: 0,

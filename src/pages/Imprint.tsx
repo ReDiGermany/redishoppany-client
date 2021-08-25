@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import SafeComponent from '../components/SafeComponent'
 import IPageProps from '../interfaces/IPageProps'
 import Language from '../language/Language'
 import Navigation from '../Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
 
-export default class Imprint extends Component<IPageProps> {
+export default class Imprint extends SafeComponent<IPageProps> {
   render() {
     const style = StyleSheet.create({
       scrollView: {

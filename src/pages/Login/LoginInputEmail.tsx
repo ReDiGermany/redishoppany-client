@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { TextInput } from 'react-native'
 import loginStyles from '../../styles/LoginStyle'
 import ILoginInputEmailProps from '../../interfaces/ILoginInputEmailProps'
 import { mailRegex } from '../../helper/Constants'
 import Language from '../../language/Language'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class LoginInputEmail extends Component<ILoginInputEmailProps> {
+export default class LoginInputEmail extends SafeComponent<ILoginInputEmailProps> {
   state = {
     valid: this.props.value === undefined ? undefined : true,
     value: this.props.value ?? '',

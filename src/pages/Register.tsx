@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Alert from '../components/Alert'
@@ -21,8 +21,9 @@ import LoginInputPassword from './Login/LoginInputPassword'
 import RegisterTitle from './Login/RegisterTitle'
 import IRegisterState from '../interfaces/IRegisterState'
 import { Redirect } from '../Router/react-router'
+import SafeComponent from '../components/SafeComponent'
 
-export default class Register extends Component<
+export default class Register extends SafeComponent<
   IRegisterProps,
   IRegisterState
 > {

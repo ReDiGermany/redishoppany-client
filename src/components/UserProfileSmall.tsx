@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Link } from '../Router/react-router'
@@ -6,8 +6,9 @@ import ColumnStyle from '../styles/ColumnStyle'
 import { profileStyle } from '../styles/SidebarStyle'
 import IUserProfileSmall from '../interfaces/IUserProfileSmall'
 import Row from './Row'
+import SafeComponent from './SafeComponent'
 
-export default class UserProfileSmall extends Component<IUserProfileSmall> {
+export default class UserProfileSmall extends SafeComponent<IUserProfileSmall> {
   render() {
     const icon = {
       style: profileStyle.bell,

@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, ScrollView, Animated, Pressable } from 'react-native'
 import ListHeader from './ListHeader'
 import Moveable from './components/Moveable/Moveable'
 import IBottomBoxProps from './interfaces/IBottomBoxProps'
 import * as BottomBoxStyles from './styles/BottomBoxStyles'
+import SafeComponent from './components/SafeComponent'
 
-export default class BottomBox extends Component<IBottomBoxProps> {
+export default class BottomBox extends SafeComponent<IBottomBoxProps> {
   state = {
     open: this.props.open ?? false,
     fadeAnim: new Animated.Value(0),
@@ -26,6 +27,12 @@ export default class BottomBox extends Component<IBottomBoxProps> {
         duration: 100,
         useNativeDriver: true,
       }).start()
+  }
+
+  componentWillUnmount() {
+    // https://stackoverflow.com/a/61055910
+    // fix Warning: Can't perform a React state update on an unmounted component
+    this.setState = (_state, _callback) => {}
   }
 
   render() {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Pressable, Text } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -6,8 +6,9 @@ import Language from '../language/Language'
 import BottomNavigationStyle from '../styles/BottomNavigationStyle'
 import IBottomNavigationProps from '../interfaces/IBottomNavigationProps'
 import Row from './Row'
+import SafeComponent from './SafeComponent'
 
-export default class BottomNavigation extends Component<IBottomNavigationProps> {
+export default class BottomNavigation extends SafeComponent<IBottomNavigationProps> {
   state = {
     active: this.props.active,
     items: [

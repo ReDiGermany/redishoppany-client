@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { ScrollView, View, Image, Text } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Link } from 'react-router-native'
@@ -22,8 +22,9 @@ import { Redirect } from '../../Router/react-router'
 import AddBar from '../../components/AddBar'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class Recipes extends Component<IPageProps, IRecipesState> {
+export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   state: IRecipesState = {
     recipes: [],
     redirect: '',

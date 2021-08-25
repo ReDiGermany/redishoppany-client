@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text } from 'react-native'
 import Navigation from '../Navigation'
 import IAboutProps from '../interfaces/IAboutProps'
+import SafeComponent from '../components/SafeComponent'
 
-export default class About extends Component<IAboutProps> {
+export default class About extends SafeComponent<IAboutProps> {
   render() {
     return (
       <View>

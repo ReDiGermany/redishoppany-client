@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
@@ -18,8 +18,9 @@ import Login from './pages/Login/Login'
 import SplashScreen from './SplashScreen'
 import UpdateCat from './pages/UpdateCat'
 import Register from './pages/Register'
+import SafeComponent from './components/SafeComponent'
 
-export default class Index extends Component<IIndexProps, IIndexState> {
+export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   state = {
     user: undefined,
     checkMeDone: this.props.checkMeDone,

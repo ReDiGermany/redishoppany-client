@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text, View, Dimensions, ScrollView } from 'react-native'
 import AddBar from '../../components/AddBar'
 import Moveable from '../../components/Moveable/Moveable'
 import Row from '../../components/Row'
+import SafeComponent from '../../components/SafeComponent'
 import APIShoppingList from '../../helper/API/APIShoppingList'
 import APIUser from '../../helper/API/APIUser'
 import IMoveableProps from '../../interfaces/IMoveableProps'
@@ -14,7 +15,7 @@ import { Redirect } from '../../Router/react-router'
 import GlobalStyles from '../../styles/GlobalStyles'
 import HomeStyles from '../../styles/HomeStyles'
 
-export default class HomeList extends Component<IPageProps> {
+export default class HomeList extends SafeComponent<IPageProps> {
   state = {
     redirect: '',
     isTop: true,
@@ -46,6 +47,12 @@ export default class HomeList extends Component<IPageProps> {
     const user = await APIUser.getMe()
     if (typeof user !== 'boolean')
       this.setState({ lists: user.lists, add: false })
+  }
+
+  componentWillUnmount() {
+    // https://stackoverflow.com/a/61055910
+    // fix Warning: Can't perform a React state update on an unmounted component
+    this.setState = (_state, _callback) => {}
   }
 
   render() {

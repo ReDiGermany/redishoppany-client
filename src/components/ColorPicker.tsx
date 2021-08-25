@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { HSLToHex } from '../helper/Functions'
 import GlobalStyles from '../styles/GlobalStyles'
 import IColorPickerProps from '../interfaces/IColorPickerProps'
 import ColorPickerStyles from '../styles/ColorPickerStyles'
+import SafeComponent from './SafeComponent'
 
-export default class ColorPicker extends Component<IColorPickerProps> {
+export default class ColorPicker extends SafeComponent<IColorPickerProps> {
   parseValue(x: number) {
     let posX = x / (GlobalStyles().appWidth - 10)
     if (posX < 0) posX = 0

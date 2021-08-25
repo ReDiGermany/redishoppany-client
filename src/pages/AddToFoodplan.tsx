@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { ScrollView, View, Image, Text, Pressable } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import APIRecipe from '../helper/API/APIRecipe'
@@ -19,8 +19,9 @@ import recipeImageNotFound from '../../assets/recipe_not_found.jpg'
 import { Redirect } from '../Router/react-router'
 import AddBar from '../components/AddBar'
 import APIFoodplan from '../helper/API/APIFoodplan'
+import SafeComponent from '../components/SafeComponent'
 
-export default class AddToFoodplan extends Component<
+export default class AddToFoodplan extends SafeComponent<
   IPageProps,
   IRecipesState
 > {

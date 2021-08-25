@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native'
 import TextField from '../../components/TextField'
@@ -6,6 +6,7 @@ import IPageProps from '../../interfaces/IPageProps'
 import Navigation from '../../Navigation'
 import { container } from '../../styles/RecipesListStyle'
 import Ingredient from './Ingredient'
+import SafeComponent from '../../components/SafeComponent'
 
 interface IEditRecipeProps extends IPageProps {
   id?: string
@@ -19,7 +20,7 @@ interface IEditRecipeState {
   focus: number
 }
 
-export default class EditRecipe extends Component<
+export default class EditRecipe extends SafeComponent<
   IEditRecipeProps,
   IEditRecipeState
 > {

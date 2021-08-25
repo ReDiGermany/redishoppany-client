@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text, Pressable } from 'react-native'
 import { HSLToHex } from '../helper/Functions'
 import CategoryStyles from '../styles/CategoryStyles'
@@ -7,8 +7,9 @@ import ColorPicker from './ColorPicker'
 import ICategoryUpdaterProps from '../interfaces/ICategoryUpdaterProps'
 import Moveable from './Moveable/Moveable'
 import Row from './Row'
+import SafeComponent from './SafeComponent'
 
-export default class CategoryUpdater extends Component<ICategoryUpdaterProps> {
+export default class CategoryUpdater extends SafeComponent<ICategoryUpdaterProps> {
   state = {
     item: this.props.item,
     colorSelectorOpen: this.props.selectorOpen,

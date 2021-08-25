@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text, Pressable, ViewStyle } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Row from '../Row'
@@ -9,8 +9,9 @@ import MoveableTextDropdown from './MoveableTextDropdown'
 import { textStyle } from '../../styles/MoveableStyle'
 import IMoveableTextProps from '../../interfaces/IMoveableTextProps'
 import GlobalStyles from '../../styles/GlobalStyles'
+import SafeComponent from '../SafeComponent'
 
-export default class MoveableText extends Component<IMoveableTextProps> {
+export default class MoveableText extends SafeComponent<IMoveableTextProps> {
   state = {
     longPress: false,
     posY: 0,

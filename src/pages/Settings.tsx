@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import BottomBox from '../BottomBox'
 import Moveable from '../components/Moveable/Moveable'
@@ -12,10 +12,14 @@ import Navigation from '../Navigation'
 import { Redirect } from '../Router/react-router'
 import GlobalStyles from '../styles/GlobalStyles'
 import ISettingsState from '../interfaces/ISettingsState'
+import SafeComponent from '../components/SafeComponent'
 
 // TODO: fill content!
 // TODO: Active Foodplan => BottomBox
-export default class Settings extends Component<IPageProps, ISettingsState> {
+export default class Settings extends SafeComponent<
+  IPageProps,
+  ISettingsState
+> {
   state: ISettingsState = {
     plans: [],
     foodplanFriends: [],

@@ -1,6 +1,6 @@
-import { Component } from 'react'
 import { Dimensions, Keyboard, StatusBar } from 'react-native'
 import { initialWindowMetrics } from 'react-native-safe-area-context'
+import SafeComponent from '../components/SafeComponent'
 import IKeyboardDetectionProps from '../interfaces/IKeyboardDetectionProps'
 
 const GlobalHeight = () => {
@@ -46,7 +46,7 @@ const GlobalHeight = () => {
   }
 }
 
-class KeyboardDetection extends Component<IKeyboardDetectionProps> {
+class KeyboardDetection extends SafeComponent<IKeyboardDetectionProps> {
   async componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', e =>
       this.keyboardDidShow(e)

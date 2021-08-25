@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { TextInput } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IAddBarProps from '../interfaces/IAddBarProps'
 import Row from './Row'
 import AddBarStyles from '../styles/AddBarStyles'
+import SafeComponent from './SafeComponent'
 
-export default class AddBar extends Component<IAddBarProps> {
+export default class AddBar extends SafeComponent<IAddBarProps> {
   state = {
     value: '',
   }

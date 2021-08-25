@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   View,
   RefreshControl,
@@ -21,9 +21,13 @@ import IPageListProps from '../interfaces/IPageListProps'
 import { Redirect } from '../Router/react-router'
 import IShoppingListCategory from '../interfaces/IShoppingListCategory'
 import APICategory from '../helper/API/APICategory'
+import SafeComponent from '../components/SafeComponent'
 
 // TODO: Finalize
-export default class List extends Component<IPageListProps, IPageListState> {
+export default class List extends SafeComponent<
+  IPageListProps,
+  IPageListState
+> {
   state: IPageListState = {
     items: [],
     refreshing: false,

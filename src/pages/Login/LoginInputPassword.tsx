@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { TextInput } from 'react-native'
 import Language from '../../language/Language'
 import loginStyles from '../../styles/LoginStyle'
 import ILoginInputPasswordProps from '../../interfaces/ILoginInputPasswordProps'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class LoginInputPassword extends Component<ILoginInputPasswordProps> {
+export default class LoginInputPassword extends SafeComponent<ILoginInputPasswordProps> {
   state = {
     valid: this.props.value === undefined ? undefined : true,
     value: this.props.value ?? '',

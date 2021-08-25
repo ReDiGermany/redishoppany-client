@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text, View, Button, Dimensions } from 'react-native'
 import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner'
 import { Camera } from 'expo-camera'
 import IQRScannerProps from '../interfaces/IQRScannerProps'
 import QRScannerStyles from '../styles/QRScannerStyles'
+import SafeComponent from '../components/SafeComponent'
 
-export default class QRScanner extends Component<IQRScannerProps> {
+export default class QRScanner extends SafeComponent<IQRScannerProps> {
   state = {
     scanned: false,
     hasPermission: null,

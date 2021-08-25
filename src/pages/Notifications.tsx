@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, RefreshControl, SafeAreaView, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Moveable from '../components/Moveable/Moveable'
@@ -8,8 +8,9 @@ import Navigation from '../Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
 import { INotificationPageState } from '../interfaces/INotificationPageState'
 import IAPINotification from '../interfaces/IAPINotification'
+import SafeComponent from '../components/SafeComponent'
 
-export default class Notifications extends Component<
+export default class Notifications extends SafeComponent<
   IPageProps,
   INotificationPageState
 > {

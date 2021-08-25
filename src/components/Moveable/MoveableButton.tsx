@@ -1,11 +1,12 @@
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import React, { Component } from 'react'
+import React from 'react'
 import IconBox from '../IconBox'
 import { textStyle } from '../../styles/MoveableStyle'
 import IMoveableButtonProps from '../../interfaces/IMoveableButtonProps'
 import { GetLuma } from '../../helper/Functions'
+import SafeComponent from '../SafeComponent'
 
-export default class MoveableButton extends Component<IMoveableButtonProps> {
+export default class MoveableButton extends SafeComponent<IMoveableButtonProps> {
   render() {
     const icon = {
       style: textStyle.right.button(

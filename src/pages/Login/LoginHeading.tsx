@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Text } from 'react-native'
+import SafeComponent from '../../components/SafeComponent'
 import ILoginHeadingProps from '../../interfaces/ILoginHeadingProps'
 import LoginHeadingStyles from '../../styles/LineLoginHeadingStyles'
 
-export default class LoginHeading extends Component<ILoginHeadingProps> {
+export default class LoginHeading extends SafeComponent<ILoginHeadingProps> {
   render() {
     return (
       <View>

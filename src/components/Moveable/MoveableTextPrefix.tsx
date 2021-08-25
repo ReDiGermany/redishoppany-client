@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text } from 'react-native'
 import { textStyle } from '../../styles/MoveableStyle'
 import IMoveableTextPrefixProps from '../../interfaces/IMoveableTextPrefixProps'
+import SafeComponent from '../SafeComponent'
 
-export default class MoveableTextPrefix extends Component<IMoveableTextPrefixProps> {
+export default class MoveableTextPrefix extends SafeComponent<IMoveableTextPrefixProps> {
   render() {
     const style = {
       ...textStyle.left.prefix,

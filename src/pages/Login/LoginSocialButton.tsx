@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import loginStyles from '../../styles/LoginStyle'
 import ILoginSocialButtonProps from '../../interfaces/ILoginSocialButtonProps'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class LoginSocialButton extends Component<ILoginSocialButtonProps> {
+export default class LoginSocialButton extends SafeComponent<ILoginSocialButtonProps> {
   state = {
     pressed: false,
     icon: this.props.icon,

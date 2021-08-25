@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { TextInput, View } from 'react-native'
+import SafeComponent from '../../components/SafeComponent'
 import GlobalStyles from '../../styles/GlobalStyles'
 
 interface IIngredientProps {
@@ -11,7 +12,7 @@ interface IIngredientProps {
   onSubmit?: () => void
 }
 
-export default class Ingredient extends Component<IIngredientProps> {
+export default class Ingredient extends SafeComponent<IIngredientProps> {
   state = {
     name: this.props.name ?? '',
     amount: this.props.amount ?? '',

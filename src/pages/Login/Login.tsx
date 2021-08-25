@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, SafeAreaView } from 'react-native'
 import * as Linking from 'expo-linking'
 import * as AuthSession from 'expo-auth-session'
@@ -30,8 +30,9 @@ import {
 } from '../../helper/DefinedAlerts'
 import { filterFacebookRedirectUrl } from '../../helper/Functions'
 import { FB_APP_ID } from '../../helper/Constants'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class Login extends Component<ILoginProps, ILoginState> {
+export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   state: ILoginState = {
     email: '',
     password: '',

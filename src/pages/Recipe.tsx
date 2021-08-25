@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {
   ScrollView,
@@ -31,6 +31,7 @@ import IPageProps from '../interfaces/IPageProps'
 import APIFriends from '../helper/API/APIFriends'
 import IFriend from '../interfaces/IFriend'
 import { Redirect } from '../Router/react-router'
+import SafeComponent from '../components/SafeComponent'
 
 interface IRecipeState {
   deleteConfirmBox: boolean
@@ -46,7 +47,10 @@ interface IRecipesProps extends IPageProps {
   id: number
 }
 
-export default class Recipes extends Component<IRecipesProps, IRecipeState> {
+export default class Recipes extends SafeComponent<
+  IRecipesProps,
+  IRecipeState
+> {
   state = {
     friends: [],
     deleteConfirmBox: false,

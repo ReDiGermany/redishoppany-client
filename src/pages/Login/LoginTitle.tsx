@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { StyleSheet, Text } from 'react-native'
+import SafeComponent from '../../components/SafeComponent'
 import Language from '../../language/Language'
 
 const Style = StyleSheet.create({
@@ -19,7 +20,7 @@ const Style = StyleSheet.create({
   },
 })
 
-export default class LoginTitle extends Component {
+export default class LoginTitle extends SafeComponent {
   render() {
     return (
       <>

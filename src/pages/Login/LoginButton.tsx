@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Pressable, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Language from '../../language/Language'
 import loginStyles from '../../styles/LoginStyle'
 import ILoginButtonProps from '../../interfaces/ILoginButtonProps'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class LoginButton extends Component<ILoginButtonProps> {
+export default class LoginButton extends SafeComponent<ILoginButtonProps> {
   render() {
     const textStyle = {
       ...loginStyles().vendorLoginText,

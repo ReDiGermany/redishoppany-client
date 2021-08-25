@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { RefreshControl, ScrollView, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import APICategory from '../helper/API/APICategory'
@@ -11,8 +11,12 @@ import GlobalStyles, { KeyboardDetection } from '../styles/GlobalStyles'
 import IUpdateCatProps from '../interfaces/IUpdateCatProps'
 import IUpdateCatState from '../interfaces/IUpdateCatState'
 import CategoryUpdater from '../components/CategoryUpdater'
+import SafeComponent from '../components/SafeComponent'
 
-export default class Index extends Component<IUpdateCatProps, IUpdateCatState> {
+export default class Index extends SafeComponent<
+  IUpdateCatProps,
+  IUpdateCatState
+> {
   state: IUpdateCatState = {
     isTop: true,
     refreshing: false,

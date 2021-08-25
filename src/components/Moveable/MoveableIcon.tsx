@@ -1,11 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { GetLuma } from '../../helper/Functions'
 import { rightIconStyle } from '../../styles/MoveableStyle'
 import IMoveableIconProps from '../../interfaces/IMoveableIconProps'
+import SafeComponent from '../SafeComponent'
 
-export default class MoveableIcon extends Component<IMoveableIconProps> {
+export default class MoveableIcon extends SafeComponent<IMoveableIconProps> {
   render() {
     const textColor = GetLuma(this.props.color) < 120 ? '#fff' : '#000'
 

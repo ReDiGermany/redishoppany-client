@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   RefreshControl,
   // RefreshControl, SafeAreaView,
@@ -20,8 +20,9 @@ import ListHeader from '../../ListHeader'
 import IFoodplanKw from '../../interfaces/IFoodplanKw'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class Foodplan extends Component<
+export default class Foodplan extends SafeComponent<
   IPageProps,
   IFoodplanPageState
 > {

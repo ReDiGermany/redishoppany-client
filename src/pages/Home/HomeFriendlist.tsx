@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { ScrollView, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ListHeader from '../../ListHeader'
@@ -14,8 +14,9 @@ import IFriend from '../../interfaces/IFriend'
 import Language from '../../language/Language'
 import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
 import { Redirect } from '../../Router/react-router'
+import SafeComponent from '../../components/SafeComponent'
 
-export default class Friends extends Component<IPageProps, IPageState> {
+export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state = {
     refreshing: false,
     isTop: true,

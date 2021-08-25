@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View } from 'react-native'
 import IconBoxStyle from '../styles/IconBoxStyle'
+import SafeComponent from './SafeComponent'
 
-export default class IconBox extends Component<{ disabled?: boolean }> {
+export default class IconBox extends SafeComponent<{ disabled?: boolean }> {
   render() {
     const style = {
       ...IconBoxStyle,

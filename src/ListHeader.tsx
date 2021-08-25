@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text } from 'react-native'
+import SafeComponent from './components/SafeComponent'
 import { GetLuma } from './helper/Functions'
 import GlobalStyles from './styles/GlobalStyles'
 import ListHeaderStyle from './styles/ListHeaderStyle'
@@ -10,7 +11,7 @@ interface IListHeaderProps {
   fullWidth?: boolean
 }
 
-export default class ListHeader extends Component<IListHeaderProps> {
+export default class ListHeader extends SafeComponent<IListHeaderProps> {
   render() {
     const style = {
       ...ListHeaderStyle,

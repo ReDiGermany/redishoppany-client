@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, TextInput, Text } from 'react-native'
 import ITextFieldProps from '../interfaces/ITextFieldProps'
 import ITextFieldState from '../interfaces/ITextFieldState'
 import TextFieldStyles from '../styles/TextFieldStyles'
+import SafeComponent from './SafeComponent'
 
-export default class TextField extends Component<
+export default class TextField extends SafeComponent<
   ITextFieldProps,
   ITextFieldState
 > {
