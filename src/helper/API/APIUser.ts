@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import IAPIUserMe from '../../interfaces/IAPIUserMe'
 import API from '../API'
+import { IAPIVendorLogin } from '../../interfaces/IAPIVendorLogin'
 
 export default class APIUser {
   public static async checkFacebookToken(
     token: string
-  ): Promise<IAPIUserMe | boolean> {
-    const ret = await API.post<IAPIUserMe>('/user/login/vendor/facebook', {
+  ): Promise<IAPIVendorLogin | boolean> {
+    const ret = await API.post<IAPIVendorLogin>('/user/login/vendor/facebook', {
       token,
     })
 
