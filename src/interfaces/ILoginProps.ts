@@ -1,1 +1,3 @@
-export default interface ILoginProps {}
+export default interface ILoginProps {
+  onReloadMe: () => void
+}
