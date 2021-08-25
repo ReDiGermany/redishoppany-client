@@ -4,6 +4,7 @@ import IAPIShoppingListResponse from '../../interfaces/IAPIShoppingListResponse'
 import IAPIShoppingListItemResponse from '../../interfaces/IAPIShoppingListItemResponse'
 import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListItemResponseItem'
 import Language from '../../language/Language'
+import { randomColor } from '../Functions'
 
 export default class APIShoppingList {
   public static async updateItemCategory(
@@ -25,7 +26,8 @@ export default class APIShoppingList {
   }
 
   public static async create(name: string): Promise<boolean> {
-    const ret = await API.post<boolean>('/shoppinglist/create', { name })
+    const color = randomColor()
+    const ret = await API.post<boolean>('/shoppinglist/create', { name, color })
 
     return ret ?? false
   }
@@ -104,7 +106,7 @@ export default class APIShoppingList {
   }
 
   public static async deleteList(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/shoppinglist/deletelist/${id}`)
+    const ret = await API.delete<boolean>(`/shoppinglist/destroy/${id}`)
 
     return ret ?? false
   }
