@@ -25,26 +25,26 @@ export const InfoAlert = (text: string, info?: string): IAlertProps => ({
   info: info && Language.get(info),
 })
 
-export const PreWarningAlert = (
-  pre: string,
-  text: string,
-  info?: string
-): IAlertProps => WarningAlert(pre + text, pre + info)
+export const PreWarningAlert = (pre: string, text: string, info?: string) =>
+  WarningAlert(pre + text, pre + info)
 
-export const PreErrorAlert = (
-  pre: string,
-  text: string,
-  info?: string
-): IAlertProps => ErrorAlert(pre + text, pre + info)
+export const PreErrorAlert = (pre: string, text: string, info?: string) =>
+  ErrorAlert(pre + text, pre + info)
 
-export const PreSuccessAlert = (
-  pre: string,
-  text: string,
-  info?: string
-): IAlertProps => SuccessAlert(pre + text, pre + info)
+export const PreSuccessAlert = (pre: string, text: string, info?: string) =>
+  SuccessAlert(pre + text, pre + info)
 
-export const PreInfoAlert = (
-  pre: string,
-  text: string,
-  info?: string
-): IAlertProps => InfoAlert(pre + text, pre + info)
+export const PreInfoAlert = (pre: string, text: string, info?: string) =>
+  InfoAlert(pre + text, pre + info)
+
+export const DefPreWarningAlert = (pre: string) =>
+  PreWarningAlert(`${pre}.`, 'text', 'info')
+
+export const DefPreErrorAlert = (pre: string) =>
+  PreErrorAlert(`${pre}.`, 'text', 'info')
+
+export const DefPreSuccessAlert = (pre: string) =>
+  PreSuccessAlert(`${pre}.`, 'text', 'info')
+
+export const DefPreInfoAlert = (pre: string) =>
+  PreInfoAlert(`${pre}.`, 'text', 'info')
