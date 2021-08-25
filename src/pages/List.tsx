@@ -10,7 +10,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Navigation from '../Navigation'
 import ListHeader from '../ListHeader'
-import GlobalStyles from '../styles/GlobalStyles'
+import GlobalStyles, { KeyboardDetection } from '../styles/GlobalStyles'
 import Input from '../Input'
 import Moveable from '../components/Moveable/Moveable'
 import APIShoppingList from '../helper/API/APIShoppingList'
@@ -22,6 +22,8 @@ import { Redirect } from '../Router/react-router'
 import IShoppingListCategory from '../interfaces/IShoppingListCategory'
 import APICategory from '../helper/API/APICategory'
 import SafeComponent from '../components/SafeComponent'
+import { DefPreErrorAlert, SuccessAlert } from '../helper/DefinedAlerts'
+import Alert from '../components/Alert'
 
 // TODO: Finalize
 export default class List extends SafeComponent<
@@ -46,6 +48,8 @@ export default class List extends SafeComponent<
     newCatItem: undefined,
     newItemList: undefined,
     newListCats: [],
+    alert: { text: '', type: 'error' },
+    keyboardHeight: 0,
   }
 
   showUpdateCategories() {
@@ -54,27 +58,44 @@ export default class List extends SafeComponent<
 
   async deleteItems() {
     await APIShoppingList.deleteAllItems(this.props.id)
-    this.setState({ items: [], lists: [] })
+    this.setState({
+      items: [],
+      settings: false,
+      lists: [],
+      alert: SuccessAlert('list.items.cleared'),
+    })
     await this.refresh()
   }
 
   async deleteBoughtItems() {
     await APIShoppingList.deleteBoughtItems(this.props.id)
+    this.setState({
+      settings: false,
+      alert: SuccessAlert('list.items.bought.cleared'),
+    })
     this.refresh()
   }
 
-  showShareContext() {}
+  showShareContext() {
+    // TODO: implement
+  }
 
-  delteList() {}
+  async delteList() {
+    const done = await APIShoppingList.deleteList(this.props.id)
+    if (done) this.setState({ redirect: '/reload' })
+    else {
+      this.setState({ alert: DefPreErrorAlert('shoppinglist.delete.failed') })
+    }
+  }
 
   async componentDidMount() {
     const listName =
       (await AsyncStorage.getItem(`listname-${this.props.id}`)) ?? 'Loading..'
     this.setState({ listName })
-    const lists = await AsyncStorage.getItem('lists')
-    if (lists) this.setState({ lists: JSON.parse(lists) })
     const items = await AsyncStorage.getItem(`list-${this.props.id}`)
     if (items) this.setState({ items: JSON.parse(items) })
+    const lists = await AsyncStorage.getItem('lists')
+    if (lists) this.setState({ lists: JSON.parse(lists) })
     this.refresh()
   }
 
@@ -114,7 +135,6 @@ export default class List extends SafeComponent<
 
   async setOpenSortItem(item: IShoppingListItem) {
     this.setState({ newCatBox: true, newCatItem: item })
-    // await APIShoppingList.moveItemToCat()
   }
 
   async refresh() {
@@ -122,18 +142,19 @@ export default class List extends SafeComponent<
 
     data.categories.forEach((cat, catIdx) => {
       const items: any[] = []
-      cat.items.forEach(item => {
-        if (item.inCart) {
-          data.categories[data.categories.length - 1].items.push({
-            ...item,
-            catId: catIdx,
-          })
-        } else {
-          items.push({ ...item, catId: catIdx })
-        }
-      })
-      if (catIdx !== data.categories.length - 1)
+      if (catIdx !== data.categories.length - 1) {
+        cat.items.forEach(item => {
+          if (item.inCart) {
+            data.categories[data.categories.length - 1].items.push({
+              ...item,
+              catId: catIdx,
+            })
+          } else {
+            items.push({ ...item, catId: catIdx })
+          }
+        })
         data.categories[catIdx].items = items
+      }
     })
     this.setState({
       items: data.categories,
@@ -153,7 +174,7 @@ export default class List extends SafeComponent<
   }
 
   async updateItemCategory(cat: IShoppingListCategory) {
-    const d = await APIShoppingList.updateItemCategory(
+    await APIShoppingList.updateItemCategory(
       this.state.newCatItem?.id ?? 0,
       cat.id
     )
@@ -173,219 +194,261 @@ export default class List extends SafeComponent<
       overflow: 'hidden',
     }
 
+    const emptyList =
+      this.state.items.length === 0 ||
+      (this.state.items.length === 2 &&
+        this.state.items[0].items.length === 0 &&
+        this.state.items[1].items.length === 0)
+
+    const listOptions = [
+      {
+        active: false,
+        name: 'Update Categories',
+        onClick: () => this.showUpdateCategories(),
+        icon: 'edit',
+      },
+      {
+        active: false,
+        name: 'Share List',
+        onClick: () => this.showShareContext(),
+        icon: 'share-alt',
+      },
+      {
+        active: false,
+        name: 'Delete List',
+        onClick: () => {
+          ToastAndroid.show('Swipe to delete', 1000)
+        },
+        onDelete: () => this.delteList(),
+        icon: 'times',
+      },
+    ]
+
+    if (!emptyList)
+      listOptions.unshift(
+        {
+          active: false,
+          name: 'Delete bought Items',
+          onClick: () => {
+            ToastAndroid.show('Swipe to delete', 1000)
+          },
+          onDelete: () => this.deleteBoughtItems(),
+          icon: 'hand-holding-usd',
+        },
+        {
+          active: false,
+          name: 'Delete all items on List',
+          onClick: () => {
+            ToastAndroid.show('Swipe to delete', 1000)
+          },
+          onDelete: () => this.deleteItems(),
+          icon: 'trash',
+        }
+      )
+
     return (
-      <ImageBackground
-        source={require('../../assets/background.jpg')}
-        resizeMode="cover"
-        style={{
-          width: GlobalStyles().appWidth,
-          height: GlobalStyles().appHeight - 50,
-        }}
+      <KeyboardDetection
+        update={(keyboardHeight: any) => this.setState({ keyboardHeight })}
       >
-        <Navigation
-          user={this.props.user}
-          label={this.state.listName}
-          solid={this.state.isTop}
-          buttons={[
-            {
-              name: 'openMenu',
-              onClick: () => {
-                this.setState({ settings: !this.state.settings })
-              },
-              icon: 'ellipsis-v',
-            },
-          ]}
-        />
-        <SafeAreaView
+        {this.state.alert.text !== '' && <Alert {...this.state.alert} />}
+        <ImageBackground
+          source={require('../../assets/background.jpg')}
+          resizeMode="cover"
           style={{
-            height: GlobalStyles().contentHeight - 10,
+            width: GlobalStyles().appWidth,
+            height: GlobalStyles().contentHeight,
+            overflow: 'hidden',
           }}
         >
-          <View
-            style={{
-              height: GlobalStyles().contentHeight - 60,
-            }}
-          >
-            <ScrollView
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={onRefresh}
-                />
-              }
-              onScroll={e =>
-                this.setState({
-                  isTop: e.nativeEvent.contentOffset.y <= 0,
-                })
-              }
-              scrollEnabled={!this.state.preventScroll}
-              style={svStyles}
-            >
-              {this.state.items.map((cat, catindex) => {
-                if (cat.items.length === 0)
-                  return <View key={`cat_${catindex}`}></View>
-
-                return (
-                  <View key={`cat_${catindex}`}>
-                    <ListHeader color={cat.color} text={cat.name} />
-                    {cat.items.map((item, itemindex) => (
-                      <Moveable
-                        key={`item_${catindex}_${itemindex}`}
-                        open={item.open}
-                        onDelete={() => {}}
-                        prefix={item.amount}
-                        name={item.name}
-                        onMoving={(left, right) =>
-                          this.setState({ preventScroll: left || right })
-                        }
-                        last={itemindex + 1 === cat.items.length}
-                        right={[
-                          {
-                            icon: 'exchange-alt',
-                            color: '#332f99',
-                            click: () => this.setOpenSwitchItem(item),
-                          },
-                          {
-                            icon: 'sort',
-                            color: '#4ae53a',
-                            click: () => this.setOpenSortItem(item),
-                          },
-                        ]}
-                        buttons={[
-                          {
-                            name: 'BUY',
-                            icon: item.inCart ? 'times' : 'cart-plus',
-                            color: item.inCart ? '#800f0f' : '#2a7d0e',
-                            onPress: () =>
-                              item.inCart
-                                ? this.setItemUnBought(
-                                    item,
-                                    itemindex,
-                                    catindex
-                                  )
-                                : this.setItemBought(item, itemindex, catindex),
-                          },
-                        ]}
-                      />
-                    ))}
-                  </View>
-                )
-              })}
-            </ScrollView>
-          </View>
-
-          <Input
-            prefix={1}
-            onSave={async (name, amount) => {
-              await APIShoppingList.addToList(
-                this.props.id,
-                name,
-                parseInt(amount, 10)
-              )
-              this.refresh()
-            }}
-          />
-          <BottomBox
-            title="Listen Optionen"
-            style={{ bottom: 0, zIndex: this.state.settings ? 10000 : -1 }}
-            items={[
+          <Navigation
+            user={this.props.user}
+            label={this.state.listName}
+            solid={this.state.isTop}
+            buttons={[
               {
-                active: false,
-                name: 'Delete all items on List',
-                onClick: () => {
-                  ToastAndroid.show('Swipe to delete', 1000)
-                },
-                onDelete: () => this.deleteItems(),
-                icon: 'trash',
-              },
-              {
-                active: false,
-                name: 'Delete bought Items',
-                onClick: () => {
-                  ToastAndroid.show('Swipe to delete', 1000)
-                },
-                onDelete: () => this.deleteBoughtItems(),
-                icon: 'hand-holding-usd',
-              },
-              {
-                active: false,
-                name: 'Update Categories',
-                onClick: () => this.showUpdateCategories(),
-                icon: 'edit',
-              },
-              {
-                active: false,
-                name: 'Share List',
-                onClick: () => this.showShareContext(),
-                icon: 'share-alt',
-              },
-              {
-                active: false,
-                name: 'Delete List',
-                onClick: () => {
-                  ToastAndroid.show('Swipe to delete', 1000)
-                },
-                onDelete: () => this.delteList(),
-                icon: 'times',
+                name: 'openMenu',
+                onClick: () =>
+                  this.setState({ settings: !this.state.settings }),
+                icon: 'ellipsis-v',
               },
             ]}
-            onClose={() => {
-              this.setState({ settings: false })
-            }}
-            open={this.state.settings}
           />
-          <BottomBox
-            title="Select new List"
-            items={this.state.lists.map(item => ({
-              active: item.id === this.state.listId,
-              name: item.name,
-              onClick: () => {
-                this.moveItemToOtherList(item.id)
-              },
-            }))}
-            onClose={() => {
-              this.setState({ bottomBox: false })
+          <SafeAreaView
+            style={{
+              height:
+                GlobalStyles().contentHeight -
+                GlobalStyles().barHeight -
+                this.state.keyboardHeight,
+              overflow: 'hidden',
             }}
-            open={this.state.bottomBox}
-          />
-          <BottomBox
-            title="Select new Cat for item"
-            items={this.state.newListCats.map((cat, idx) => ({
-              active: idx === this.state.newItemList?.catId,
-              name: cat.name,
-              onClick: async () => {
-                await APIShoppingList.moveItemToList(
-                  this.state.newItemList?.id ?? 0,
-                  cat.id
+          >
+            <View
+              style={{
+                height:
+                  GlobalStyles().contentHeight -
+                  GlobalStyles().lineHeight - // addbar1
+                  GlobalStyles().barHeight - // navi
+                  this.state.keyboardHeight,
+              }}
+            >
+              <ScrollView
+                refreshControl={
+                  <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                onScroll={e =>
+                  this.setState({
+                    isTop: e.nativeEvent.contentOffset.y <= 0,
+                  })
+                }
+                scrollEnabled={!this.state.preventScroll}
+                style={svStyles}
+              >
+                {emptyList && (
+                  <>
+                    <ListHeader
+                      color="#ff000040"
+                      text="Diese Liste ist leer :("
+                    />
+                    <Moveable
+                      last={true}
+                      centerText={true}
+                      name="Aber du kannst unten etwas auf die Liste hinzufügen!"
+                    />
+                  </>
+                )}
+                {this.state.items.map((cat, catindex) => {
+                  if (cat.items.length === 0)
+                    return <View key={`cat_${catindex}`}></View>
+
+                  return (
+                    <View key={`cat_${catindex}`}>
+                      <ListHeader color={cat.color} text={cat.name} />
+                      {cat.items.map((item, itemindex) => (
+                        <Moveable
+                          key={`item_${catindex}_${itemindex}`}
+                          open={item.open}
+                          onDelete={() => {}}
+                          prefix={item.amount}
+                          name={item.name}
+                          onMoving={(left, right) =>
+                            this.setState({ preventScroll: left || right })
+                          }
+                          last={itemindex + 1 === cat.items.length}
+                          right={[
+                            {
+                              icon: 'exchange-alt',
+                              color: '#332f99',
+                              click: () => this.setOpenSwitchItem(item),
+                            },
+                            {
+                              icon: 'sort',
+                              color: '#4ae53a',
+                              click: () => this.setOpenSortItem(item),
+                            },
+                          ]}
+                          buttons={[
+                            {
+                              name: 'BUY',
+                              icon: item.inCart ? 'times' : 'cart-plus',
+                              color: item.inCart ? '#800f0f' : '#2a7d0e',
+                              onPress: () =>
+                                item.inCart
+                                  ? this.setItemUnBought(
+                                      item,
+                                      itemindex,
+                                      catindex
+                                    )
+                                  : this.setItemBought(
+                                      item,
+                                      itemindex,
+                                      catindex
+                                    ),
+                            },
+                          ]}
+                        />
+                      ))}
+                    </View>
+                  )
+                })}
+              </ScrollView>
+            </View>
+
+            <Input
+              prefix={1}
+              onSave={async (name, amount) => {
+                await APIShoppingList.addToList(
+                  this.props.id,
+                  name,
+                  parseInt(amount, 10)
                 )
-                this.setState({ items: [] })
                 this.refresh()
-              },
-            }))}
-            onClose={() => {
-              this.setState({ moveToListBox: false })
-            }}
-            open={this.state.moveToListBox}
-          />
-          <BottomBox
-            title="Select new Cat"
-            items={this.state.items
-              .filter(cat => cat.id > 0)
-              .map((cat, idx) => ({
-                active: idx === this.state.newCatItem?.catId,
-                name: cat.name,
-                onClick: async () => {
-                  this.setState({ newCatBox: false })
-                  await this.updateItemCategory(cat)
+              }}
+            />
+            <BottomBox
+              title="Listen Optionen"
+              style={{ bottom: 0, zIndex: this.state.settings ? 10000 : -1 }}
+              items={listOptions}
+              onClose={() => {
+                this.setState({ settings: false })
+              }}
+              open={this.state.settings}
+            />
+            <BottomBox
+              title="Select new List"
+              items={this.state.lists.map(item => ({
+                active: item.id === this.state.listId,
+                name: item.name,
+                onClick: () => {
+                  this.moveItemToOtherList(item.id)
                 },
               }))}
-            onClose={() => {
-              this.setState({ newCatBox: false })
-            }}
-            open={this.state.newCatBox}
-          />
-        </SafeAreaView>
-      </ImageBackground>
+              onClose={() => {
+                this.setState({ bottomBox: false })
+              }}
+              open={this.state.bottomBox}
+            />
+            <BottomBox
+              title="Select new Cat for item"
+              items={this.state.newListCats.map((cat, idx) => ({
+                active: idx === this.state.newItemList?.catId,
+                name: cat.name,
+                onClick: async () => {
+                  await APIShoppingList.moveItemToList(
+                    this.state.newItemList?.id ?? 0,
+                    cat.id
+                  )
+                  this.setState({ items: [] })
+                  this.refresh()
+                },
+              }))}
+              onClose={() => {
+                this.setState({ moveToListBox: false })
+              }}
+              open={this.state.moveToListBox}
+            />
+            <BottomBox
+              title="Select new Cat"
+              items={this.state.items
+                .filter(cat => cat.id > 0)
+                .map((cat, idx) => ({
+                  active: idx === this.state.newCatItem?.catId,
+                  name: cat.name,
+                  onClick: async () => {
+                    this.setState({ newCatBox: false })
+                    await this.updateItemCategory(cat)
+                  },
+                }))}
+              onClose={() => {
+                this.setState({ newCatBox: false })
+              }}
+              open={this.state.newCatBox}
+            />
+          </SafeAreaView>
+        </ImageBackground>
+      </KeyboardDetection>
     )
   }
 
