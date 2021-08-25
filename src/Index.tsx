@@ -26,14 +26,18 @@ export default class Index extends Component<IIndexProps, IIndexState> {
     loggedin: this.props.loggedin,
   }
 
-  async componentDidMount() {
+  async reloadMe(updateAll: boolean) {
     const user = await APIUser.getMe()
     if (typeof user === 'boolean') {
       console.log('[index.tsx] error logging in. Wrong credentials?')
-      this.setState({ checkMeDone: true, loggedin: false })
+      if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
     } else {
       this.setState({ user, checkMeDone: true, loggedin: true })
     }
+  }
+
+  async componentDidMount() {
+    await this.reloadMe(true)
   }
 
   render() {
@@ -84,7 +88,7 @@ export default class Index extends Component<IIndexProps, IIndexState> {
           <Logout user={this.state.user} />
         </Route>
         <Route path="/login">
-          <Login />
+          <Login onReloadMe={() => this.reloadMe(false)} />
         </Route>
         <Route
           path="/updatecat/:id"
