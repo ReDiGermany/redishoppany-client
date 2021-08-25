@@ -12,25 +12,10 @@ export default class BottomNavigation extends SafeComponent<IBottomNavigationPro
   state = {
     active: this.props.active,
     items: [
-      {
-        name: Language.get('overview'),
-        icon: 'home',
-      },
-
-      {
-        name: Language.get('foodlist'),
-        icon: 'bars',
-      },
-
-      {
-        name: Language.get('recipes'),
-        icon: 'book',
-      },
-
-      {
-        name: Language.get('friends'),
-        icon: 'users',
-      },
+      { name: 'overview', icon: 'home' },
+      { name: 'foodlist', icon: 'bars' },
+      { name: 'recipes', icon: 'book' },
+      { name: 'friends', icon: 'users' },
     ],
   }
 
@@ -41,6 +26,11 @@ export default class BottomNavigation extends SafeComponent<IBottomNavigationPro
       await AsyncStorage.setItem('activeHomePage', active)
     }
     this.setState({ active: parseInt(active, 10) })
+  }
+
+  async navUpdate(index: number) {
+    await AsyncStorage.setItem('activeHomePage', index.toString())
+    this.props.navUpdate(index)
   }
 
   render() {
@@ -56,7 +46,7 @@ export default class BottomNavigation extends SafeComponent<IBottomNavigationPro
               ...(active && BottomNavigationStyle.activeButton),
             },
             onPress: () => {
-              this.props.navUpdate(index)
+              this.navUpdate(index)
               this.setState({ active: index })
             },
           }
@@ -77,7 +67,7 @@ export default class BottomNavigation extends SafeComponent<IBottomNavigationPro
           return (
             <Pressable {...pressable}>
               <Icon {...icon} />
-              <Text style={textStyle}>{item.name.toString()}</Text>
+              <Text style={textStyle}>{Language.get(item.name)}</Text>
             </Pressable>
           )
         })}

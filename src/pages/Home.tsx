@@ -67,7 +67,6 @@ export default class Home extends SafeComponent<IPageProps> {
           active={active}
           navUpdate={async act => {
             this.setState({ active: act })
-            await AsyncStorage.setItem('activeHomePage', active.toString())
           }}
         />
       </View>
