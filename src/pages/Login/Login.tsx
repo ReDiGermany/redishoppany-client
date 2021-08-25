@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, SafeAreaView } from 'react-native'
 import * as Linking from 'expo-linking'
 import * as AuthSession from 'expo-auth-session'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Row from '../../components/Row'
 import LoginTitle from './LoginTitle'
 import LoginInputEmail from './LoginInputEmail'
@@ -15,13 +16,18 @@ import { Redirect } from '../../Router/react-router'
 import APIUser from '../../helper/API/APIUser'
 import loginStyles from '../../styles/LoginStyle'
 import Alert from '../../components/Alert'
-import ILoginStateAlert from '../../interfaces/ILoginStateAlert'
 import ILoginState from '../../interfaces/ILoginState'
 import ILoginProps from '../../interfaces/ILoginProps'
 // import IScreen from '../../interfaces/IScreen'
 import Language from '../../language/Language'
 import BackgroundImage from '../../components/BackgroundImage'
-import { PreInfoAlert, PreWarningAlert } from '../../helper/DefinedAlerts'
+import {
+  DefPreErrorAlert,
+  PreInfoAlert,
+  PreSuccessAlert,
+  PreWarningAlert,
+  SuccessAlert,
+} from '../../helper/DefinedAlerts'
 import { filterFacebookRedirectUrl } from '../../helper/Functions'
 import { FB_APP_ID } from '../../helper/Constants'
 
@@ -60,11 +66,27 @@ export default class Login extends Component<ILoginProps, ILoginState> {
               alert: PreInfoAlert('login.facebook.check.', 'text', 'info'),
             })
             const tokenResult = await APIUser.checkFacebookToken(token)
-            setTimeout(() => {
+            setTimeout(async () => {
               if (typeof tokenResult === 'boolean') {
                 this.PreWarningAlert('login.facebook.error.email.')
               } else {
-                console.log(tokenResult)
+                this.setState({
+                  alert: PreSuccessAlert(
+                    'login.facebook.success.',
+                    'text',
+                    'info'
+                  ),
+                  loggedin: true,
+                })
+                await AsyncStorage.setItem(
+                  'redishoppany-token',
+                  tokenResult.token
+                )
+                await AsyncStorage.setItem(
+                  'redishoppany-email',
+                  tokenResult.email
+                )
+                this.reloadApp()
               }
             }, 2000)
           } catch (E) {
@@ -78,6 +100,28 @@ export default class Login extends Component<ILoginProps, ILoginState> {
     }
   }
 
+  handleEmailPasswordLoginAsync = async () => {
+    if (this.state.passwordValid && this.state.emailValid) {
+      const { email, password } = this.state
+      this.setState({ loginChecking: true })
+
+      const loggedin = await APIUser.checkLogin(email, password)
+
+      if (loggedin) {
+        const alert = SuccessAlert('login.welcome')
+        this.setState({ loggedin, alert, loginChecking: false })
+        this.reloadApp()
+      } else {
+        const alert = DefPreErrorAlert('login.wrong.credentials')
+        this.setState({ alert, loginChecking: false })
+      }
+    }
+  }
+
+  reloadApp() {
+    this.props.onReloadMe()
+  }
+
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
@@ -89,43 +133,23 @@ export default class Login extends Component<ILoginProps, ILoginState> {
     boxHeight += 40 // heading
     boxHeight += GlobalStyles().lineHeight // register / anonym
 
-    const checkLogin = async () => {
-      if (this.state.passwordValid && this.state.emailValid) {
-        const { email, password } = this.state
-        this.setState({ loginChecking: true })
+    // if (this.state.loggedin) return <Redirect to="/" />
 
-        const loggedin = await APIUser.checkLogin(email, password)
-
-        if (loggedin) {
-          const alert: ILoginStateAlert = {
-            type: 'success',
-            text: 'Willkommen!',
-          }
-          this.setState({ loggedin, alert, loginChecking: false })
-        } else {
-          const alert: ILoginStateAlert = {
-            type: 'error',
-            text: 'Logindaten waren falsch!',
-            info: 'Bitte versuche es erneut.',
-          }
-          this.setState({ alert, loginChecking: false })
-        }
-      }
-    }
-
-    if (this.state.loggedin) return <Redirect to="/" />
-
-    const { alert } = this.state
+    // console.log(this.state.alert)
 
     return (
       <SafeAreaView style={loginStyles().body}>
         <BackgroundImage>
-          {!this.state.loginChecking && this.state.alert.text !== '' && (
+          {this.state.alert.text !== '' && (
             <Alert
-              onClose={() =>
+              onClose={async () => {
                 this.setState({ alert: { text: '', type: 'success' } })
-              }
-              {...alert}
+                if (this.state.loggedin) {
+                  this.setState({ redirect: '/' })
+                  // console.log('done?')
+                }
+              }}
+              {...this.state.alert}
             />
           )}
           <View
@@ -137,20 +161,20 @@ export default class Login extends Component<ILoginProps, ILoginState> {
           >
             <LoginTitle />
             <LoginInputEmail
-              onSubmit={checkLogin}
+              onSubmit={this.handleEmailPasswordLoginAsync}
               onChange={(email, emailValid) =>
                 this.setState({ email, emailValid })
               }
             />
             <LoginInputPassword
-              onSubmit={checkLogin}
+              onSubmit={this.handleEmailPasswordLoginAsync}
               onChange={(password, passwordValid) =>
                 this.setState({ password, passwordValid })
               }
             />
             <LoginButton
               checking={this.state.loginChecking}
-              onSubmit={checkLogin}
+              onSubmit={this.handleEmailPasswordLoginAsync}
               disabled={!(this.state.passwordValid && this.state.emailValid)}
             />
 
