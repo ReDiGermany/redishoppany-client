@@ -80,6 +80,8 @@ export default class APIShoppingList {
   // TODO: Check
   private static defaultSingleList: IShoppingList = {
     categories: [],
+    owned: true,
+    owner: 'You',
     id: -1,
     name: '',
   }

@@ -5,6 +5,8 @@ import IShoppingListCategory from './IShoppingListCategory'
 import IShoppingListItem from './IShoppingListItem'
 
 export default interface IPageListState {
+  owned: boolean
+  owner: string
   items: IShoppingListCategory[]
   newListCats: IAPICategory[]
   refreshing: boolean
