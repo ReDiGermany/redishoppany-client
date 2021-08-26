@@ -1,5 +1,5 @@
 import React from 'react'
-import { RefreshControl, ScrollView, View, ViewStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import APICategory from '../helper/API/APICategory'
 import { randomColor } from '../helper/Functions'
@@ -12,7 +12,7 @@ import IUpdateCatProps from '../interfaces/IUpdateCatProps'
 import IUpdateCatState from '../interfaces/IUpdateCatState'
 import CategoryUpdater from '../components/CategoryUpdater'
 import SafeComponent from '../components/SafeComponent'
-import INavigationProps from '../interfaces/INavigationProps'
+import ScrollView from '../components/ScrollView'
 
 export default class Index extends SafeComponent<
   IUpdateCatProps,
@@ -86,33 +86,12 @@ export default class Index extends SafeComponent<
       height: GlobalStyles().contentHeight - this.state.keyboardHeight,
     }
 
-    const navigation: INavigationProps = {
-      solid: this.state.isTop,
-      label: Language.get('category.update'),
-    }
     const innerBox: ViewStyle = {
       height:
         GlobalStyles().contentHeight -
         this.state.keyboardHeight -
         GlobalStyles().barHeight -
         GlobalStyles().lineHeight,
-    }
-
-    const scrollView = {
-      onScroll: (n: any) => {
-        this.setState({ yoffset: n.nativeEvent.contentOffset.y })
-      },
-      scrollEnabled: !this.state.preventScroll,
-      refreshControl: (
-        <RefreshControl
-          onRefresh={() => {
-            this.setState({ refreshing: true, list: [] })
-            this.refresh()
-          }}
-          enabled={!this.state.preventScroll}
-          refreshing={this.state.refreshing}
-        />
-      ),
     }
 
     const categoryUpdater = (item: any, index: number) => ({
@@ -169,13 +148,30 @@ export default class Index extends SafeComponent<
         } else this.add(text)
       },
     }
+    // scrollEnabled: !this.state.preventScroll,
+    // onScroll={(n: any) => {
+    //   this.setState({ yoffset: n.nativeEvent.contentOffset.y })
+    // }},
+    // enabled={!this.state.preventScroll}
 
     return (
       <KeyboardDetection {...keyboardDetection}>
         <View style={outerBox}>
-          <Navigation {...navigation} />
+          <Navigation
+            url={`/list/${this.props.id}`}
+            solid={this.state.isTop}
+            label={Language.get('category.update')}
+          />
           <View style={innerBox}>
-            <ScrollView {...scrollView}>
+            <ScrollView
+              hasBottomBar={true}
+              dark={true}
+              onRefresh={() => {
+                this.setState({ refreshing: true, list: [] })
+                this.refresh()
+              }}
+              refreshing={this.state.refreshing}
+            >
               {this.state.list.map((item: IAPICategory, index: number) => (
                 <CategoryUpdater
                   key={item.id}
