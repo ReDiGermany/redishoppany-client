@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, BackHandler } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import NavigationBarStyle from './styles/NavigationBarStyle'
 import NavigationButtonIconStyle from './styles/NavigationButtonIconStyle'
@@ -14,8 +14,31 @@ export default class Navigation extends SafeComponent<INavigationProps> {
     back: false,
   }
 
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.backHandler())
+  }
+
+  backHandler() {
+    if (!this.props.simple) {
+      this.setState({ back: true })
+
+      return true
+    }
+
+    return false
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', () =>
+      this.backHandler()
+    )
+  }
+
   render() {
-    if (this.state.back) return <Redirect to="/" />
+    if (this.state.back)
+      return (
+        <Redirect to={this.props.url === undefined ? '/' : this.props.url} />
+      )
 
     const navigationTitle = {
       ...this.props,

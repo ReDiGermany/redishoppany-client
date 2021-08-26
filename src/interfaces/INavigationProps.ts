@@ -9,4 +9,5 @@ export default interface INavigationProps {
   user?: IAPIUserMe
   simple?: boolean
   solid?: boolean
+  url?: string
 }
