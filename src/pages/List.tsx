@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, RefreshControl, ScrollView, ToastAndroid } from 'react-native'
+import { View, ToastAndroid } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Navigation from '../Navigation'
 import ListHeader from '../ListHeader'
@@ -18,6 +18,7 @@ import SafeComponent from '../components/SafeComponent'
 import { DefPreErrorAlert, SuccessAlert } from '../helper/DefinedAlerts'
 import Alert from '../components/Alert'
 import BackgroundImage from '../components/BackgroundImage'
+import ScrollView from '../components/ScrollView'
 
 // TODO: Finalize
 export default class List extends SafeComponent<
@@ -197,10 +198,6 @@ export default class List extends SafeComponent<
       await this.refresh()
     }
 
-    const svStyles: any = {
-      overflow: 'hidden',
-    }
-
     const emptyList =
       this.state.items.length === 0 ||
       (this.state.items.length === 2 &&
@@ -293,19 +290,11 @@ export default class List extends SafeComponent<
             }}
           >
             <ScrollView
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={onRefresh}
-                />
-              }
-              onScroll={e =>
-                this.setState({
-                  isTop: e.nativeEvent.contentOffset.y <= 0,
-                })
-              }
-              scrollEnabled={!this.state.preventScroll}
-              style={svStyles}
+              hasBottomBar={true}
+              hasNavi={true}
+              refreshing={this.state.refreshing}
+              onRefresh={onRefresh}
+              isTop={isTop => this.setState({ isTop })}
             >
               {emptyList && (
                 <>
@@ -370,6 +359,7 @@ export default class List extends SafeComponent<
                   </View>
                 )
               })}
+              <View style={{ height: GlobalStyles().barHeight }}></View>
             </ScrollView>
           </View>
 
