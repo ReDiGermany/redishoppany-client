@@ -123,21 +123,6 @@ export default class Moveable extends SafeComponent<IMoveableProps> {
   }
 
   render() {
-    const moveableText = {
-      onLongPress: () => this.props.onLongPress?.(),
-      onRelease: () => {
-        this.stop()
-        this.props.onRelease?.()
-      },
-      touchStart: this.resetMovement,
-      text: this.props.name,
-      stop: this.stop,
-      handle: this.handle,
-      onStart: this.start,
-      posX: this.state.posX,
-      ...this.props,
-    }
-
     let style: ViewStyle = {
       ...boxStyle(this.props.visible ?? true, this.props.large ?? false),
       ...this.props.style,
@@ -167,7 +152,20 @@ export default class Moveable extends SafeComponent<IMoveableProps> {
             posX={this.state.posX}
           />
         )}
-        <MoveableText {...moveableText} />
+        <MoveableText
+          onLongPress={() => this.props.onLongPress?.()}
+          onRelease={() => {
+            this.stop()
+            this.props.onRelease?.()
+          }}
+          touchStart={this.resetMovement}
+          text={this.props.name}
+          stop={this.stop}
+          handle={this.handle}
+          onStart={this.start}
+          posX={this.state.posX}
+          {...this.props}
+        />
         {this.props.right?.map((item, index) =>
           this.getIcon(item, index, index === 0)
         )}
