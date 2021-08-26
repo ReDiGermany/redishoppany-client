@@ -1,15 +1,10 @@
 import React from 'react'
-import {
-  Text,
-  View,
-  Dimensions,
-  ScrollView,
-  RefreshControl,
-} from 'react-native'
+import { Text, View, Dimensions } from 'react-native'
 import AddBar from '../../components/AddBar'
 import Moveable from '../../components/Moveable/Moveable'
 import Row from '../../components/Row'
 import SafeComponent from '../../components/SafeComponent'
+import ScrollView from '../../components/ScrollView'
 import APIShoppingList from '../../helper/API/APIShoppingList'
 import APIUser from '../../helper/API/APIUser'
 import IMoveableProps from '../../interfaces/IMoveableProps'
@@ -18,7 +13,6 @@ import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
 import Navigation from '../../Navigation'
 import { Redirect } from '../../Router/react-router'
-import GlobalStyles from '../../styles/GlobalStyles'
 import HomeStyles from '../../styles/HomeStyles'
 
 export default class HomeList extends SafeComponent<IPageProps> {
@@ -27,12 +21,8 @@ export default class HomeList extends SafeComponent<IPageProps> {
     isTop: true,
     add: false,
     lists: this.props.user?.lists ?? [],
+    refreshing: false,
   }
-
-  // constructor(props: IPageProps) {
-  // super(props)
-  // console.log(props)
-  // }
 
   shouldComponentUpdate(nextProps: Readonly<IPageProps>) {
     if (
@@ -53,6 +43,12 @@ export default class HomeList extends SafeComponent<IPageProps> {
     const user = await APIUser.getMe()
     if (typeof user !== 'boolean')
       this.setState({ lists: user.lists, add: false })
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true })
+    this.props.onReload?.()
+    setTimeout(() => this.setState({ refreshing: false }), 1000)
   }
 
   render() {
@@ -78,8 +74,6 @@ export default class HomeList extends SafeComponent<IPageProps> {
         },
       })
 
-    // console.log(this.props.user)
-
     return (
       <>
         <Navigation
@@ -89,21 +83,10 @@ export default class HomeList extends SafeComponent<IPageProps> {
           buttons={buttons}
         />
         <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={false}
-              onRefresh={() => this.props.onReload?.()}
-            />
-          }
-          onScroll={e =>
-            this.setState({
-              isTop: e.nativeEvent.contentOffset.y <= 0,
-            })
-          }
-          style={{
-            height:
-              GlobalStyles().contentHeight - GlobalStyles().barHeight - 20,
-          }}
+          hasBottomBar={true}
+          hasNavi={true}
+          refreshing={this.state.refreshing}
+          onRefresh={() => this.onRefresh()}
         >
           <AddBar
             placeholder={Language.get('listname')}
@@ -155,7 +138,10 @@ export default class HomeList extends SafeComponent<IPageProps> {
             name={Language.get('settings')}
             centerText={true}
             large={true}
-            onClick={() => this.setState({ redirect: '/settings' })}
+            onDelete={() => console.log('delete?')}
+            onClick={() => {
+              this.setState({ redirect: '/settings' })
+            }}
           />
           <Row style={{ marginTop: 10, marginBottom: 30 }}>
             <Moveable

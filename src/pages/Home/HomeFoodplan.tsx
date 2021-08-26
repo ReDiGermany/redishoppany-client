@@ -1,8 +1,7 @@
 import React from 'react'
-import { RefreshControl, ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Moveable from '../../components/Moveable/Moveable'
-import GlobalStyles from '../../styles/GlobalStyles'
 import IPageProps from '../../interfaces/IPageProps'
 import Navigation from '../../Navigation'
 import Language from '../../language/Language'
@@ -16,6 +15,7 @@ import IFoodplanKw from '../../interfaces/IFoodplanKw'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import SafeComponent from '../../components/SafeComponent'
+import ScrollView from '../../components/ScrollView'
 
 export default class Foodplan extends SafeComponent<
   IPageProps,
@@ -76,7 +76,6 @@ export default class Foodplan extends SafeComponent<
     this.setState({ plan, recipes })
     await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
     await AsyncStorage.setItem('foodplanList', JSON.stringify(plan))
-    // console.log(plan)
     this.setState({ refreshing: false, suspendFirstRefresh: true })
   }
 
@@ -88,7 +87,6 @@ export default class Foodplan extends SafeComponent<
         icon: 'plus',
         name: 'add',
         onClick: () => {
-          // console.log('add')
           this.setState({ redirect: '/foodplan/add' })
         },
       },
@@ -114,81 +112,73 @@ export default class Foodplan extends SafeComponent<
           simple={true}
           buttons={buttons}
         />
-        <RefreshControl
+        <ScrollView
+          hasBottomBar={true}
+          hasNavi={true}
           refreshing={this.state.refreshing && this.state.suspendFirstRefresh}
           onRefresh={() => this.refresh()}
+          isTop={isTop => this.setState({ isTop })}
         >
-          <ScrollView
-            onScroll={e =>
-              this.setState({
-                isTop: e.nativeEvent.contentOffset.y <= 0,
-              })
-            }
-            style={{
-              height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
-            }}
-          >
-            {this.state.plan.length === 0 && (
-              <Moveable
-                name="OOPs! Hier scheint nichts zu sein!"
-                large={true}
-                centerText={true}
-                boldText={true}
-                disabled={true}
+          {this.state.plan.length === 0 && (
+            <Moveable
+              name="OOPs! Hier scheint nichts zu sein!"
+              large={true}
+              centerText={true}
+              boldText={true}
+              disabled={true}
+            />
+          )}
+          {this.state.plan.map((kw: IFoodplanKw) => (
+            <View key={kw.name}>
+              <ListHeader
+                color="#111111"
+                text={`KW ${kw.name.split('-')[1]}`}
               />
-            )}
-            {this.state.plan.map((kw: IFoodplanKw) => (
-              <View key={kw.name}>
-                <ListHeader
-                  color="#111111"
-                  text={`KW ${kw.name.split('-')[1]}`}
-                />
-                {kw.items.map((item: IFoodplanItem, idx) => {
-                  if (item.recipe === null) {
-                    return (
-                      <Moveable
-                        key={`add_${item.date}`}
-                        name={`ADD RECIPE for ${this.parseDate(item.date)}`}
-                        centerText={true}
-                        boldText={true}
-                      />
-                    )
-                  }
+              {kw.items.map((item: IFoodplanItem, idx) => {
+                if (item.recipe === null) {
+                  return (
+                    <Moveable
+                      key={`add_${item.date}`}
+                      name={`ADD RECIPE for ${this.parseDate(item.date)}`}
+                      centerText={true}
+                      boldText={true}
+                    />
+                  )
+                }
 
-                  const mbuttons: any[] = []
+                const mbuttons: any[] = []
 
-                  if (idx === 1)
-                    mbuttons.push({
-                      color: '#80dfad',
-                      icon: 'shopping-basket',
-                      name: 'cart',
-                      onPress: () => {
-                        this.setState({ item })
-                        // APIFoodplan.addToCart(item.id)
-                      },
-                    })
-                  const disabled = new Date(item.date) < currentDate
-                  if (disabled) mbuttons.splice(0)
+                if (idx === 1)
+                  mbuttons.push({
+                    color: '#80dfad',
+                    icon: 'shopping-basket',
+                    name: 'cart',
+                    onPress: () => {
+                      this.setState({ item })
+                      // APIFoodplan.addToCart(item.id)
+                    },
+                  })
+                const disabled = new Date(item.date) < currentDate
+                if (disabled) mbuttons.splice(0)
 
-                  const moveable: IMoveableProps = {
-                    onDelete: undefined,
-                    prefix: this.parseDate(item.date),
-                    name: item.recipe.name ?? '?',
-                    last: idx === kw.items.length - 1,
-                    buttons: mbuttons,
-                    disabled,
-                  }
+                const moveable: IMoveableProps = {
+                  onDelete: undefined,
+                  prefix: this.parseDate(item.date),
+                  name: item.recipe.name ?? '?',
+                  last: idx === kw.items.length - 1,
+                  buttons: mbuttons,
+                  disabled,
+                }
 
-                  if (!disabled) {
-                    moveable.onDelete = () => this.remove(item)
-                  }
+                if (!disabled) {
+                  moveable.onDelete = () => this.remove(item)
+                }
 
-                  return <Moveable key={item.id} {...moveable} />
-                })}
-              </View>
-            ))}
-          </ScrollView>
-        </RefreshControl>
+                return <Moveable key={item.id} {...moveable} />
+              })}
+            </View>
+          ))}
+        </ScrollView>
       </View>
     )
   }

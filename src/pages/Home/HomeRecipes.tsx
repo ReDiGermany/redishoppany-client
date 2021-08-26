@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, View, Image, Text } from 'react-native'
+import { View, Image, Text } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Link } from 'react-router-native'
 import APIRecipe from '../../helper/API/APIRecipe'
@@ -24,12 +24,14 @@ import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import SafeComponent from '../../components/SafeComponent'
 import Moveable from '../../components/Moveable/Moveable'
+import ScrollView from '../../components/ScrollView'
 
 export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   state: IRecipesState = {
     recipes: [],
     redirect: '',
     showOnly: '',
+    refreshing: false,
   }
 
   constructor(props: IPageProps) {
@@ -59,13 +61,17 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   }
 
   async componentDidMount() {
+    this.refresh()
+  }
+
+  async refresh() {
     const recipes = await APIRecipe.list()
     recipes.forEach((item, idx) => {
       if (item.image === '') recipes[idx].image = recipeImageNotFound
       else recipes[idx].image = { uri: item.image }
     })
     await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
-    this.setState({ recipes })
+    this.setState({ recipes, refreshing: false })
   }
 
   render() {
@@ -97,54 +103,64 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
       })
 
     return (
-      <ScrollView style={{ height: GlobalStyles().contentHeight }}>
+      <>
         <Navigation
           label={Language.get('recipes')}
           simple={true}
           buttons={buttons}
         />
-        <AddBar
-          onType={showOnly => this.setState({ showOnly })}
-          placeholder={Language.get('search')}
-          autoFocus={false}
-        />
-        {this.state.recipes.length === 0 && (
-          <Moveable
-            name="OOPs! Hier scheint nichts zu sein!"
-            large={true}
-            centerText={true}
-            boldText={true}
-            disabled={true}
+        <ScrollView
+          hasBottomBar={true}
+          hasNavi={true}
+          refreshing={this.state.refreshing}
+          onRefresh={() => {
+            this.setState({ refreshing: true })
+            this.refresh()
+          }}
+        >
+          <AddBar
+            onType={showOnly => this.setState({ showOnly })}
+            placeholder={Language.get('search')}
+            autoFocus={false}
           />
-        )}
-        {this.state.recipes.map((item, index) => {
-          if (
-            this.state.showOnly !== '' &&
-            !item.name.match(this.state.showOnly)
-          )
-            return <View key={index}></View>
+          {this.state.recipes.length === 0 && (
+            <Moveable
+              name="OOPs! Hier scheint nichts zu sein!"
+              large={true}
+              centerText={true}
+              boldText={true}
+              disabled={true}
+            />
+          )}
+          {this.state.recipes.map((item, index) => {
+            if (
+              this.state.showOnly !== '' &&
+              !item.name.match(this.state.showOnly)
+            )
+              return <View key={index}></View>
 
-          renderedItems++
+            renderedItems++
 
-          return (
-            <Link key={index} to={`/recipe/${item.id}`}>
-              <View style={imageBox}>
-                <Image
-                  {...image(item)}
-                  // onError={e => console.log('Image Load Error', e)}
-                />
-                <View style={textBox}>
-                  <Text style={nameBox}>{item.name}</Text>
-                  <Text style={timeBox}>{item.time}</Text>
+            return (
+              <Link key={index} to={`/recipe/${item.id}`}>
+                <View style={imageBox}>
+                  <Image
+                    {...image(item)}
+                    // onError={e => console.log('Image Load Error', e)}
+                  />
+                  <View style={textBox}>
+                    <Text style={nameBox}>{item.name}</Text>
+                    <Text style={timeBox}>{item.time}</Text>
+                  </View>
                 </View>
-              </View>
-            </Link>
-          )
-        })}
-        {renderedItems === 0 && (
-          <Text style={notFoundText}>{Language.get('no_recipe_found')}</Text>
-        )}
-      </ScrollView>
+              </Link>
+            )
+          })}
+          {renderedItems === 0 && (
+            <Text style={notFoundText}>{Language.get('no_recipe_found')}</Text>
+          )}
+        </ScrollView>
+      </>
     )
   }
 }

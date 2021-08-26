@@ -1,10 +1,9 @@
 import React from 'react'
-import { ScrollView, View } from 'react-native'
+import { View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ListHeader from '../../ListHeader'
 import Moveable from '../../components/Moveable/Moveable'
 import QRCode from '../../QRCode'
-import GlobalStyles from '../../styles/GlobalStyles'
 import IPageProps from '../../interfaces/IPageProps'
 import Navigation from '../../Navigation'
 import AddBar from '../../components/AddBar'
@@ -15,6 +14,7 @@ import Language from '../../language/Language'
 import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
 import { Redirect } from '../../Router/react-router'
 import SafeComponent from '../../components/SafeComponent'
+import ScrollView from '../../components/ScrollView'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state = {
@@ -38,6 +38,10 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
   }
 
   async componentDidMount() {
+    this.onRefresh()
+  }
+
+  async onRefresh() {
     const list = await APIFriends.list()
     this.update(list)
   }
@@ -138,16 +142,6 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
       buttons,
     }
 
-    const scrollView = {
-      onScroll: (e: any) =>
-        this.setState({
-          isTop: e.nativeEvent.contentOffset.y <= 0,
-        }),
-      style: {
-        height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
-      },
-    }
-
     const addBar = {
       onChange: this.addFriend,
       placeholder: 'E-Mail',
@@ -163,7 +157,14 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
     return (
       <View>
         <Navigation {...navigation} />
-        <ScrollView {...scrollView}>
+        <ScrollView
+          dark={true}
+          hasBottomBar={true}
+          hasNavi={true}
+          refreshing={this.state.refreshing}
+          onRefresh={() => this.onRefresh()}
+          isTop={isTop => this.setState({ isTop })}
+        >
           <AddBar {...addBar} type="email" />
           <QRCode {...qrCode} />
 
