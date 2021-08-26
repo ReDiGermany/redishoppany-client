@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, View, ViewStyle } from 'react-native'
+import { View, ViewStyle } from 'react-native'
 import { boxStyle } from '../../styles/MoveableStyle'
 import IMoveableProps from '../../interfaces/IMoveableProps'
 import MoveableDeleteIcon from './MoveableDeleteIcon'
@@ -160,7 +160,7 @@ export default class Moveable extends SafeComponent<IMoveableProps> {
       style.borderBottomWidth = 2
 
     return (
-      <Pressable onPress={this.props.onClick} style={style}>
+      <View style={style}>
         {this.state.posX > 0 && this.props.onDelete && (
           <MoveableDeleteIcon
             onPress={this.props.onDelete}
@@ -171,7 +171,7 @@ export default class Moveable extends SafeComponent<IMoveableProps> {
         {this.props.right?.map((item, index) =>
           this.getIcon(item, index, index === 0)
         )}
-      </Pressable>
+      </View>
     )
   }
 }
