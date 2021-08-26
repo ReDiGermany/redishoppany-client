@@ -135,13 +135,7 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
     return (
       <View {...box}>
         <Row>
-          <Pressable
-            onLongPress={() => console.log('onLongPress')}
-            onPressIn={() => console.log('onPressIn')}
-            onPressOut={() => console.log('onPressOut')}
-            onPress={() => this.props.onClick?.()}
-            style={linkSstyle}
-          >
+          <Pressable onPress={() => this.props.onClick?.()} style={linkSstyle}>
             <Row>
               {this.props.icon && (
                 <Icon style={textStyle.textIcon} name={this.props.icon} />
