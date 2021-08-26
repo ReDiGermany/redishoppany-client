@@ -20,6 +20,7 @@ import { Redirect } from '../Router/react-router'
 import AddBar from '../components/AddBar'
 import APIFoodplan from '../helper/API/APIFoodplan'
 import SafeComponent from '../components/SafeComponent'
+import IAPIRecipe from '../interfaces/IAPIRecipe'
 
 export default class AddToFoodplan extends SafeComponent<
   IPageProps,
@@ -29,6 +30,7 @@ export default class AddToFoodplan extends SafeComponent<
     recipes: [],
     redirect: '',
     showOnly: '',
+    refreshing: false,
   }
 
   constructor(props: IPageProps) {
@@ -36,19 +38,39 @@ export default class AddToFoodplan extends SafeComponent<
     ;(async () => {
       const recipes = await AsyncStorage.getItem('recipeList')
       if (recipes !== null) {
-        this.setState({ recipes: JSON.parse(recipes) })
+        const rec: IAPIRecipe[] = JSON.parse(recipes)
+        let image: string | number | { uri: string } = -1
+        try {
+          rec.forEach((item, idx) => {
+            image = item.image
+            if (
+              typeof image === 'number' ||
+              (typeof image === 'string' && image === '') ||
+              (typeof image === 'object' && 'uri' in image && image.uri === '')
+            )
+              rec[idx].image = recipeImageNotFound
+            else rec[idx].image = { uri: item.image }
+          })
+        } catch (e) {
+          console.log('HomeRecipes.tsx', { e, rec, image })
+        }
+        this.setState({ recipes: rec })
       }
     })()
   }
 
   async componentDidMount() {
+    this.refresh()
+  }
+
+  async refresh() {
     const recipes = await APIRecipe.list()
     recipes.forEach((item, idx) => {
       if (item.image === '') recipes[idx].image = recipeImageNotFound
       else recipes[idx].image = { uri: item.image }
     })
     await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
-    this.setState({ recipes })
+    this.setState({ recipes, refreshing: false })
   }
 
   render() {
