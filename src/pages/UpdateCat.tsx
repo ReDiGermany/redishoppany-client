@@ -148,11 +148,6 @@ export default class Index extends SafeComponent<
         } else this.add(text)
       },
     }
-    // scrollEnabled: !this.state.preventScroll,
-    // onScroll={(n: any) => {
-    //   this.setState({ yoffset: n.nativeEvent.contentOffset.y })
-    // }},
-    // enabled={!this.state.preventScroll}
 
     return (
       <KeyboardDetection {...keyboardDetection}>
