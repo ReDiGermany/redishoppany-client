@@ -288,7 +288,6 @@ export default class List extends SafeComponent<
             style={{
               height:
                 GlobalStyles().contentHeight -
-                GlobalStyles().lineHeight - // addbar1
                 GlobalStyles().barHeight - // navi
                 this.state.keyboardHeight,
             }}
