@@ -47,7 +47,16 @@ export default class NavigationTitle extends SafeComponent<INavigationTitleProps
         )}
         <Text style={textStyle}>{this.props.label}</Text>
         {this.props.subTitle !== undefined && (
-          <Text style={NavigationTitleStyle}>{this.props.subTitle}</Text>
+          <Text
+            style={{
+              ...NavigationTitleStyle,
+              ...(!(this.props.simple ?? false) && {
+                marginLeft: GlobalStyles().barHeight,
+              }),
+            }}
+          >
+            {this.props.subTitle}
+          </Text>
         )}
       </View>
     )
