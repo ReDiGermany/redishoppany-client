@@ -104,8 +104,6 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
 
     const box = {
       style,
-      onStartShouldSetResponder: () => true,
-      onMoveShouldSetResponder: () => true,
       onTouchEnd,
       onTouchCancel: onTouchEnd,
       onTouchStart,
@@ -141,10 +139,7 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
             onLongPress={() => console.log('onLongPress')}
             onPressIn={() => console.log('onPressIn')}
             onPressOut={() => console.log('onPressOut')}
-            onPress={() => {
-              console.log('press')
-              this.props.onClick?.()
-            }}
+            onPress={() => this.props.onClick?.()}
             style={linkSstyle}
           >
             <Row>
