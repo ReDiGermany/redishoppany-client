@@ -138,7 +138,6 @@ export default class HomeList extends SafeComponent<IPageProps> {
             name={Language.get('settings')}
             centerText={true}
             large={true}
-            onDelete={() => console.log('delete?')}
             onClick={() => {
               this.setState({ redirect: '/settings' })
             }}
