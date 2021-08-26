@@ -1,11 +1,10 @@
 import React from 'react'
-import { View, RefreshControl, SafeAreaView, ScrollView } from 'react-native'
+import { View, RefreshControl, ScrollView } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Moveable from '../components/Moveable/Moveable'
 import APINotification from '../helper/API/APINotification'
 import IPageProps from '../interfaces/IPageProps'
 import Navigation from '../Navigation'
-import GlobalStyles from '../styles/GlobalStyles'
 import { INotificationPageState } from '../interfaces/INotificationPageState'
 import IAPINotification from '../interfaces/IAPINotification'
 import SafeComponent from '../components/SafeComponent'
@@ -55,15 +54,6 @@ export default class Notifications extends SafeComponent<
       ],
     }
 
-    const safeView = {
-      style: {
-        height:
-          GlobalStyles().appHeight -
-          GlobalStyles().statusbarHeight -
-          GlobalStyles().barHeight,
-      },
-    }
-
     const refreshControl = {
       refreshing: this.state.refreshing,
       onRefresh: async () => {
@@ -79,17 +69,15 @@ export default class Notifications extends SafeComponent<
     return (
       <View>
         <Navigation {...navigation} />
-        <SafeAreaView {...safeView}>
-          <ScrollView {...scrollView}>
-            {this.state.notifications.map(item => (
-              <Moveable
-                key={item.name}
-                onDelete={() => this.delete(item)}
-                name={item.name}
-              />
-            ))}
-          </ScrollView>
-        </SafeAreaView>
+        <ScrollView {...scrollView}>
+          {this.state.notifications.map(item => (
+            <Moveable
+              key={item.name}
+              onDelete={() => this.delete(item)}
+              name={item.name}
+            />
+          ))}
+        </ScrollView>
       </View>
     )
   }

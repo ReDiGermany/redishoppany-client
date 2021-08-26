@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  View,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  ToastAndroid,
-  ImageBackground,
-} from 'react-native'
+import { View, RefreshControl, ScrollView, ToastAndroid } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Navigation from '../Navigation'
 import ListHeader from '../ListHeader'
@@ -291,180 +284,166 @@ export default class List extends SafeComponent<
               },
             ]}
           />
-          <SafeAreaView
+          <View
             style={{
               height:
                 GlobalStyles().contentHeight -
-                GlobalStyles().barHeight -
+                GlobalStyles().lineHeight - // addbar1
+                GlobalStyles().barHeight - // navi
                 this.state.keyboardHeight,
-              overflow: 'hidden',
             }}
           >
-            <View
-              style={{
-                height:
-                  GlobalStyles().contentHeight -
-                  GlobalStyles().lineHeight - // addbar1
-                  GlobalStyles().barHeight - // navi
-                  this.state.keyboardHeight,
-              }}
+            <ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={onRefresh}
+                />
+              }
+              onScroll={e =>
+                this.setState({
+                  isTop: e.nativeEvent.contentOffset.y <= 0,
+                })
+              }
+              scrollEnabled={!this.state.preventScroll}
+              style={svStyles}
             >
-              <ScrollView
-                refreshControl={
-                  <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={onRefresh}
+              {emptyList && (
+                <>
+                  <ListHeader
+                    color="#ff000040"
+                    text="Diese Liste ist leer :("
                   />
-                }
-                onScroll={e =>
-                  this.setState({
-                    isTop: e.nativeEvent.contentOffset.y <= 0,
-                  })
-                }
-                scrollEnabled={!this.state.preventScroll}
-                style={svStyles}
-              >
-                {emptyList && (
-                  <>
-                    <ListHeader
-                      color="#ff000040"
-                      text="Diese Liste ist leer :("
-                    />
-                    <Moveable
-                      last={true}
-                      centerText={true}
-                      name="Aber du kannst unten etwas auf die Liste hinzufügen!"
-                    />
-                  </>
-                )}
-                {this.state.items.map((cat, catindex) => {
-                  if (cat.items.length === 0)
-                    return <View key={`cat_${catindex}`}></View>
+                  <Moveable
+                    last={true}
+                    centerText={true}
+                    name="Aber du kannst unten etwas auf die Liste hinzufügen!"
+                  />
+                </>
+              )}
+              {this.state.items.map((cat, catindex) => {
+                if (cat.items.length === 0)
+                  return <View key={`cat_${catindex}`}></View>
 
-                  return (
-                    <View key={`cat_${catindex}`}>
-                      <ListHeader color={cat.color} text={cat.name} />
-                      {cat.items.map((item, itemindex) => (
-                        <Moveable
-                          key={`item_${catindex}_${itemindex}`}
-                          open={item.open}
-                          onDelete={() => {}}
-                          prefix={item.amount}
-                          name={item.name}
-                          onMoving={(left, right) =>
-                            this.setState({ preventScroll: left || right })
-                          }
-                          last={itemindex + 1 === cat.items.length}
-                          right={[
-                            {
-                              icon: 'exchange-alt',
-                              color: '#332f99',
-                              click: () => this.setOpenSwitchItem(item),
-                            },
-                            {
-                              icon: 'sort',
-                              color: '#4ae53a',
-                              click: () => this.setOpenSortItem(item),
-                            },
-                          ]}
-                          buttons={[
-                            {
-                              name: 'BUY',
-                              icon: item.inCart ? 'times' : 'cart-plus',
-                              color: item.inCart ? '#800f0f' : '#2a7d0e',
-                              onPress: () =>
-                                item.inCart
-                                  ? this.setItemUnBought(
-                                      item,
-                                      itemindex,
-                                      catindex
-                                    )
-                                  : this.setItemBought(
-                                      item,
-                                      itemindex,
-                                      catindex
-                                    ),
-                            },
-                          ]}
-                        />
-                      ))}
-                    </View>
-                  )
-                })}
-              </ScrollView>
-            </View>
-
-            <Input
-              prefix={1}
-              onSave={async (name, amount) => {
-                await APIShoppingList.addToList(
-                  this.props.id,
-                  name,
-                  parseInt(amount, 10)
+                return (
+                  <View key={`cat_${catindex}`}>
+                    <ListHeader color={cat.color} text={cat.name} />
+                    {cat.items.map((item, itemindex) => (
+                      <Moveable
+                        key={`item_${catindex}_${itemindex}`}
+                        open={item.open}
+                        onDelete={() => {}}
+                        prefix={item.amount}
+                        name={item.name}
+                        onMoving={(left, right) =>
+                          this.setState({ preventScroll: left || right })
+                        }
+                        last={itemindex + 1 === cat.items.length}
+                        right={[
+                          {
+                            icon: 'exchange-alt',
+                            color: '#332f99',
+                            click: () => this.setOpenSwitchItem(item),
+                          },
+                          {
+                            icon: 'sort',
+                            color: '#4ae53a',
+                            click: () => this.setOpenSortItem(item),
+                          },
+                        ]}
+                        buttons={[
+                          {
+                            name: 'BUY',
+                            icon: item.inCart ? 'times' : 'cart-plus',
+                            color: item.inCart ? '#800f0f' : '#2a7d0e',
+                            onPress: () =>
+                              item.inCart
+                                ? this.setItemUnBought(
+                                    item,
+                                    itemindex,
+                                    catindex
+                                  )
+                                : this.setItemBought(item, itemindex, catindex),
+                          },
+                        ]}
+                      />
+                    ))}
+                  </View>
                 )
+              })}
+            </ScrollView>
+          </View>
+
+          <Input
+            prefix={1}
+            onSave={async (name, amount) => {
+              await APIShoppingList.addToList(
+                this.props.id,
+                name,
+                parseInt(amount, 10)
+              )
+              this.refresh()
+            }}
+          />
+          <BottomBox
+            title="Listen Optionen"
+            style={{ bottom: 0, zIndex: this.state.settings ? 10000 : -1 }}
+            items={listOptions}
+            onClose={() => {
+              this.setState({ settings: false })
+            }}
+            open={this.state.settings}
+          />
+          <BottomBox
+            title="Select new List"
+            items={this.state.lists.map(item => ({
+              active: item.id === this.state.listId,
+              name: item.name,
+              onClick: () => {
+                this.moveItemToOtherList(item.id)
+              },
+            }))}
+            onClose={() => {
+              this.setState({ bottomBox: false })
+            }}
+            open={this.state.bottomBox}
+          />
+          <BottomBox
+            title="Select new Cat for item"
+            items={this.state.newListCats.map((cat, idx) => ({
+              active: idx === this.state.newItemList?.catId,
+              name: cat.name,
+              onClick: async () => {
+                await APIShoppingList.moveItemToList(
+                  this.state.newItemList?.id ?? 0,
+                  cat.id
+                )
+                this.setState({ items: [] })
                 this.refresh()
-              }}
-            />
-            <BottomBox
-              title="Listen Optionen"
-              style={{ bottom: 0, zIndex: this.state.settings ? 10000 : -1 }}
-              items={listOptions}
-              onClose={() => {
-                this.setState({ settings: false })
-              }}
-              open={this.state.settings}
-            />
-            <BottomBox
-              title="Select new List"
-              items={this.state.lists.map(item => ({
-                active: item.id === this.state.listId,
-                name: item.name,
-                onClick: () => {
-                  this.moveItemToOtherList(item.id)
-                },
-              }))}
-              onClose={() => {
-                this.setState({ bottomBox: false })
-              }}
-              open={this.state.bottomBox}
-            />
-            <BottomBox
-              title="Select new Cat for item"
-              items={this.state.newListCats.map((cat, idx) => ({
-                active: idx === this.state.newItemList?.catId,
+              },
+            }))}
+            onClose={() => {
+              this.setState({ moveToListBox: false })
+            }}
+            open={this.state.moveToListBox}
+          />
+          <BottomBox
+            title="Select new Cat"
+            items={this.state.items
+              .filter(cat => cat.id > 0)
+              .map((cat, idx) => ({
+                active: idx === this.state.newCatItem?.catId,
                 name: cat.name,
                 onClick: async () => {
-                  await APIShoppingList.moveItemToList(
-                    this.state.newItemList?.id ?? 0,
-                    cat.id
-                  )
-                  this.setState({ items: [] })
-                  this.refresh()
+                  this.setState({ newCatBox: false })
+                  await this.updateItemCategory(cat)
                 },
               }))}
-              onClose={() => {
-                this.setState({ moveToListBox: false })
-              }}
-              open={this.state.moveToListBox}
-            />
-            <BottomBox
-              title="Select new Cat"
-              items={this.state.items
-                .filter(cat => cat.id > 0)
-                .map((cat, idx) => ({
-                  active: idx === this.state.newCatItem?.catId,
-                  name: cat.name,
-                  onClick: async () => {
-                    this.setState({ newCatBox: false })
-                    await this.updateItemCategory(cat)
-                  },
-                }))}
-              onClose={() => {
-                this.setState({ newCatBox: false })
-              }}
-              open={this.state.newCatBox}
-            />
-          </SafeAreaView>
+            onClose={() => {
+              this.setState({ newCatBox: false })
+            }}
+            open={this.state.newCatBox}
+          />
         </BackgroundImage>
       </KeyboardDetection>
     )

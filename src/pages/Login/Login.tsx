@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, SafeAreaView } from 'react-native'
+import { View } from 'react-native'
 import * as Linking from 'expo-linking'
 import * as AuthSession from 'expo-auth-session'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -14,7 +14,6 @@ import LoginLongButton from './LoginLongButton'
 import GlobalStyles from '../../styles/GlobalStyles'
 import { Redirect } from '../../Router/react-router'
 import APIUser from '../../helper/API/APIUser'
-import loginStyles from '../../styles/LoginStyle'
 import Alert from '../../components/Alert'
 import ILoginState from '../../interfaces/ILoginState'
 import ILoginProps from '../../interfaces/ILoginProps'
@@ -139,88 +138,86 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
     // console.log(this.state.alert)
 
     return (
-      <SafeAreaView style={loginStyles().body}>
-        <BackgroundImage>
-          {this.state.alert.text !== '' && (
-            <Alert
-              onClose={async () => {
-                this.setState({ alert: { text: '', type: 'success' } })
-                if (this.state.loggedin) {
-                  this.setState({ redirect: '/' })
-                  // console.log('done?')
-                }
-              }}
-              {...this.state.alert}
-            />
-          )}
-          <View
-            style={{
-              maxWidth: 500,
-              height: boxHeight,
-              marginTop: (GlobalStyles().appHeight - boxHeight) / 2,
+      <BackgroundImage>
+        {this.state.alert.text !== '' && (
+          <Alert
+            onClose={async () => {
+              this.setState({ alert: { text: '', type: 'success' } })
+              if (this.state.loggedin) {
+                this.setState({ redirect: '/' })
+                // console.log('done?')
+              }
             }}
-          >
-            <LoginTitle />
-            <LoginInputEmail
-              onSubmit={this.handleEmailPasswordLoginAsync}
-              onChange={(email, emailValid) =>
-                this.setState({ email, emailValid })
-              }
-            />
-            <LoginInputPassword
-              onSubmit={this.handleEmailPasswordLoginAsync}
-              onChange={(password, passwordValid) =>
-                this.setState({ password, passwordValid })
-              }
-            />
-            <LoginButton
-              checking={this.state.loginChecking}
-              onSubmit={this.handleEmailPasswordLoginAsync}
-              disabled={!(this.state.passwordValid && this.state.emailValid)}
-            />
+            {...this.state.alert}
+          />
+        )}
+        <View
+          style={{
+            maxWidth: 500,
+            height: boxHeight,
+            marginTop: (GlobalStyles().appHeight - boxHeight) / 2,
+          }}
+        >
+          <LoginTitle />
+          <LoginInputEmail
+            onSubmit={this.handleEmailPasswordLoginAsync}
+            onChange={(email, emailValid) =>
+              this.setState({ email, emailValid })
+            }
+          />
+          <LoginInputPassword
+            onSubmit={this.handleEmailPasswordLoginAsync}
+            onChange={(password, passwordValid) =>
+              this.setState({ password, passwordValid })
+            }
+          />
+          <LoginButton
+            checking={this.state.loginChecking}
+            onSubmit={this.handleEmailPasswordLoginAsync}
+            disabled={!(this.state.passwordValid && this.state.emailValid)}
+          />
 
-            <LoginHeading title={Language.get('login.via')} />
-            <Row>
-              <LoginSocialButton
-                onUrl={_url => {}}
-                url="/login/vendor/google"
-                color="#34a853"
-                icon="google"
-              />
-              <LoginSocialButton
-                onPress={this.handleFacebookPressAsync}
-                // onUrl={handleFacebookPressAsync}
-                url="/login/vendor/facebook"
-                color="#3b5998"
-                icon="facebook-f"
-              />
-              <LoginSocialButton
-                onUrl={_url => {
-                  Linking.openSettings()
-                }}
-                url="/login/vendor/twitter"
-                color="#1da1f2"
-                icon="twitter"
-              />
-              {/* <LoginSocialButton onUrl={url=>{}} url='/login/vendor/instagram' color="#e1306c" icon="instagram" /> */}
-            </Row>
+          <LoginHeading title={Language.get('login.via')} />
+          <Row>
+            <LoginSocialButton
+              onUrl={_url => {}}
+              url="/login/vendor/google"
+              color="#34a853"
+              icon="google"
+            />
+            <LoginSocialButton
+              onPress={this.handleFacebookPressAsync}
+              // onUrl={handleFacebookPressAsync}
+              url="/login/vendor/facebook"
+              color="#3b5998"
+              icon="facebook-f"
+            />
+            <LoginSocialButton
+              onUrl={_url => {
+                Linking.openSettings()
+              }}
+              url="/login/vendor/twitter"
+              color="#1da1f2"
+              icon="twitter"
+            />
+            {/* <LoginSocialButton onUrl={url=>{}} url='/login/vendor/instagram' color="#e1306c" icon="instagram" /> */}
+          </Row>
 
-            <LoginHeading title={Language.get('login.noaccount')} />
-            <Row>
-              <LoginLongButton
-                onPress={() => this.setState({ redirect: '/register' })}
-                icon="user-plus"
-                title={Language.get('register')}
-              />
-              <LoginLongButton
-                onPress={() => {}}
-                icon="user-secret"
-                title={Language.get('login.anonym')}
-              />
-            </Row>
-          </View>
-        </BackgroundImage>
-      </SafeAreaView>
+          <LoginHeading title={Language.get('login.noaccount')} />
+          <Row>
+            <LoginLongButton
+              onPress={() => this.setState({ redirect: '/register' })}
+              icon="user-plus"
+              title={Language.get('register')}
+            />
+            <LoginLongButton
+              onPress={() => {}}
+              icon="user-secret"
+              title={Language.get('login.anonym')}
+            />
+          </Row>
+        </View>
+      </BackgroundImage>
     )
   }
 }
