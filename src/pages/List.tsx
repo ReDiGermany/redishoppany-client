@@ -24,6 +24,7 @@ import APICategory from '../helper/API/APICategory'
 import SafeComponent from '../components/SafeComponent'
 import { DefPreErrorAlert, SuccessAlert } from '../helper/DefinedAlerts'
 import Alert from '../components/Alert'
+import BackgroundImage from '../components/BackgroundImage'
 
 // TODO: Finalize
 export default class List extends SafeComponent<
@@ -32,6 +33,8 @@ export default class List extends SafeComponent<
 > {
   state: IPageListState = {
     items: [],
+    owned: true,
+    owner: 'Unknown',
     refreshing: false,
     scrolling: true,
     bottomBox: false,
@@ -157,6 +160,8 @@ export default class List extends SafeComponent<
       }
     })
     this.setState({
+      owned: data.owned,
+      owner: data.owner,
       items: data.categories,
       listName: data.name,
       listId: data.id,
@@ -180,6 +185,15 @@ export default class List extends SafeComponent<
     )
     this.setState({ items: [], refreshing: true })
     await this.refresh()
+  }
+
+  leaveList(): Promise<void> {
+    throw new Error('Method not implemented.')
+  }
+
+  async moveItemToOtherList(listId: number) {
+    const newListCats = await APICategory.list(listId)
+    this.setState({ newListCats, bottomBox: false, moveToListBox: true })
   }
 
   render() {
@@ -246,24 +260,28 @@ export default class List extends SafeComponent<
         }
       )
 
+    if (!this.state.owned)
+      listOptions.push({
+        active: false,
+        name: 'Leave list',
+        onClick: () => {
+          ToastAndroid.show('Swipe to delete', 1000)
+        },
+        onDelete: () => this.leaveList(),
+        icon: 'sign-out-alt',
+      })
+
     return (
       <KeyboardDetection
         update={(keyboardHeight: any) => this.setState({ keyboardHeight })}
       >
         {this.state.alert.text !== '' && <Alert {...this.state.alert} />}
-        <ImageBackground
-          source={require('../../assets/background.jpg')}
-          resizeMode="cover"
-          style={{
-            width: GlobalStyles().appWidth,
-            height: GlobalStyles().contentHeight,
-            overflow: 'hidden',
-          }}
-        >
+        <BackgroundImage>
           <Navigation
             user={this.props.user}
             label={this.state.listName}
             solid={this.state.isTop}
+            subTitle={!this.state.owned ? `von ${this.state.owner}` : undefined}
             buttons={[
               {
                 name: 'openMenu',
@@ -447,13 +465,8 @@ export default class List extends SafeComponent<
               open={this.state.newCatBox}
             />
           </SafeAreaView>
-        </ImageBackground>
+        </BackgroundImage>
       </KeyboardDetection>
     )
-  }
-
-  async moveItemToOtherList(listId: number) {
-    const newListCats = await APICategory.list(listId)
-    this.setState({ newListCats, bottomBox: false, moveToListBox: true })
   }
 }
