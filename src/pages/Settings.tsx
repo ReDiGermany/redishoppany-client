@@ -59,11 +59,14 @@ export default class Settings extends SafeComponent<
     this.setState({ shareFoodplanBox: !this.state.shareFoodplanBox })
   }
 
-  inviteToFoodplan(friend: {
-    id: number
-    firstName: string
-    lastName: string
-  }): any {}
+  async inviteToFoodplan(id: number) {
+    await APIShareFoodplan.invite(id)
+    const { foodplanFriends } = this.state
+    foodplanFriends.forEach((item, idx) => {
+      if (item.id === id) foodplanFriends[idx].inList = true
+    })
+    this.setState({ foodplanFriends, shareFoodplanBox: false })
+  }
 
   async setActiveFoodplan(id: number) {
     await APIFoodplan.changePlan(id)
@@ -130,7 +133,7 @@ export default class Settings extends SafeComponent<
           items={this.state.foodplanFriends.map(item => ({
             name: `${item.friend.firstName} ${item.friend.lastName}`,
             active: item.inList,
-            onClick: () => this.inviteToFoodplan(item.friend),
+            onClick: () => this.inviteToFoodplan(item.friend.id),
             onDelete: item.inList ? () => {} : undefined,
           }))}
           open={this.state.shareFoodplanBox}
