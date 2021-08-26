@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  RefreshControl,
-  // RefreshControl, SafeAreaView,
-  ScrollView,
-  View,
-} from 'react-native'
+import { RefreshControl, ScrollView, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Moveable from '../../components/Moveable/Moveable'
 import GlobalStyles from '../../styles/GlobalStyles'
@@ -133,6 +128,15 @@ export default class Foodplan extends SafeComponent<
               height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
             }}
           >
+            {this.state.plan.length === 0 && (
+              <Moveable
+                name="OOPs! Hier scheint nichts zu sein!"
+                large={true}
+                centerText={true}
+                boldText={true}
+                disabled={true}
+              />
+            )}
             {this.state.plan.map((kw: IFoodplanKw) => (
               <View key={kw.name}>
                 <ListHeader

@@ -23,6 +23,7 @@ import AddBar from '../../components/AddBar'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import SafeComponent from '../../components/SafeComponent'
+import Moveable from '../../components/Moveable/Moveable'
 
 export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -107,6 +108,15 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
           placeholder={Language.get('search')}
           autoFocus={false}
         />
+        {this.state.recipes.length === 0 && (
+          <Moveable
+            name="OOPs! Hier scheint nichts zu sein!"
+            large={true}
+            centerText={true}
+            boldText={true}
+            disabled={true}
+          />
+        )}
         {this.state.recipes.map((item, index) => {
           if (
             this.state.showOnly !== '' &&
