@@ -42,8 +42,11 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
       this.props.onStart?.(startX, startY)
     }
 
-    const link = {
-      style: RowFlexStyle,
+    const linkSstyle: ViewStyle = {
+      ...RowFlexStyle,
+      position: 'relative',
+      top: 0,
+      left: 0,
     }
 
     let style: ViewStyle = {
@@ -134,7 +137,16 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
     return (
       <View {...box}>
         <Row>
-          <Pressable onPress={this.props.onClick} {...link}>
+          <Pressable
+            onLongPress={() => console.log('onLongPress')}
+            onPressIn={() => console.log('onPressIn')}
+            onPressOut={() => console.log('onPressOut')}
+            onPress={() => {
+              console.log('press')
+              this.props.onClick?.()
+            }}
+            style={linkSstyle}
+          >
             <Row>
               {this.props.icon && (
                 <Icon style={textStyle.textIcon} name={this.props.icon} />
