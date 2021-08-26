@@ -323,9 +323,6 @@ export default class List extends SafeComponent<
                         onDelete={() => {}}
                         prefix={item.amount}
                         name={item.name}
-                        onMoving={(left, right) =>
-                          this.setState({ preventScroll: left || right })
-                        }
                         last={itemindex + 1 === cat.items.length}
                         right={[
                           {
