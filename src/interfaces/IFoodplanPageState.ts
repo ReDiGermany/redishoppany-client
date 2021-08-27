@@ -1,4 +1,3 @@
-import IAPIRecipe from './IAPIRecipe'
 import IFoodplanItem from './IFoodplanItem'
 import IFoodplanKw from './IFoodplanKw'
 
@@ -7,7 +6,6 @@ export default interface IFoodplanPageState {
   refreshing: boolean
   isTop: boolean
   suspendFirstRefresh: boolean
-  recipes: IAPIRecipe[]
   item?: IFoodplanItem
   redirect: string
 }

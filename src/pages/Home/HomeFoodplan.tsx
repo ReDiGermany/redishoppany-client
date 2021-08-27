@@ -7,7 +7,6 @@ import Navigation from '../../Navigation'
 import Language from '../../language/Language'
 import APIFoodplan from '../../helper/API/APIFoodplan'
 import IFoodplanItem from '../../interfaces/IFoodplanItem'
-import APIRecipe from '../../helper/API/APIRecipe'
 import IFoodplanPageState from '../../interfaces/IFoodplanPageState'
 import { Redirect } from '../../Router/react-router'
 import ListHeader from '../../ListHeader'
@@ -16,14 +15,15 @@ import IMoveableProps from '../../interfaces/IMoveableProps'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
+import GlobalStyles from '../../styles/GlobalStyles'
 
+// TODO: Add recipe to cart
 export default class Foodplan extends SafeComponent<
   IPageProps,
   IFoodplanPageState
 > {
   state: IFoodplanPageState = {
     plan: [],
-    recipes: [],
     refreshing: false,
     suspendFirstRefresh: false,
     isTop: true,
@@ -36,9 +36,6 @@ export default class Foodplan extends SafeComponent<
     ;(async () => {
       const plan = await AsyncStorage.getItem('foodplanList')
       if (plan !== null) this.setState({ plan: JSON.parse(plan) })
-
-      const recipes = await AsyncStorage.getItem('recipeList')
-      if (recipes !== null) this.setState({ recipes: JSON.parse(recipes) })
     })()
   }
 
@@ -72,9 +69,7 @@ export default class Foodplan extends SafeComponent<
   async refresh() {
     this.setState({ refreshing: true })
     const plan = await APIFoodplan.list()
-    const recipes = await APIRecipe.list()
-    this.setState({ plan, recipes })
-    await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
+    this.setState({ plan })
     await AsyncStorage.setItem('foodplanList', JSON.stringify(plan))
     this.setState({ refreshing: false, suspendFirstRefresh: true })
   }
@@ -119,6 +114,15 @@ export default class Foodplan extends SafeComponent<
           onRefresh={() => this.refresh()}
           isTop={isTop => this.setState({ isTop })}
         >
+          {this.props.connected === false && (
+            <Moveable
+              name="Phone not Connected"
+              bgColor="rgba(255,0,0,.2)"
+              icon="exclamation"
+              large={true}
+              boldText={true}
+            />
+          )}
           {this.state.plan.length === 0 && (
             <Moveable
               name="OOPs! Hier scheint nichts zu sein!"
@@ -148,9 +152,9 @@ export default class Foodplan extends SafeComponent<
 
                 const mbuttons: any[] = []
 
-                if (idx === 1)
+                if (!item.inCart)
                   mbuttons.push({
-                    color: '#80dfad',
+                    color: GlobalStyles().color.accent,
                     icon: 'shopping-basket',
                     name: 'cart',
                     onPress: () => {
