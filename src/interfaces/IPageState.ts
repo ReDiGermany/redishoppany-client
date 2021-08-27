@@ -1,3 +1,4 @@
+import IAlertProps from './IAlertProps'
 import IAPIFriendsList from './IAPIFriendsList'
 
 export default interface IPageState {
@@ -6,4 +7,5 @@ export default interface IPageState {
   add: boolean
   list: IAPIFriendsList
   redirect: string
+  alert: IAlertProps
 }
