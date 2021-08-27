@@ -7,8 +7,8 @@ import * as Constants from 'expo-constants'
 export default class API {
   private initAPI() {
     this.axiosInstance = axios.create({
-      // baseURL: 'https://api.lisha-app.com',
-      baseURL: 'http://192.168.0.30:3001',
+      baseURL: 'https://api.lisha-app.com',
+      // baseURL: 'http://192.168.0.30:3001',
       timeout: 1000,
       httpAgent: Constants.default.deviceName,
       httpsAgent: Constants.default.deviceName,
