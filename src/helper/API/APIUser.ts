@@ -20,6 +20,19 @@ export default class APIUser {
     return ret ?? false
   }
 
+  public static async sendRemoteToken(token: string): Promise<boolean> {
+    console.log(`sending token ${token}`)
+    const ret = await API.post<boolean>(`/user/token/fcm`, { token }).catch(
+      e => {
+        console.log(`error sending token ${token}`)
+
+        return e
+      }
+    )
+
+    return ret.data ?? false
+  }
+
   public static async getMeByToken(
     password: string,
     username: string

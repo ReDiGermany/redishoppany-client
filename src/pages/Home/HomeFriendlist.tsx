@@ -1,6 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Notifications from 'expo-notifications'
 import ListHeader from '../../ListHeader'
 import Moveable from '../../components/Moveable/Moveable'
 import QRCode from '../../QRCode'
@@ -16,6 +17,13 @@ import { Redirect } from '../../Router/react-router'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
+import Alert from '../../components/Alert'
+import IAlertProps from '../../interfaces/IAlertProps'
+
+interface INotification {
+  reload?: string
+  alert?: IAlertProps
+}
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state: IPageState = {
@@ -28,6 +36,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
       outgoing: [],
     },
     redirect: '',
+    alert: { text: '', type: 'error' },
   }
 
   constructor(props: IPageProps) {
@@ -40,6 +49,18 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
 
   async componentDidMount() {
     this.onRefresh()
+    Notifications.addNotificationReceivedListener(this.handleNotification)
+  }
+
+  handleNotification = (notification: Notifications.Notification) => {
+    // eslint-disable-next-line prefer-destructuring
+    const data: INotification = notification.request.content.data
+    if (data?.reload === 'friendlist') {
+      this.onRefresh()
+    }
+    if (data.alert) {
+      this.setState({ alert: data.alert })
+    }
   }
 
   async onRefresh() {
@@ -98,8 +119,23 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
     this.update(list)
   }
 
-  async addFriend(email: string) {
-    await APIFriends.add(email)
+  async addFriend(email: string, isMail: boolean) {
+    const added = await APIFriends.add(email, isMail)
+    if (added) {
+      this.setState({
+        alert: { type: 'success', text: 'Freund hinzugefügt' },
+      })
+      const list = await APIFriends.list()
+      this.update(list)
+    } else {
+      this.setState({
+        alert: {
+          type: 'error',
+          text: 'Fehler!',
+          info: 'Freund konnte nicht hinzugefügt werden',
+        },
+      })
+    }
   }
 
   render() {
@@ -132,19 +168,34 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
     }
 
     const addBar = {
-      onChange: this.addFriend,
+      onChange: (email: string) => this.addFriend(email, true),
       placeholder: 'E-Mail',
       visible: this.state.add,
     }
 
     const qrCode = {
       // onFail: () => console.log('Das hat leider nicht funktioniert.'),
-      onFail: () => {},
-      onSuccess: this.addFriend,
+      onFail: () =>
+        this.setState({
+          alert: {
+            text: 'Fehler',
+            info: 'Es gab einen Fehler beim hinzufügen.',
+            type: 'error',
+          },
+        }),
+      onSuccess: (a: string, b: boolean) => this.addFriend(a, b),
     }
 
     return (
       <View>
+        {this.state.alert.text !== '' && (
+          <Alert
+            onClose={() =>
+              this.setState({ alert: { text: '', type: 'error' } })
+            }
+            {...this.state.alert}
+          />
+        )}
         <Navigation {...navigation} />
         <ScrollView
           dark={true}
@@ -166,7 +217,21 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
           )}
           <QRCode {...qrCode} />
 
-          {(this.state.list.friends.length ?? 0) > 0 && (
+          {this.state.list.friends.length <= 0 &&
+            this.state.list.incomming.length <= 0 &&
+            this.state.list.outgoing.length <= 0 && (
+              <Moveable
+                name="Nichts vorhanden!"
+                large={true}
+                style={{ marginTop: 10 }}
+                centerText={true}
+                boldText={true}
+                disabled={true}
+                bgColor="rgba(255,0,0,.1)"
+              />
+            )}
+
+          {this.state.list.friends.length > 0 && (
             <>
               <ListHeader color="#111" text={Language.get('friends')} />
               {this.state.list.friends.map((friend: IFriend, index) => (

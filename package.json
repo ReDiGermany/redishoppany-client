@@ -86,7 +86,9 @@
     "react-router-dom": "^5.2.0",
     "react-router-native": "^5.2.0",
     "rn-nodeify": "^10.3.0",
-    "@react-native-community/netinfo": "6.0.0"
+    "@react-native-community/netinfo": "6.0.0",
+    "firebase": "8.2.3",
+    "expo-notifications": "~0.12.3"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

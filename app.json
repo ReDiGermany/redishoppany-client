@@ -24,12 +24,23 @@
         "backgroundColor": "#FFFFFF"
       },
       "userInterfaceStyle": "dark",
-      "package": "com.redigermany.lisha"
+      "package": "com.redigermany.lisha",
+      "googleServicesFile": "./android/app/google-services.json"
     },
     "facebookScheme": "fb1896807707303093",
     "facebookAppId": "1896807707303093",
     "facebookDisplayName": "LiSha",
     "facebookAutoLogAppEventsEnabled": true,
-    "facebookAdvertiserIDCollectionEnabled": true
+    "facebookAdvertiserIDCollectionEnabled": true,
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "/assets/adaptive-icon.png",
+          "color": "#ffffff",
+          "mode": "production"
+        }
+      ]
+    ]
   }
 }
