@@ -151,8 +151,8 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   shared: {
-    color: '#4ae53a',
-    borderColor: '#4ae53a',
+    color: GlobalStyles().color.accent,
+    borderColor: GlobalStyles().color.accent,
     borderWidth: 1,
     fontSize: 10,
     textTransform: 'uppercase',
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     textAlign: 'center',
     textAlignVertical: 'center',
-    opacity: 0.4,
+    // opacity: 0.4,
     paddingHorizontal: 5,
   },
 })

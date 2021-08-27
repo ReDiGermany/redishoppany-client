@@ -20,7 +20,7 @@ const GlobalHeight = () => {
       bright: 'rgba(255,255,255,.3)',
     },
     color: {
-      accent: '#015AA2',
+      accent: '#4ae53a80',
       light: '#ffffff',
       dimmed: 'rgba(255,255,255,.5)',
       red: '#A00000',

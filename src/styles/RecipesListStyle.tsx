@@ -38,7 +38,7 @@ export const {
     bottom: 0,
     left: 0,
     width: '100%',
-    backgroundColor: 'rgba(0,0,0,.5)',
+    // backgroundColor: 'rgba(0,0,0,.5)',
     paddingHorizontal: 20,
   },
   nameBox: {
