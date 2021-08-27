@@ -33,22 +33,18 @@ export default class Moveable extends SafeComponent<IMoveableProps> {
     if (posX > 0 && !this.props.onDelete) return
     if (posX < 0 && !this.props.right) return
 
-    if (posX > 40) {
-      posX = 50
-    } else if (posX < -40 * (this.props.right?.length ?? 0)) {
+    if (posX > 40) posX = 50
+    else if (posX < -40 * (this.props.right?.length ?? 0))
       posX = -50 * (this.props.right?.length ?? 0)
-    }
 
     if (this.state.isRight && posX < 0) posX = 0
     if (this.state.isLeft && posX > 0) posX = 0
 
     if (!this.state.moving) this.props.onPop?.()
     this.props.onMoving?.(posX <= -20, posX >= 20)
-    this.setState({
-      posX,
-      movingLeft: posX <= -20,
-      movingRight: posX >= 20,
-    })
+    const movingLeft = posX <= -20
+    const movingRight = posX >= 20
+    this.setState({ posX, movingLeft, movingRight })
   }
 
   start = (initX: number, initY: number) => {
