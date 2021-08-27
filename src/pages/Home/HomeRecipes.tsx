@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Image, Text } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { LinearGradient } from 'expo-linear-gradient'
 import { Link } from 'react-router-native'
 import APIRecipe from '../../helper/API/APIRecipe'
 import IPageProps from '../../interfaces/IPageProps'
@@ -118,6 +119,15 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
             this.refresh()
           }}
         >
+          {this.props.connected === false && (
+            <Moveable
+              name="Phone not Connected"
+              bgColor="rgba(255,0,0,.2)"
+              icon="exclamation"
+              large={true}
+              boldText={true}
+            />
+          )}
           <AddBar
             onType={showOnly => this.setState({ showOnly })}
             placeholder={Language.get('search')}
@@ -148,10 +158,17 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
                     {...image(item)}
                     // onError={e => console.log('Image Load Error', e)}
                   />
-                  <View style={textBox}>
+                  <LinearGradient
+                    colors={[
+                      'rgba(0,0,0,0)',
+                      'rgba(0,0,0,.5)',
+                      'rgba(0,0,0,.8)',
+                    ]}
+                    style={textBox}
+                  >
                     <Text style={nameBox}>{item.name}</Text>
                     <Text style={timeBox}>{item.time}</Text>
-                  </View>
+                  </LinearGradient>
                 </View>
               </Link>
             )
