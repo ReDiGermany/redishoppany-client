@@ -15,9 +15,10 @@ import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
 import { Redirect } from '../../Router/react-router'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
+import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
-  state = {
+  state: IPageState = {
     refreshing: false,
     isTop: true,
     add: false,
@@ -46,56 +47,46 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
     this.update(list)
   }
 
-  update(list: IAPIFriendsList) {
+  async update(list: IAPIFriendsList) {
     this.setState({ list })
-    ;(async () => {
-      await AsyncStorage.setItem('friendlist', JSON.stringify(list))
-    })()
+    await AsyncStorage.setItem('friendlist', JSON.stringify(list))
   }
 
-  removePending(friend: IFriend) {
+  removePending(friend: IFriend): IAPIFriendsList {
     const { list } = this.state
 
-    list.incomming.forEach((value: IFriend, idx) => {
-      if (value.id === friend.id) list.incomming.splice(idx, 1)
+    list.incomming?.forEach((value: IFriend, idx) => {
+      if (value.id === friend.id) list.incomming?.splice(idx, 1)
     })
 
-    list.outgoing.forEach((value: IFriend, idx) => {
-      if (value.id === friend.id) list.outgoing.splice(idx, 1)
+    list.outgoing?.forEach((value: IFriend, idx) => {
+      if (value.id === friend.id) list.outgoing?.splice(idx, 1)
     })
 
     return list
   }
 
-  cancleInvite(friend: IFriend) {
+  async cancleInvite(friend: IFriend) {
     const list = this.removePending(friend)
 
-    ;(async () => {
-      await APIFriends.cancel(friend.id)
-    })()
+    await APIFriends.cancel(friend.id)
     this.update(list)
   }
 
-  denyInvite(friend: IFriend) {
+  async denyInvite(friend: IFriend) {
     const list = this.removePending(friend)
-
-    ;(async () => {
-      await APIFriends.deny(friend.id)
-    })()
+    await APIFriends.deny(friend.id)
     this.update(list)
   }
 
-  acceptFriend(friend: IFriend) {
+  async acceptFriend(friend: IFriend) {
     const list = this.removePending(friend)
-    // @ts-ignore should be possible #never
     list.friends.push(friend)
-    ;(async () => {
-      await APIFriends.accept(friend.id)
-    })()
+    await APIFriends.accept(friend.id)
     this.update(list)
   }
 
-  removeFriend(friend: IFriend) {
+  async removeFriend(friend: IFriend) {
     const { list } = this.state
 
     list.friends.forEach((item: IFriend, idx) => {
@@ -103,22 +94,18 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
         list.friends.splice(idx, 1)
       }
     })
-    ;(async () => {
-      await APIFriends.delete(friend.id)
-    })()
+    await APIFriends.delete(friend.id)
     this.update(list)
   }
 
-  addFriend(email: string) {
-    ;(async () => {
-      await APIFriends.add(email)
-    })()
+  async addFriend(email: string) {
+    await APIFriends.add(email)
   }
 
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
-    const buttons = [
+    const buttons: INavigationPropsButton[] = [
       {
         icon: this.state.add ? 'chevron-up' : 'plus',
         name: 'add',
@@ -130,8 +117,10 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
         icon: 'bell',
         name: 'notifications',
         onClick: () => this.setState({ redirect: '/notifications' }),
-        // @ts-ignore
-        badge: { color: '#900000', text: this.props.user?.notificationCount },
+        badge: {
+          color: '#900000',
+          text: this.props.user?.notificationCount.toString() ?? '',
+        },
       })
 
     const navigation = {
@@ -177,7 +166,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
           )}
           <QRCode {...qrCode} />
 
-          {this.state.list.friends.length > 0 && (
+          {(this.state.list.friends.length ?? 0) > 0 && (
             <>
               <ListHeader color="#111" text={Language.get('friends')} />
               {this.state.list.friends.map((friend: IFriend, index) => (
