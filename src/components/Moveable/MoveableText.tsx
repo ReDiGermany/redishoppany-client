@@ -27,15 +27,12 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
       this.setState({ longPress: false, posY: 0, startY: 0 })
     }
 
-    const onTouchStart = () => {
+    const onTouchStart = (e: any) => {
       this.timer = setTimeout(() => {
         this.setState({ longPress: true })
         this.props.onLongPress?.()
       }, 500)
       this.props.touchStart?.()
-    }
-
-    const onResponderGrant = (e: any) => {
       const startX = parseInt(e.nativeEvent.pageX, 10)
       const startY = parseInt(e.nativeEvent.pageY, 10)
       this.setState({ startY })
@@ -102,29 +99,6 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
       }
     }
 
-    const box = {
-      style,
-      onTouchEnd,
-      onTouchCancel: onTouchEnd,
-      onTouchStart,
-      onResponderEnd: () => this.props.onEnd?.(),
-      onResponderMove: (e: any) => {
-        if (!this.state.longPress) {
-          this.props.handle?.(e)
-        } else if (this.props.onSort !== undefined) {
-          this.setState({ posY: e.nativeEvent.pageY })
-          this.props.onSort?.(this.state.posY)
-        }
-      },
-      onResponderTerminate: () => this.props.onRelease?.(),
-      onResponderRelease: () => {
-        this.props.onRelease?.()
-        this.props.stop?.()
-      },
-      onResponderGrant: (e: any) => onResponderGrant(e),
-      onResponderReject: () => this.props.onRelease?.(),
-    }
-
     const fullTextStyle = {
       ...textStyle.text,
       ...(this.props.centerText && textStyle.centerText),
@@ -133,20 +107,43 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
     }
 
     return (
-      <View {...box}>
+      <View style={style}>
         <Row>
-          <Pressable onPress={() => this.props.onClick?.()} style={linkSstyle}>
+          <Pressable
+            onStartShouldSetResponder={() => true}
+            onMoveShouldSetResponder={() => true}
+            onTouchEnd={onTouchEnd}
+            onTouchCancel={onTouchEnd}
+            onTouchStart={onTouchStart}
+            onResponderEnd={() => this.props.onEnd?.()}
+            onTouchMove={(e: any) => {
+              if (!this.state.longPress) {
+                this.props.handle?.(e)
+              } else if (this.props.onSort !== undefined) {
+                this.setState({ posY: e.nativeEvent.pageY })
+                this.props.onSort?.(this.state.posY)
+              }
+            }}
+            onResponderTerminate={() => this.props.onRelease?.()}
+            onResponderRelease={() => {
+              this.props.onRelease?.()
+              this.props.stop?.()
+            }}
+            onResponderReject={() => this.props.onRelease?.()}
+            onPress={() => this.props.onClick?.()}
+            style={linkSstyle}
+          >
             <Row>
-              {this.props.icon && (
+              {this.props.icon !== undefined && (
                 <Icon style={textStyle.textIcon} name={this.props.icon} />
               )}
-              {this.props.prefix && (
+              {this.props.prefix !== undefined && (
                 <MoveableTextPrefix
                   disabled={this.props.disabled}
                   text={this.props.prefix}
                 />
               )}
-              {this.props.text && (
+              {this.props.text !== undefined && (
                 <Text style={fullTextStyle}>{this.props.text}</Text>
               )}
             </Row>
@@ -158,15 +155,11 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
               />
             )}
           </Pressable>
-          {this.props.badge ? (
+          {this.props.badge !== undefined && (
             <Text style={textStyle.badge}>{this.props.badge.toString()}</Text>
-          ) : (
-            <></>
           )}
-          {this.props.shared ? (
+          {(this.props.shared ?? false) && (
             <Text style={textStyle.shared}>shared</Text>
-          ) : (
-            <></>
           )}
           {!isSorting &&
             this.props.buttons?.map(btn => (
