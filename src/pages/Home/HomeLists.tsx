@@ -133,7 +133,7 @@ export default class HomeList extends SafeComponent<IPageProps> {
                     name: item.name,
                     onClick: () =>
                       this.setState({ redirect: `/list/${item.id}` }),
-                    badge: item.count,
+                    badge: item.count > 0 ? item.count : undefined,
                     shared: item.shared,
                   }
 
