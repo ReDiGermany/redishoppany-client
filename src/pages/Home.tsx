@@ -58,13 +58,29 @@ export default class Home extends SafeComponent<IPageProps> {
             <BackgroundImage>
               {active === 0 && (
                 <HomeList
+                  connected={this.props.connected}
                   onReload={() => this.props.onReload?.()}
                   user={this.props.user}
                 />
               )}
-              {active === 1 && <HomeFoodplan user={this.props.user} />}
-              {active === 2 && <HomeRecipes user={this.props.user} />}
-              {active === 3 && <HomeFriendlist user={this.props.user} />}
+              {active === 1 && (
+                <HomeFoodplan
+                  connected={this.props.connected}
+                  user={this.props.user}
+                />
+              )}
+              {active === 2 && (
+                <HomeRecipes
+                  connected={this.props.connected}
+                  user={this.props.user}
+                />
+              )}
+              {active === 3 && (
+                <HomeFriendlist
+                  connected={this.props.connected}
+                  user={this.props.user}
+                />
+              )}
             </BackgroundImage>
           </View>
         </View>

@@ -93,6 +93,15 @@ export default class HomeList extends SafeComponent<IPageProps> {
             visible={this.state.add}
             onChange={name => this.addList(name)}
           />
+          {this.props.connected === false && (
+            <Moveable
+              name="Phone not Connected"
+              bgColor="rgba(255,0,0,.2)"
+              icon="exclamation"
+              large={true}
+              boldText={true}
+            />
+          )}
           {this.state.lists.length === 0 && (
             <Moveable
               name="Nothing here. Add a new List!"

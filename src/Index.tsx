@@ -1,6 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import NetInfo from '@react-native-community/netinfo'
 import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
 import Imprint from './pages/Imprint'
@@ -24,7 +25,8 @@ import Reload from './pages/Reload'
 import Backgrounds from './pages/Backgrounds'
 
 export default class Index extends SafeComponent<IIndexProps, IIndexState> {
-  state = {
+  state: IIndexState = {
+    connected: undefined,
     user: undefined,
     checkMeDone: this.props.checkMeDone,
     loggedin: this.props.loggedin,
@@ -44,8 +46,19 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
     } else if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
   }
 
+  unsubscribe: any = null
+
   async componentDidMount() {
+    this.unsubscribe = NetInfo.addEventListener(state => {
+      this.setState({
+        connected: state.isConnected ?? false,
+      })
+    })
     await this.reloadMe(true)
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe()
   }
 
   render() {
@@ -105,7 +118,11 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
           path="/"
           render={() =>
             this.state.loggedin ? (
-              <Home onReload={async () => this.reloadMe(false)} user={user} />
+              <Home
+                connected={this.state.connected}
+                onReload={async () => this.reloadMe(false)}
+                user={user}
+              />
             ) : (
               <Redirect to="/login" />
             )

@@ -166,6 +166,15 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
           isTop={isTop => this.setState({ isTop })}
         >
           <AddBar {...addBar} type="email" />
+          {this.props.connected === false && (
+            <Moveable
+              name="Phone not Connected"
+              bgColor="rgba(255,0,0,.2)"
+              icon="exclamation"
+              large={true}
+              boldText={true}
+            />
+          )}
           <QRCode {...qrCode} />
 
           {this.state.list.friends.length > 0 && (
