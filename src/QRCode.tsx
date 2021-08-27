@@ -5,7 +5,7 @@ import { SvgXml } from 'react-native-svg'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import SafeComponent from './components/SafeComponent'
 import APIFriends from './helper/API/APIFriends'
-import { mailRegex } from './helper/Constants'
+import { mailRegex, uuidRegex } from './helper/Constants'
 import IQRCodeScanned from './interfaces/IQRCodeScanned'
 import QRScanner from './pages/QRScanner'
 import QRCodeStyles from './styles/QRCodeStyles'
@@ -40,7 +40,9 @@ export default class QRCode extends SafeComponent<IQRCodeScanned> {
         <View style={QRCodeStyles.scannerBox}>
           <QRScanner
             onScan={text => {
-              if (text.match(mailRegex)) this.props.onSuccess(text)
+              const isMail = text.match(mailRegex)
+              if (isMail || text.match(uuidRegex))
+                this.props.onSuccess(text, (isMail ?? []).length > 0)
               else this.props.onFail()
               this.setState({ scanner: false })
             }}

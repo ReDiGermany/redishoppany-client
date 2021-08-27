@@ -21,8 +21,11 @@ export default class APIFriends {
     return ret ?? []
   }
 
-  public static async add(email: string): Promise<boolean> {
-    const ret = await API.post<boolean>('/friends/add', { email })
+  public static async add(email: string, isMail: boolean): Promise<boolean> {
+    const ret = await API.post<boolean>(
+      '/friends/add',
+      isMail ? { email } : { uuid: email }
+    )
 
     return ret ?? false
   }
