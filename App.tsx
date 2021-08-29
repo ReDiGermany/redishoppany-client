@@ -81,16 +81,17 @@ export default class App extends Component {
       const me = await APIUser.getMeByToken(token, email)
       if (typeof me === 'boolean')
         this.setState({ checkMeDone: true, loggedin: false })
-      else this.setState({ checkMeDone: true, loggedin: me !== undefined })
+      else {
+        const expoPushToken = await registerForPushNotificationsAsync()
+        Notifications.addNotificationReceivedListener(this.handleNotification)
+
+        Notifications.addNotificationResponseReceivedListener(
+          this.handleNotificationResponse
+        )
+        if (expoPushToken) await APIUser.sendRemoteToken(expoPushToken)
+        this.setState({ checkMeDone: true, loggedin: me !== undefined })
+      }
     } else this.setState({ checkMeDone: true, loggedin: false })
-
-    const expoPushToken = await registerForPushNotificationsAsync()
-    Notifications.addNotificationReceivedListener(this.handleNotification)
-
-    Notifications.addNotificationResponseReceivedListener(
-      this.handleNotificationResponse
-    )
-    if (expoPushToken) await APIUser.sendRemoteToken(expoPushToken)
   }
 
   render() {
