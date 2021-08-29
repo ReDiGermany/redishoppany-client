@@ -107,21 +107,21 @@ export const GetLuma = (inp: string) => {
   return luma
 }
 
-export const filterFacebookRedirectUrl = (url: string): string | null => {
-  const parseUrl = url.split('#')[1]
-  const token = parseUrl
-    .split('&')
-    .map(item => {
-      const q = item.split('=')
-      if (q[0] === 'access_token') return q[1]
+const filterUrl = (url: string, name: string, initSplit: string) => {
+  const parseUrl = url.split(initSplit)[1]
 
-      return null
-    })
-    .filter(item => item !== null)
-  if (token.length) return token[0]
+  return parseUrl.split('&').reduce((acc, item) => {
+    const q = item.split('=')
 
-  return null
+    return q[0] !== name ? acc : q[1]
+  }, '')
 }
+
+export const filterFacebookRedirectUrl = (url: string): string | null =>
+  filterUrl(url, 'access_token', '#')
+
+export const filterGoogleRedirectUrl = (url: string): string | null =>
+  filterUrl(url, 'access_token', '#')
 
 export const randomString = (length: number) => {
   let result = ''
