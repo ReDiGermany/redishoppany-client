@@ -4,6 +4,16 @@ import API from '../API'
 import { IAPIVendorLogin } from '../../interfaces/IAPIVendorLogin'
 
 export default class APIUser {
+  public static async checkGoogleToken(
+    token: string | null
+  ): Promise<IAPIVendorLogin | boolean> {
+    const ret = await API.post<IAPIVendorLogin>('/user/login/vendor/google', {
+      token,
+    })
+
+    return ret ?? false
+  }
+
   public static async checkFacebookToken(
     token: string
   ): Promise<IAPIVendorLogin | boolean> {
