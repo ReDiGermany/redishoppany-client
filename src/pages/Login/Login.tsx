@@ -1,6 +1,5 @@
 import React from 'react'
 import { View } from 'react-native'
-import * as Linking from 'expo-linking'
 import * as AuthSession from 'expo-auth-session'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Row from '../../components/Row'
@@ -27,9 +26,15 @@ import {
   PreWarningAlert,
   SuccessAlert,
 } from '../../helper/DefinedAlerts'
-import { filterFacebookRedirectUrl } from '../../helper/Functions'
-import { FB_APP_ID } from '../../helper/Constants'
+import {
+  filterFacebookRedirectUrl,
+  filterGoogleRedirectUrl,
+} from '../../helper/Functions'
+import { FB_APP_ID, GOOGLE_CLIENT_ID } from '../../helper/Constants'
 import SafeComponent from '../../components/SafeComponent'
+
+// TODO: Add Anonymous login
+// TODO: Add Twitter Login
 
 export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -51,6 +56,43 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
     this.setState({
       alert: PreWarningAlert(pre, 'text', 'info'),
     })
+  }
+
+  handleTwitterPressAsync = async () => {}
+
+  handleGooglePressAsync = async () => {
+    const redirectUrl = 'https://auth.expo.io/@redigermany/lisha'
+    const returnUrl = AuthSession.getDefaultReturnUrl()
+    const scope = encodeURIComponent(
+      'openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
+    )
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&include_granted_scopes=true&response_type=token&state=state_parameter_passthrough_value&redirect_uri=${redirectUrl}&client_id=${GOOGLE_CLIENT_ID}`
+    const result = await AuthSession.startAsync({ authUrl, returnUrl })
+    if ('url' in result && result.errorCode === null) {
+      const token = filterGoogleRedirectUrl(result.url)
+      try {
+        this.setState({
+          alert: PreInfoAlert('login.facebook.check.', 'text', 'info'),
+        })
+        const tokenResult = await APIUser.checkGoogleToken(token)
+        setTimeout(async () => {
+          if (typeof tokenResult === 'boolean') {
+            this.PreWarningAlert('login.facebook.error.email.')
+          } else {
+            this.setState({
+              alert: PreSuccessAlert('login.facebook.success.', 'text', 'info'),
+              loggedin: true,
+            })
+            await AsyncStorage.setItem('redishoppany-token', tokenResult.token)
+            await AsyncStorage.setItem('redishoppany-email', tokenResult.email)
+            this.reloadApp()
+          }
+        }, 2000)
+      } catch (e) {
+        console.log(e.message)
+        this.PreWarningAlert('login.facebook.error.')
+      }
+    }
   }
 
   handleFacebookPressAsync = async () => {
@@ -180,7 +222,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
           <LoginHeading title={Language.get('login.via')} />
           <Row>
             <LoginSocialButton
-              onUrl={_url => {}}
+              onPress={this.handleGooglePressAsync}
               url="/login/vendor/google"
               color="#34a853"
               icon="google"
@@ -193,9 +235,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
               icon="facebook-f"
             />
             <LoginSocialButton
-              onUrl={_url => {
-                Linking.openSettings()
-              }}
+              onPress={this.handleTwitterPressAsync}
               url="/login/vendor/twitter"
               color="#1da1f2"
               icon="twitter"
