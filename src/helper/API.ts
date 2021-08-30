@@ -5,14 +5,16 @@ import * as Constants from 'expo-constants'
 // Error Handling from https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
 
 export default class API {
+  private static config = {
+    baseURL: 'https://api.lisha-app.com',
+    // baseURL: 'http://192.168.0.30:3001',
+    timeout: 1000,
+    httpAgent: Constants.default.deviceName,
+    httpsAgent: Constants.default.deviceName,
+  }
+
   private initAPI() {
-    this.axiosInstance = axios.create({
-      baseURL: 'https://api.lisha-app.com',
-      // baseURL: 'http://192.168.0.30:3001',
-      timeout: 1000,
-      httpAgent: Constants.default.deviceName,
-      httpsAgent: Constants.default.deviceName,
-    })
+    this.axiosInstance = axios.create(API.config)
   }
 
   private static INSTANCE: API
@@ -44,7 +46,7 @@ export default class API {
   public static async get<T>(uri: string): Promise<T | null> {
     const auth = await API.getAuth()
     const ret = await API.axiosInstance.get(uri, auth).catch(error => {
-      console.log('AXIOS::GET::ERROR', { uri, auth })
+      console.log('AXIOS::GET::ERROR', { url: this.config.baseURL + uri, auth })
       // Error 😨
       if (error.response) {
         // The request was made and the server responded with a status code that falls out of the range of 2xx
