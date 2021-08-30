@@ -79,5 +79,12 @@
   "shoppinglist.delete.failed.info": "Bitte versuche es erneut!",
 
   "list.items.cleared": "Die Liste wurde geleert",
-  "list.items.bought.cleared": "Die gekauften Dinge wurden gelöscht."
+  "list.items.bought.cleared": "Die gekauften Dinge wurden gelöscht.",
+
+  "anon.register.fail.text": "Etwas ist schief gelaufen",
+  "anon.register.fail.info": "Bitte versuche es erneut!",
+  "anon.register.success.text": "Willkommen!",
+  "anon.register.success.info": "Du kannst die App nun nutzen!",
+  "anon.register.text": "Logge ein!",
+  "anon.register.info": "Dies kann einen Moment dauern!"
 }

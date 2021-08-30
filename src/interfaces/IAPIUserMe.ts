@@ -6,6 +6,9 @@ export default interface IAPIUserMe {
     lastName: string
     email: string
     confirmed: boolean
+    isAnon: boolean
+    isFacebook: boolean
+    isGoogle: boolean
   }
   lists: IAPIUserMeLists[]
   notificationCount: number

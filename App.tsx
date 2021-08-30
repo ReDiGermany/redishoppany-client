@@ -88,7 +88,8 @@ export default class App extends Component {
         Notifications.addNotificationResponseReceivedListener(
           this.handleNotificationResponse
         )
-        if (expoPushToken) await APIUser.sendRemoteToken(expoPushToken)
+        if (expoPushToken && !me.profile.isAnon)
+          await APIUser.sendRemoteToken(expoPushToken)
         this.setState({ checkMeDone: true, loggedin: me !== undefined })
       }
     } else this.setState({ checkMeDone: true, loggedin: false })

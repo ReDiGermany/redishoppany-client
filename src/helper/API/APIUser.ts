@@ -77,6 +77,21 @@ export default class APIUser {
     return ret ?? false
   }
 
+  public static async registerAnon(): Promise<boolean> {
+    const data = await API.axiosInstance.post<{
+      data: { token: string; email: string }
+      status: string
+      success: boolean
+    }>('/user/register/anon')
+
+    if (!data) return false
+
+    await AsyncStorage.setItem('redishoppany-token', data.data.data.token)
+    await AsyncStorage.setItem('redishoppany-email', data.data.data.email)
+
+    return true
+  }
+
   public static async register(
     firstname: string,
     lastname: string,

@@ -21,6 +21,8 @@ import Language from '../../language/Language'
 import BackgroundImage from '../../components/BackgroundImage'
 import {
   DefPreErrorAlert,
+  DefPreInfoAlert,
+  DefPreSuccessAlert,
   PreInfoAlert,
   PreSuccessAlert,
   PreWarningAlert,
@@ -49,6 +51,19 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
       text: '',
       info: undefined,
     },
+  }
+
+  loginAnonAsync = async () => {
+    this.setState({ alert: DefPreInfoAlert('anon.register') })
+    const loggedin = await APIUser.registerAnon()
+    setTimeout(async () => {
+      if (loggedin) {
+        this.setState({ alert: DefPreSuccessAlert('anon.register.success') })
+        this.reloadApp()
+      } else {
+        this.setState({ alert: DefPreErrorAlert('anon.register.fail') })
+      }
+    }, 3000)
   }
 
   PreWarningAlert(pre: string) {
@@ -241,7 +256,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
               title={Language.get('register')}
             />
             <LoginLongButton
-              onPress={() => {}}
+              onPress={() => this.loginAnonAsync()}
               icon="user-secret"
               title={Language.get('login.anonym')}
             />
