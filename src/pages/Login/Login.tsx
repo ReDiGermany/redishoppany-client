@@ -34,7 +34,6 @@ import { FB_APP_ID, GOOGLE_CLIENT_ID } from '../../helper/Constants'
 import SafeComponent from '../../components/SafeComponent'
 
 // TODO: Add Anonymous login
-// TODO: Add Twitter Login
 
 export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -57,8 +56,6 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
       alert: PreWarningAlert(pre, 'text', 'info'),
     })
   }
-
-  handleTwitterPressAsync = async () => {}
 
   handleGooglePressAsync = async () => {
     const redirectUrl = 'https://auth.expo.io/@redigermany/lisha'
@@ -234,13 +231,6 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
               color="#3b5998"
               icon="facebook-f"
             />
-            <LoginSocialButton
-              onPress={this.handleTwitterPressAsync}
-              url="/login/vendor/twitter"
-              color="#1da1f2"
-              icon="twitter"
-            />
-            {/* <LoginSocialButton onUrl={url=>{}} url='/login/vendor/instagram' color="#e1306c" icon="instagram" /> */}
           </Row>
 
           <LoginHeading title={Language.get('login.noaccount')} />
