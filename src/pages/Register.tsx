@@ -87,18 +87,12 @@ export default class Register extends SafeComponent<
         const alert = PreSuccessAlert('register.welcome.', 'text', 'info')
         const { text } = alert
 
-        console.log({ alert, text })
         const t = text.replace('%firstname%', firstName)
         alert.text = t
-        console.log({ alert, t })
         this.setState({ alert })
 
-        setTimeout(async () => {
-          this.setState({ redirect: '/' })
-        }, 3 * 1000)
-      } else {
-        this.setState({ alert: WarningAlert('register.unsuccess') })
-      }
+        setTimeout(async () => this.setState({ redirect: '/' }), 3 * 1000)
+      } else this.setState({ alert: WarningAlert('register.unsuccess') })
     } catch (e) {
       if (e.message === 'Request failed with status code 406')
         this.setState({ alert: ErrorAlert('register.406') })
@@ -139,7 +133,7 @@ export default class Register extends SafeComponent<
     return (
       <KeyboardDetection {...keyboardDetection}>
         <BackgroundImage>
-          <Navigation label="Registration" />
+          <Navigation url="/login" label="Registration" />
           {this.state.alert.text !== '' && (
             <Alert
               yOffset={GlobalStyles().statusbarHeight}
@@ -152,13 +146,11 @@ export default class Register extends SafeComponent<
           <ScrollView {...outerBox}>
             <RegisterTitle />
             <LoginInput
-              value="Max"
               onChange={firstName => this.setState({ firstName })}
               onSubmit={() => this.submit()}
               placeholder="Vorname"
             />
             <LoginInput
-              value="Kruggel"
               onChange={lastName => this.setState({ lastName })}
               onSubmit={() => this.submit()}
               placeholder="Nachname"
@@ -177,21 +169,18 @@ export default class Register extends SafeComponent<
               abgekürzt!
             </Text>
             <LoginInputEmail
-              value="max@kruggel.it"
               onChange={(email, emailValid) =>
                 this.setState({ email, emailValid })
               }
               onSubmit={() => this.submit()}
             />
             <LoginInputPassword
-              value="asdasdasd"
               onChange={(password, passwordValid) =>
                 this.setState({ password, passwordValid })
               }
               onSubmit={() => this.submit()}
             />
             <LoginInputPassword
-              value="asdasdasd"
               repeat={true}
               onChange={(passwordRepeat, passwordRepeatValid) =>
                 this.setState({ passwordRepeat, passwordRepeatValid })
@@ -202,7 +191,6 @@ export default class Register extends SafeComponent<
               checking={this.state.checking}
               onSubmit={() => this.submit()}
               disabled={this.state.disabled}
-              // disabled={false}
             />
           </ScrollView>
         </BackgroundImage>
