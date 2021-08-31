@@ -4,7 +4,7 @@ import { BarCodeScannedCallback, BarCodeScanner } from 'expo-barcode-scanner'
 import { Camera } from 'expo-camera'
 import IQRScannerProps from '../interfaces/IQRScannerProps'
 import QRScannerStyles from '../styles/QRScannerStyles'
-import SafeComponent from '../components/SafeComponent'
+import SafeComponent from './SafeComponent'
 
 export default class QRScanner extends SafeComponent<IQRScannerProps> {
   state = {
