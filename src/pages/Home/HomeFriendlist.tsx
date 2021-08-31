@@ -18,12 +18,7 @@ import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import Alert from '../../components/Alert'
-import IAlertProps from '../../interfaces/IAlertProps'
-
-interface INotification {
-  reload?: string
-  alert?: IAlertProps
-}
+import INotification from '../../interfaces/INotification'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state: IPageState = {
