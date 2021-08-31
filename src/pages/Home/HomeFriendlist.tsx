@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Notifications from 'expo-notifications'
 import ListHeader from '../../ListHeader'
 import Moveable from '../../components/Moveable/Moveable'
-import QRCode from '../../QRCode'
+import QRCode from '../../components/QRCode'
 import IPageProps from '../../interfaces/IPageProps'
 import Navigation from '../../Navigation'
 import AddBar from '../../components/AddBar'
@@ -136,13 +136,17 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
-    const buttons: INavigationPropsButton[] = [
-      {
+    const allowed =
+      (this.props.user?.profile.isAnon && this.props.user?.profile.confirmed) ??
+      false
+
+    const buttons: INavigationPropsButton[] = []
+    if (allowed)
+      buttons.push({
         icon: this.state.add ? 'chevron-up' : 'plus',
         name: 'add',
         onClick: () => this.setState({ add: !this.state.add }),
-      },
-    ]
+      })
     if (this.props.user?.notificationCount)
       buttons.unshift({
         icon: 'bell',
@@ -156,7 +160,9 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
 
     const navigation = {
       label: this.props.user?.profile.firstName ?? 'User',
-      subTitle: this.props.user?.profile.email ?? 'someone@email.tld',
+      subTitle: allowed
+        ? this.props.user?.profile.email ?? 'someone@email.tld'
+        : undefined,
       simple: true,
       solid: this.state.isTop,
       buttons,
@@ -169,7 +175,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
     }
 
     const qrCode = {
-      // onFail: () => console.log('Das hat leider nicht funktioniert.'),
+      scanAllowed: allowed,
       onFail: () =>
         this.setState({
           alert: {
@@ -211,12 +217,82 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
             />
           )}
           <QRCode {...qrCode} />
+          {allowed ? (
+            <>
+              {this.state.list.friends.length <= 0 &&
+                this.state.list.incomming.length <= 0 &&
+                this.state.list.outgoing.length <= 0 && (
+                  <Moveable
+                    name="Nichts vorhanden!"
+                    large={true}
+                    style={{ marginTop: 10 }}
+                    centerText={true}
+                    boldText={true}
+                    disabled={true}
+                    bgColor="rgba(255,0,0,.1)"
+                  />
+                )}
 
-          {this.state.list.friends.length <= 0 &&
-            this.state.list.incomming.length <= 0 &&
-            this.state.list.outgoing.length <= 0 && (
+              {this.state.list.friends.length > 0 && (
+                <>
+                  <ListHeader color="#111" text={Language.get('friends')} />
+                  {this.state.list.friends.map((friend: IFriend, index) => (
+                    <Moveable
+                      key={`friend_${friend.id}`}
+                      name={`${friend.firstName} ${friend.lastName}`}
+                      onDelete={() => this.removeFriend(friend)}
+                      last={index === this.state.list.friends.length - 1}
+                    />
+                  ))}
+                </>
+              )}
+
+              {this.state.list.incomming.length > 0 && (
+                <>
+                  <ListHeader
+                    color="#111"
+                    text={Language.get('friends.incomming')}
+                  />
+                  {this.state.list.incomming.map((friend: IFriend, index) => (
+                    <Moveable
+                      key={`inc_${friend.id}`}
+                      name={`${friend.firstName} ${friend.lastName}`}
+                      onDelete={() => this.denyInvite(friend)}
+                      last={index === this.state.list.incomming.length - 1}
+                      buttons={[
+                        {
+                          name: 'accept',
+                          color: '#0F0',
+                          icon: 'check',
+                          onPress: () => this.acceptFriend(friend),
+                        },
+                      ]}
+                    />
+                  ))}
+                </>
+              )}
+
+              {this.state.list.outgoing.length > 0 && (
+                <>
+                  <ListHeader
+                    color="#111"
+                    text={Language.get('friends.outgoing')}
+                  />
+                  {this.state.list.outgoing.map((friend: IFriend, index) => (
+                    <Moveable
+                      key={`out_${friend.id}`}
+                      name={`${friend.firstName} ${friend.lastName}`}
+                      onDelete={() => this.cancleInvite(friend)}
+                      last={index === this.state.list.outgoing.length - 1}
+                    />
+                  ))}
+                </>
+              )}
+            </>
+          ) : (
+            <>
               <Moveable
-                name="Nichts vorhanden!"
+                name="Du must eingeloggt sein,"
                 large={true}
                 style={{ marginTop: 10 }}
                 centerText={true}
@@ -224,61 +300,14 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
                 disabled={true}
                 bgColor="rgba(255,0,0,.1)"
               />
-            )}
-
-          {this.state.list.friends.length > 0 && (
-            <>
-              <ListHeader color="#111" text={Language.get('friends')} />
-              {this.state.list.friends.map((friend: IFriend, index) => (
-                <Moveable
-                  key={`friend_${friend.id}`}
-                  name={`${friend.firstName} ${friend.lastName}`}
-                  onDelete={() => this.removeFriend(friend)}
-                  last={index === this.state.list.friends.length - 1}
-                />
-              ))}
-            </>
-          )}
-
-          {this.state.list.incomming.length > 0 && (
-            <>
-              <ListHeader
-                color="#111"
-                text={Language.get('friends.incomming')}
+              <Moveable
+                name="um diese Seite nutzen zu können"
+                large={true}
+                centerText={true}
+                boldText={true}
+                disabled={true}
+                bgColor="rgba(255,0,0,.1)"
               />
-              {this.state.list.incomming.map((friend: IFriend, index) => (
-                <Moveable
-                  key={`inc_${friend.id}`}
-                  name={`${friend.firstName} ${friend.lastName}`}
-                  onDelete={() => this.denyInvite(friend)}
-                  last={index === this.state.list.incomming.length - 1}
-                  buttons={[
-                    {
-                      name: 'accept',
-                      color: '#0F0',
-                      icon: 'check',
-                      onPress: () => this.acceptFriend(friend),
-                    },
-                  ]}
-                />
-              ))}
-            </>
-          )}
-
-          {this.state.list.outgoing.length > 0 && (
-            <>
-              <ListHeader
-                color="#111"
-                text={Language.get('friends.outgoing')}
-              />
-              {this.state.list.outgoing.map((friend: IFriend, index) => (
-                <Moveable
-                  key={`out_${friend.id}`}
-                  name={`${friend.firstName} ${friend.lastName}`}
-                  onDelete={() => this.cancleInvite(friend)}
-                  last={index === this.state.list.outgoing.length - 1}
-                />
-              ))}
             </>
           )}
         </ScrollView>

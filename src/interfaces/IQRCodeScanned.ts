@@ -1,4 +1,5 @@
 export default interface IQRCodeScanned {
-  onSuccess: (_email: string, isMail: boolean) => void
+  onSuccess: (_email: string, _isMail: boolean) => void
   onFail: () => void
+  scanAllowed?: boolean
 }

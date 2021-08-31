@@ -76,9 +76,14 @@ export default class QRCode extends SafeComponent<IQRCodeScanned> {
     return (
       <View style={QRCodeStyles.container}>
         {QRContent}
-        <Pressable {...pressable}>
-          <Icon style={style} name={this.state.scanner ? 'times' : 'camera'} />
-        </Pressable>
+        {(this.props.scanAllowed ?? true) && (
+          <Pressable {...pressable}>
+            <Icon
+              style={style}
+              name={this.state.scanner ? 'times' : 'camera'}
+            />
+          </Pressable>
+        )}
       </View>
     )
   }
