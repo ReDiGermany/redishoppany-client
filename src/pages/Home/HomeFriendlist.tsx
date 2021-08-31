@@ -2,7 +2,6 @@ import React from 'react'
 import { View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Notifications from 'expo-notifications'
-import ListHeader from '../../ListHeader'
 import Moveable from '../../components/Moveable/Moveable'
 import QRCode from '../../components/QRCode'
 import IPageProps from '../../interfaces/IPageProps'
@@ -11,7 +10,6 @@ import AddBar from '../../components/AddBar'
 import APIFriends from '../../helper/API/APIFriends'
 import IPageState from '../../interfaces/IPageState'
 import IFriend from '../../interfaces/IFriend'
-import Language from '../../language/Language'
 import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
 import { Redirect } from '../../Router/react-router'
 import SafeComponent from '../../components/SafeComponent'
@@ -19,6 +17,8 @@ import ScrollView from '../../components/ScrollView'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import Alert from '../../components/Alert'
 import INotification from '../../interfaces/INotification'
+import HomeFriendlistListItem from './HomeFriendlistListItem'
+import RestrictedAnon from '../../components/RestrictedAnon'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state: IPageState = {
@@ -187,6 +187,8 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
       onSuccess: (a: string, b: boolean) => this.addFriend(a, b),
     }
 
+    const { list } = this.state
+
     return (
       <View>
         {this.state.alert.text !== '' && (
@@ -219,9 +221,9 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
           <QRCode {...qrCode} />
           {allowed ? (
             <>
-              {this.state.list.friends.length <= 0 &&
-                this.state.list.incomming.length <= 0 &&
-                this.state.list.outgoing.length <= 0 && (
+              {list.friends.length <= 0 &&
+                list.incomming.length <= 0 &&
+                list.outgoing.length <= 0 && (
                   <Moveable
                     name="Nichts vorhanden!"
                     large={true}
@@ -232,83 +234,25 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
                     bgColor="rgba(255,0,0,.1)"
                   />
                 )}
-
-              {this.state.list.friends.length > 0 && (
-                <>
-                  <ListHeader color="#111" text={Language.get('friends')} />
-                  {this.state.list.friends.map((friend: IFriend, index) => (
-                    <Moveable
-                      key={`friend_${friend.id}`}
-                      name={`${friend.firstName} ${friend.lastName}`}
-                      onDelete={() => this.removeFriend(friend)}
-                      last={index === this.state.list.friends.length - 1}
-                    />
-                  ))}
-                </>
-              )}
-
-              {this.state.list.incomming.length > 0 && (
-                <>
-                  <ListHeader
-                    color="#111"
-                    text={Language.get('friends.incomming')}
-                  />
-                  {this.state.list.incomming.map((friend: IFriend, index) => (
-                    <Moveable
-                      key={`inc_${friend.id}`}
-                      name={`${friend.firstName} ${friend.lastName}`}
-                      onDelete={() => this.denyInvite(friend)}
-                      last={index === this.state.list.incomming.length - 1}
-                      buttons={[
-                        {
-                          name: 'accept',
-                          color: '#0F0',
-                          icon: 'check',
-                          onPress: () => this.acceptFriend(friend),
-                        },
-                      ]}
-                    />
-                  ))}
-                </>
-              )}
-
-              {this.state.list.outgoing.length > 0 && (
-                <>
-                  <ListHeader
-                    color="#111"
-                    text={Language.get('friends.outgoing')}
-                  />
-                  {this.state.list.outgoing.map((friend: IFriend, index) => (
-                    <Moveable
-                      key={`out_${friend.id}`}
-                      name={`${friend.firstName} ${friend.lastName}`}
-                      onDelete={() => this.cancleInvite(friend)}
-                      last={index === this.state.list.outgoing.length - 1}
-                    />
-                  ))}
-                </>
-              )}
+              <HomeFriendlistListItem
+                title="friends"
+                list={this.state.list.friends}
+                removeFriend={this.removeFriend}
+              />
+              <HomeFriendlistListItem
+                title="friends.incomming"
+                list={this.state.list.incomming}
+                denyInvite={this.denyInvite}
+                acceptFriend={this.acceptFriend}
+              />
+              <HomeFriendlistListItem
+                title="friends.outgoing"
+                list={this.state.list.outgoing}
+                cancleInvite={this.cancleInvite}
+              />
             </>
           ) : (
-            <>
-              <Moveable
-                name="Du must eingeloggt sein,"
-                large={true}
-                style={{ marginTop: 10 }}
-                centerText={true}
-                boldText={true}
-                disabled={true}
-                bgColor="rgba(255,0,0,.1)"
-              />
-              <Moveable
-                name="um diese Seite nutzen zu können"
-                large={true}
-                centerText={true}
-                boldText={true}
-                disabled={true}
-                bgColor="rgba(255,0,0,.1)"
-              />
-            </>
+            <RestrictedAnon />
           )}
         </ScrollView>
       </View>
