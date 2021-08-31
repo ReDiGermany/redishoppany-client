@@ -146,6 +146,17 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
               {this.props.text !== undefined && (
                 <Text style={fullTextStyle}>{this.props.text}</Text>
               )}
+              {this.props.secondText !== undefined && (
+                <Text
+                  style={{
+                    ...fullTextStyle,
+                    marginTop: 20,
+                    position: 'absolute',
+                  }}
+                >
+                  {this.props.secondText}
+                </Text>
+              )}
             </Row>
             {this.props.dropdownItems && this.props.dropdownSelected && (
               <MoveableTextDropdown

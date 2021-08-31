@@ -140,6 +140,10 @@ export default class Moveable extends SafeComponent<IMoveableProps> {
     if (!(this.props.last ?? false) && !(this.props.large ?? false))
       style.borderBottomWidth = 2
 
+    if (this.props.secondText) {
+      style = { ...style, height: this.props.disabled ?? false ? 55 : 75 }
+    }
+
     return (
       <View style={style}>
         {this.state.posX > 0 && this.props.onDelete && (

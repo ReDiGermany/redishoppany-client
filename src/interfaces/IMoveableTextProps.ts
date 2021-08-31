@@ -5,6 +5,7 @@ export default interface IMoveableTextProps {
   stop?: () => void
   touchStart?: () => void
   text?: string
+  secondText?: string
   buttons?: {
     name: string
     icon: string

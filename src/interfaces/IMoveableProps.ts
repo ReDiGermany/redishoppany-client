@@ -1,6 +1,7 @@
 export default interface IMoveableProps {
   style?: any
   name?: string
+  secondText?: string
   onDelete?: () => void
   right?: { icon: string; color: string; click: () => void }[]
   buttons?: {
