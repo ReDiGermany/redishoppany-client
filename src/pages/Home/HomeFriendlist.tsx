@@ -20,6 +20,7 @@ import INotification from '../../interfaces/INotification'
 import HomeFriendlistListItem from '../../components/HomeFriendlistListItem'
 import RestrictedAnon from '../../components/RestrictedAnon'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
+import AnonAlert from '../../components/AnonAlert'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state: IPageState = {
@@ -211,6 +212,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
         >
           <AddBar {...addBar} type="email" />
           <PhoneNotConnected connected={this.props.connected} />
+          <AnonAlert user={this.props.user} />
           <QRCode {...qrCode} />
           {allowed ? (
             <>

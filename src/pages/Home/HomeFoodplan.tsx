@@ -17,6 +17,7 @@ import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import GlobalStyles from '../../styles/GlobalStyles'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
+import AnonAlert from '../../components/AnonAlert'
 
 // TODO: Add recipe to cart
 export default class Foodplan extends SafeComponent<
@@ -116,6 +117,7 @@ export default class Foodplan extends SafeComponent<
           isTop={isTop => this.setState({ isTop })}
         >
           <PhoneNotConnected connected={this.props.connected} />
+          <AnonAlert user={this.props.user} />
           {this.state.plan.length === 0 && (
             <Moveable
               name="OOPs! Hier scheint nichts zu sein!"

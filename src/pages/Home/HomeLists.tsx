@@ -1,6 +1,7 @@
 import React from 'react'
 import { Text, View, Dimensions } from 'react-native'
 import AddBar from '../../components/AddBar'
+import AnonAlert from '../../components/AnonAlert'
 import Moveable from '../../components/Moveable/Moveable'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
 import Row from '../../components/Row'
@@ -95,6 +96,7 @@ export default class HomeList extends SafeComponent<IPageProps> {
             onChange={name => this.addList(name)}
           />
           <PhoneNotConnected connected={this.props.connected} />
+          <AnonAlert user={this.props.user} />
           {this.state.lists.length === 0 && (
             <Moveable
               name="Nothing here. Add a new List!"

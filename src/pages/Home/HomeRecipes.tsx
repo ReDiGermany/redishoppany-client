@@ -27,6 +27,7 @@ import SafeComponent from '../../components/SafeComponent'
 import Moveable from '../../components/Moveable/Moveable'
 import ScrollView from '../../components/ScrollView'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
+import AnonAlert from '../../components/AnonAlert'
 
 export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -121,6 +122,7 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
           }}
         >
           <PhoneNotConnected connected={this.props.connected} />
+          <AnonAlert user={this.props.user} />
           <AddBar
             onType={showOnly => this.setState({ showOnly })}
             placeholder={Language.get('search')}
