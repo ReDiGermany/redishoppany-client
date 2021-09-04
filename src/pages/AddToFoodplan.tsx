@@ -12,7 +12,7 @@ import {
   textBox,
   timeBox,
 } from '../styles/RecipesListStyle'
-import Navigation from '../Navigation'
+import Navigation from '../components/Navigation'
 import Language from '../language/Language'
 // @ts-ignore
 import recipeImageNotFound from '../../assets/recipe_not_found.jpg'

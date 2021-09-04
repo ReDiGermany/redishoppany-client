@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text } from 'react-native'
-import Navigation from '../Navigation'
+import Navigation from '../components/Navigation'
 import IAboutProps from '../interfaces/IAboutProps'
 import SafeComponent from '../components/SafeComponent'
 import ScrollView from '../components/ScrollView'

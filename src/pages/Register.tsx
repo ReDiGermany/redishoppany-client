@@ -11,7 +11,7 @@ import {
   PreWarningAlert,
   WarningAlert,
 } from '../helper/DefinedAlerts'
-import Navigation from '../Navigation'
+import Navigation from '../components/Navigation'
 import GlobalStyles, { KeyboardDetection } from '../styles/GlobalStyles'
 import IRegisterProps from '../interfaces/IRegisterProps'
 import LoginButton from './Login/LoginButton'

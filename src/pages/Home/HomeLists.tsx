@@ -13,7 +13,7 @@ import APIUser from '../../helper/API/APIUser'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
-import Navigation from '../../Navigation'
+import Navigation from '../../components/Navigation'
 import { RedirectIfPossible } from '../../Router/react-router'
 import HomeStyles from '../../styles/HomeStyles'
 

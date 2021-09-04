@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text } from 'react-native'
-import SafeComponent from './components/SafeComponent'
-import { GetLuma } from './helper/Functions'
-import GlobalStyles from './styles/GlobalStyles'
-import ListHeaderStyle from './styles/ListHeaderStyle'
+import SafeComponent from './SafeComponent'
+import { GetLuma } from '../helper/Functions'
+import GlobalStyles from '../styles/GlobalStyles'
+import ListHeaderStyle from '../styles/ListHeaderStyle'
 
 interface IListHeaderProps {
   text: string

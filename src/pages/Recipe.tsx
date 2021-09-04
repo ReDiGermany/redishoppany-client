@@ -1,8 +1,8 @@
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { ScrollView, View, Image, Text, Pressable } from 'react-native'
-import BottomBox from '../BottomBox'
-import Navigation from '../Navigation'
+import BottomBox from '../components/BottomBox'
+import Navigation from '../components/Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
 import {
   btn,

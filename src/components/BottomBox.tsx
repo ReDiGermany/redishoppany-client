@@ -1,10 +1,10 @@
 import React from 'react'
 import { View, ScrollView, Animated, Pressable } from 'react-native'
 import ListHeader from './ListHeader'
-import Moveable from './components/Moveable/Moveable'
-import IBottomBoxProps from './interfaces/IBottomBoxProps'
-import * as BottomBoxStyles from './styles/BottomBoxStyles'
-import SafeComponent from './components/SafeComponent'
+import Moveable from './Moveable/Moveable'
+import IBottomBoxProps from '../interfaces/IBottomBoxProps'
+import * as BottomBoxStyles from '../styles/BottomBoxStyles'
+import SafeComponent from './SafeComponent'
 
 export default class BottomBox extends SafeComponent<IBottomBoxProps> {
   state = {

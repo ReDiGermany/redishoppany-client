@@ -1,13 +1,13 @@
 import React from 'react'
 import { View, Text, Pressable, BackHandler } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import NavigationBarStyle from './styles/NavigationBarStyle'
-import NavigationButtonIconStyle from './styles/NavigationButtonIconStyle'
+import NavigationBarStyle from '../styles/NavigationBarStyle'
+import NavigationButtonIconStyle from '../styles/NavigationButtonIconStyle'
 import NavigationTitle from './NavigationTitle'
-import IconBoxStyle from './styles/IconBoxStyle'
-import INavigationProps from './interfaces/INavigationProps'
-import { Redirect } from './Router/react-router'
-import SafeComponent from './components/SafeComponent'
+import IconBoxStyle from '../styles/IconBoxStyle'
+import INavigationProps from '../interfaces/INavigationProps'
+import { Redirect } from '../Router/react-router'
+import SafeComponent from './SafeComponent'
 
 export default class Navigation extends SafeComponent<INavigationProps> {
   state = {

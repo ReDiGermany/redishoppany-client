@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View } from 'react-native'
 import BackgroundImage from '../components/BackgroundImage'
 import Moveable from '../components/Moveable/Moveable'
-import Navigation from '../Navigation'
+import Navigation from '../components/Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
 
 export default class Backgrounds extends Component {

@@ -8,7 +8,7 @@ import {
   DefPreInfoAlert,
   DefPreSuccessAlert,
 } from '../../helper/DefinedAlerts'
-import Navigation from '../../Navigation'
+import Navigation from '../../components/Navigation'
 import Moveable from '../../components/Moveable/Moveable'
 import GlobalStyles from '../../styles/GlobalStyles'
 import { Redirect } from '../../Router/react-router'

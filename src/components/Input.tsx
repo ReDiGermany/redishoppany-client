@@ -1,8 +1,8 @@
 import React from 'react'
 import { Pressable, TextInput, View } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import SafeComponent from './components/SafeComponent'
-import IInputProps from './interfaces/IInputProps'
+import SafeComponent from './SafeComponent'
+import IInputProps from '../interfaces/IInputProps'
 import {
   box,
   button,
@@ -10,7 +10,7 @@ import {
   prefixBlock,
   textBlock,
   textBlockNoPrefix,
-} from './styles/InputStyle'
+} from '../styles/InputStyle'
 
 export default class Input extends SafeComponent<IInputProps> {
   state = {

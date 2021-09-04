@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native'
 import SafeComponent from '../components/SafeComponent'
 import IPageProps from '../interfaces/IPageProps'
 import Language from '../language/Language'
-import Navigation from '../Navigation'
+import Navigation from '../components/Navigation'
 import GlobalStyles from '../styles/GlobalStyles'
 
 export default class Imprint extends SafeComponent<IPageProps> {

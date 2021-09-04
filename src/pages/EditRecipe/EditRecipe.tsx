@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import TextField from '../../components/TextField'
 import IPageProps from '../../interfaces/IPageProps'
-import Navigation from '../../Navigation'
+import Navigation from '../../components/Navigation'
 import Ingredient from './Ingredient'
 import SafeComponent from '../../components/SafeComponent'
 

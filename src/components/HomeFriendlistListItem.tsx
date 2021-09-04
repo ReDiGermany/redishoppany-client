@@ -3,7 +3,7 @@ import Moveable from './Moveable/Moveable'
 import SafeComponent from './SafeComponent'
 import IFriend from '../interfaces/IFriend'
 import Language from '../language/Language'
-import ListHeader from '../ListHeader'
+import ListHeader from './ListHeader'
 
 export default class HomeFriendlistListItem extends SafeComponent<{
   list: IFriend[]
