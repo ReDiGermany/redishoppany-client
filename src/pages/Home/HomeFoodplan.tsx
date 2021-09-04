@@ -18,6 +18,7 @@ import ScrollView from '../../components/ScrollView'
 import GlobalStyles from '../../styles/GlobalStyles'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
 import AnonAlert from '../../components/AnonAlert'
+import InfoMoveable from '../../components/Moveable/InfoMoveable'
 
 // TODO: Add recipe to cart
 export default class Foodplan extends SafeComponent<
@@ -118,15 +119,10 @@ export default class Foodplan extends SafeComponent<
         >
           <PhoneNotConnected connected={this.props.connected} />
           <AnonAlert user={this.props.user} />
-          {this.state.plan.length === 0 && (
-            <Moveable
-              name="OOPs! Hier scheint nichts zu sein!"
-              large={true}
-              centerText={true}
-              boldText={true}
-              disabled={true}
-            />
-          )}
+          <InfoMoveable
+            show={this.state.plan.length === 0}
+            name="OOPs! Hier scheint nichts zu sein!"
+          />
           {this.state.plan.map((kw: IFoodplanKw) => (
             <View key={kw.name}>
               <ListHeader

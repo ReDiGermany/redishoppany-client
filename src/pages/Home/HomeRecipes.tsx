@@ -28,6 +28,7 @@ import Moveable from '../../components/Moveable/Moveable'
 import ScrollView from '../../components/ScrollView'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
 import AnonAlert from '../../components/AnonAlert'
+import InfoMoveable from '../../components/Moveable/InfoMoveable'
 
 export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -128,15 +129,6 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
             placeholder={Language.get('search')}
             autoFocus={false}
           />
-          {this.state.recipes.length === 0 && (
-            <Moveable
-              name="OOPs! Hier scheint nichts zu sein!"
-              large={true}
-              centerText={true}
-              boldText={true}
-              disabled={true}
-            />
-          )}
           {this.state.recipes.map((item, index) => {
             if (
               this.state.showOnly !== '' &&
@@ -168,9 +160,10 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
               </Link>
             )
           })}
-          {renderedItems === 0 && (
-            <Text style={notFoundText}>{Language.get('no_recipe_found')}</Text>
-          )}
+          <InfoMoveable
+            show={this.state.recipes.length === 0 || renderedItems === 0}
+            name="OOPs! Hier scheint nichts zu sein!"
+          />
         </ScrollView>
       </>
     )

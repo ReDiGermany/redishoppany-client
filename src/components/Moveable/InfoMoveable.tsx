@@ -17,7 +17,7 @@ export default class InfoMoveable extends SafeComponent<{
         large={this.props.large ?? true}
         centerText={this.props.center ?? true}
         boldText={this.props.bold ?? true}
-        disabled={this.props.onClick !== undefined}
+        disabled={this.props.onClick === undefined}
         onClick={() => this.props.onClick?.()}
       />
     ) : (
