@@ -23,9 +23,9 @@ import {
   DefPreErrorAlert,
   DefPreInfoAlert,
   DefPreSuccessAlert,
+  DefPreWarningAlert,
   PreInfoAlert,
   PreSuccessAlert,
-  PreWarningAlert,
   SuccessAlert,
 } from '../../helper/DefinedAlerts'
 import {
@@ -34,8 +34,6 @@ import {
 } from '../../helper/Functions'
 import { FB_APP_ID, GOOGLE_CLIENT_ID } from '../../helper/Constants'
 import SafeComponent from '../../components/SafeComponent'
-
-// TODO: Add Anonymous login
 
 export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -56,6 +54,8 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   loginAnonAsync = async () => {
     this.setState({ alert: DefPreInfoAlert('anon.register') })
     const loggedin = await APIUser.registerAnon()
+    this.setState({ loggedin })
+
     setTimeout(async () => {
       if (loggedin) {
         this.setState({ alert: DefPreSuccessAlert('anon.register.success') })
@@ -64,12 +64,6 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
         this.setState({ alert: DefPreErrorAlert('anon.register.fail') })
       }
     }, 3000)
-  }
-
-  PreWarningAlert(pre: string) {
-    this.setState({
-      alert: PreWarningAlert(pre, 'text', 'info'),
-    })
   }
 
   handleGooglePressAsync = async () => {
@@ -89,7 +83,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
         const tokenResult = await APIUser.checkGoogleToken(token)
         setTimeout(async () => {
           if (typeof tokenResult === 'boolean') {
-            this.PreWarningAlert('login.facebook.error.email.')
+            DefPreWarningAlert('login.facebook.error.email.')
           } else {
             this.setState({
               alert: PreSuccessAlert('login.facebook.success.', 'text', 'info'),
@@ -100,9 +94,9 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
             this.reloadApp()
           }
         }, 2000)
-      } catch (e) {
+      } catch (e: any) {
         console.log(e.message)
-        this.PreWarningAlert('login.facebook.error.')
+        DefPreWarningAlert('login.facebook.error.')
       }
     }
   }
@@ -122,7 +116,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
             const tokenResult = await APIUser.checkFacebookToken(token)
             setTimeout(async () => {
               if (typeof tokenResult === 'boolean') {
-                this.PreWarningAlert('login.facebook.error.email.')
+                DefPreWarningAlert('login.facebook.error.email.')
               } else {
                 this.setState({
                   alert: PreSuccessAlert(
@@ -144,13 +138,13 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
               }
             }, 2000)
           } catch (E) {
-            this.PreWarningAlert('login.facebook.error.')
+            DefPreWarningAlert('login.facebook.error.')
           }
-        } else this.PreWarningAlert('login.facebook.error.')
-      } else this.PreWarningAlert('login.facebook.error.')
-    } catch (e) {
+        } else DefPreWarningAlert('login.facebook.error.')
+      } else DefPreWarningAlert('login.facebook.error.')
+    } catch (e: any) {
       console.log(e.message)
-      this.PreWarningAlert('login.facebook.error.')
+      DefPreWarningAlert('login.facebook.error.')
     }
   }
 
@@ -176,6 +170,10 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
     this.props.onReloadMe()
   }
 
+  startLoginAnonAsync() {
+    this.setState({ redirect: '/login/anon' })
+  }
+
   render() {
     if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
 
@@ -199,7 +197,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
               this.setState({ alert: { text: '', type: 'success' } })
               if (this.state.loggedin) {
                 this.setState({ redirect: '/' })
-                // console.log('done?')
+                console.log('done?')
               }
             }}
             {...this.state.alert}
@@ -235,14 +233,11 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
           <Row>
             <LoginSocialButton
               onPress={this.handleGooglePressAsync}
-              url="/login/vendor/google"
               color="#34a853"
               icon="google"
             />
             <LoginSocialButton
               onPress={this.handleFacebookPressAsync}
-              // onUrl={handleFacebookPressAsync}
-              url="/login/vendor/facebook"
               color="#3b5998"
               icon="facebook-f"
             />
@@ -256,7 +251,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
               title={Language.get('register')}
             />
             <LoginLongButton
-              onPress={() => this.loginAnonAsync()}
+              onPress={() => this.startLoginAnonAsync()}
               icon="user-secret"
               title={Language.get('login.anonym')}
             />
