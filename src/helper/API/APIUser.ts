@@ -47,11 +47,15 @@ export default class APIUser {
     password: string,
     username: string
   ): Promise<IAPIUserMe | boolean> {
-    const ret = await API.axiosInstance.get<IAPIUserMe>('/user/me', {
+    const ret = await API.axiosInstance.get<{
+      status: string
+      success: boolean
+      data: IAPIUserMe
+    }>('/user/me', {
       auth: { password, username },
     })
 
-    return ret.data ?? false
+    return ret.data.data ?? false
   }
 
   public static async checkLogin(
