@@ -13,6 +13,7 @@ import Moveable from '../../components/Moveable/Moveable'
 import GlobalStyles from '../../styles/GlobalStyles'
 import { Redirect } from '../../Router/react-router'
 import Alert from '../../components/Alert'
+import Language from '../../language/Language'
 
 interface ILoginAnonProps {
   onReloadMe: () => void
@@ -70,7 +71,7 @@ export default class LoginAnon extends SafeComponent<ILoginAnonProps> {
             paddingBottom: 20,
           }}
         >
-          Anonym nutzen und auf community features verzichten?
+          {Language.get('anon.disclaimer')}
         </Text>
         <Moveable
           onClick={async () => {
