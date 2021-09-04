@@ -48,3 +48,5 @@ export const DefPreSuccessAlert = (pre: string) =>
 
 export const DefPreInfoAlert = (pre: string) =>
   PreInfoAlert(`${pre}.`, 'text', 'info')
+
+export const DefAlert: IAlertProps = { text: '', type: 'error' }
