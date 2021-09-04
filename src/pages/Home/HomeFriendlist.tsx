@@ -17,7 +17,7 @@ import ScrollView from '../../components/ScrollView'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import Alert from '../../components/Alert'
 import INotification from '../../interfaces/INotification'
-import HomeFriendlistListItem from './HomeFriendlistListItem'
+import HomeFriendlistListItem from '../../components/HomeFriendlistListItem'
 import RestrictedAnon from '../../components/RestrictedAnon'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
