@@ -35,10 +35,7 @@ export default class Navigation extends SafeComponent<INavigationProps> {
   }
 
   render() {
-    if (this.state.back)
-      return (
-        <Redirect to={this.props.url === undefined ? '/' : this.props.url} />
-      )
+    if (this.state.back) return <Redirect to={this.props.url ?? '/'} />
 
     const navigationTitle = {
       ...this.props,
