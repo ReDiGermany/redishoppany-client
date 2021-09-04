@@ -11,8 +11,6 @@ export default class LoginSocialButton extends SafeComponent<ILoginSocialButtonP
     icon: this.props.icon,
   }
 
-  // todo: add vendor logins!
-
   render() {
     return (
       <Pressable
