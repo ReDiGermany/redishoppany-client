@@ -1,11 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import BackgroundImage from '../components/BackgroundImage'
 import BottomNavigation from '../components/BottomNavigation'
 import SafeComponent from '../components/SafeComponent'
 import IPageProps from '../interfaces/IPageProps'
-import GlobalStyles from '../styles/GlobalStyles'
+import HomeStyles from '../styles/HomeStyles'
 import HomeFoodplan from './Home/HomeFoodplan'
 import HomeFriendlist from './Home/HomeFriendlist'
 import HomeList from './Home/HomeLists'
@@ -18,77 +18,35 @@ export default class Home extends SafeComponent<IPageProps> {
 
   async componentDidMount() {
     let active: string | null = await AsyncStorage.getItem('activeHomePage')
-    if (active === null) {
-      active = '0'
-      await AsyncStorage.setItem('activeHomePage', active)
-    }
+    if (active === null) active = '0'
+    await AsyncStorage.setItem('activeHomePage', active)
     this.setState({ active: parseInt(active, 10) })
   }
 
   render() {
     const { active } = this.state
 
-    const styles = StyleSheet.create({
-      outerView: { backgroundColor: '#111' },
-      innerView: {
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
-
-        height: GlobalStyles().contentHeight - GlobalStyles().lineHeight,
-      },
-    })
+    const data = {
+      onReload: () => this.props.onReload?.(),
+      user: this.props.user,
+      connected: this.props.connected,
+    }
 
     return (
-      <View style={styles.outerView}>
-        <View
-          style={{
-            ...styles.innerView,
-            shadowColor: '#000',
-            shadowOffset: {
-              width: 0,
-              height: 6,
-            },
-            shadowOpacity: 0.37,
-            shadowRadius: 7.49,
-
-            elevation: 12,
-          }}
-        >
-          <View style={{ ...styles.innerView, overflow: 'hidden' }}>
+      <View style={HomeStyles.outerView}>
+        <View style={{ ...HomeStyles.innerView, ...HomeStyles.shadow }}>
+          <View style={{ ...HomeStyles.innerView, overflow: 'hidden' }}>
             <BackgroundImage>
-              {active === 0 && (
-                <HomeList
-                  connected={this.props.connected}
-                  onReload={() => this.props.onReload?.()}
-                  user={this.props.user}
-                />
-              )}
-              {active === 1 && (
-                <HomeFoodplan
-                  connected={this.props.connected}
-                  user={this.props.user}
-                />
-              )}
-              {active === 2 && (
-                <HomeRecipes
-                  connected={this.props.connected}
-                  user={this.props.user}
-                />
-              )}
-              {active === 3 && (
-                <HomeFriendlist
-                  connected={this.props.connected}
-                  user={this.props.user}
-                />
-              )}
+              {active === 0 && <HomeList {...data} />}
+              {active === 1 && <HomeFoodplan {...data} />}
+              {active === 2 && <HomeRecipes {...data} />}
+              {active === 3 && <HomeFriendlist {...data} />}
             </BackgroundImage>
           </View>
         </View>
         <BottomNavigation
           active={active}
-          navUpdate={async act => {
-            this.setState({ active: act })
-          }}
+          navUpdate={act => this.setState({ active: act })}
         />
       </View>
     )
