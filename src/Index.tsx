@@ -23,6 +23,7 @@ import Register from './pages/Register'
 import SafeComponent from './components/SafeComponent'
 import Reload from './pages/Reload'
 import Backgrounds from './pages/Backgrounds'
+import LoginAnon from './pages/Login/LoginAnon'
 
 export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   state: IIndexState = {
@@ -35,8 +36,10 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   async reloadMe(updateAll: boolean) {
     const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
     const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
+    console.log({ token, email })
     if (token !== '' && email !== '') {
       const user = await APIUser.getMe()
+      console.log({ user })
       if (typeof user === 'boolean') {
         console.log('[index.tsx] error logging in. Wrong credentials?')
         if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
@@ -108,6 +111,10 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
         <Route
           path="/login"
           render={() => <Login onReloadMe={() => this.reloadMe(false)} />}
+        />
+        <Route
+          path="/login/anon"
+          render={() => <LoginAnon onReloadMe={() => this.reloadMe(false)} />}
         />
         <Route
           path="/updatecat/:id"
