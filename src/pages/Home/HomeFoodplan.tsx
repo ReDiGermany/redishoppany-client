@@ -16,6 +16,7 @@ import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import GlobalStyles from '../../styles/GlobalStyles'
+import PhoneNotConnected from '../../components/PhoneNotConnected'
 
 // TODO: Add recipe to cart
 export default class Foodplan extends SafeComponent<
@@ -114,15 +115,7 @@ export default class Foodplan extends SafeComponent<
           onRefresh={() => this.refresh()}
           isTop={isTop => this.setState({ isTop })}
         >
-          {this.props.connected === false && (
-            <Moveable
-              name="Phone not Connected"
-              bgColor="rgba(255,0,0,.2)"
-              icon="exclamation"
-              large={true}
-              boldText={true}
-            />
-          )}
+          <PhoneNotConnected connected={this.props.connected} />
           {this.state.plan.length === 0 && (
             <Moveable
               name="OOPs! Hier scheint nichts zu sein!"

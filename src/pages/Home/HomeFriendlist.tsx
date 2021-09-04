@@ -19,6 +19,7 @@ import Alert from '../../components/Alert'
 import INotification from '../../interfaces/INotification'
 import HomeFriendlistListItem from '../../components/HomeFriendlistListItem'
 import RestrictedAnon from '../../components/RestrictedAnon'
+import PhoneNotConnected from '../../components/PhoneNotConnected'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state: IPageState = {
@@ -209,15 +210,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
           isTop={isTop => this.setState({ isTop })}
         >
           <AddBar {...addBar} type="email" />
-          {this.props.connected === false && (
-            <Moveable
-              name="Phone not Connected"
-              bgColor="rgba(255,0,0,.2)"
-              icon="exclamation"
-              large={true}
-              boldText={true}
-            />
-          )}
+          <PhoneNotConnected connected={this.props.connected} />
           <QRCode {...qrCode} />
           {allowed ? (
             <>

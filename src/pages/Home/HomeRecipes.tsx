@@ -26,6 +26,7 @@ import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import SafeComponent from '../../components/SafeComponent'
 import Moveable from '../../components/Moveable/Moveable'
 import ScrollView from '../../components/ScrollView'
+import PhoneNotConnected from '../../components/PhoneNotConnected'
 
 export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -119,15 +120,7 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
             this.refresh()
           }}
         >
-          {this.props.connected === false && (
-            <Moveable
-              name="Phone not Connected"
-              bgColor="rgba(255,0,0,.2)"
-              icon="exclamation"
-              large={true}
-              boldText={true}
-            />
-          )}
+          <PhoneNotConnected connected={this.props.connected} />
           <AddBar
             onType={showOnly => this.setState({ showOnly })}
             placeholder={Language.get('search')}

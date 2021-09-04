@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, Dimensions } from 'react-native'
 import AddBar from '../../components/AddBar'
 import Moveable from '../../components/Moveable/Moveable'
+import PhoneNotConnected from '../../components/PhoneNotConnected'
 import Row from '../../components/Row'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
@@ -93,15 +94,7 @@ export default class HomeList extends SafeComponent<IPageProps> {
             visible={this.state.add}
             onChange={name => this.addList(name)}
           />
-          {this.props.connected === false && (
-            <Moveable
-              name="Phone not Connected"
-              bgColor="rgba(255,0,0,.2)"
-              icon="exclamation"
-              large={true}
-              boldText={true}
-            />
-          )}
+          <PhoneNotConnected connected={this.props.connected} />
           {this.state.lists.length === 0 && (
             <Moveable
               name="Nothing here. Add a new List!"
