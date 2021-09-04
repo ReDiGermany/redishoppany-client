@@ -10,12 +10,11 @@ import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import APIShoppingList from '../../helper/API/APIShoppingList'
 import APIUser from '../../helper/API/APIUser'
-import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
-import Navigation from '../../components/Navigation'
 import { RedirectIfPossible } from '../../Router/react-router'
 import HomeStyles from '../../styles/HomeStyles'
+import HomeNavigation from '../../components/HomeNavigation'
 
 export default class HomeList extends SafeComponent<IPageProps> {
   state = {
@@ -54,33 +53,20 @@ export default class HomeList extends SafeComponent<IPageProps> {
   }
 
   render() {
-    const buttons: INavigationPropsButton[] = [
-      {
-        icon: 'plus',
-        name: this.state.add ? 'chevron-up' : 'add',
-        onClick: () => this.setState({ add: !this.state.add }),
-      },
-    ]
-
-    if (this.props.user?.notificationCount)
-      buttons.unshift({
-        icon: 'bell',
-        name: 'notifications',
-        onClick: () => this.setState({ redirect: '/notifications' }),
-        badge: {
-          color: '#900000',
-          text: this.props.user?.notificationCount.toString(),
-        },
-      })
-
     return (
       <>
         <RedirectIfPossible to={this.state.redirect} />
-        <Navigation
-          solid={this.state.isTop}
-          label={Language.get('overview')}
-          simple={true}
-          buttons={buttons}
+        <HomeNavigation
+          user={this.props.user}
+          isTop={this.state.isTop}
+          name="overview"
+          buttons={[
+            {
+              icon: 'plus',
+              name: this.state.add ? 'chevron-up' : 'add',
+              onClick: () => this.setState({ add: !this.state.add }),
+            },
+          ]}
         />
         <ScrollView
           hasBottomBar={true}

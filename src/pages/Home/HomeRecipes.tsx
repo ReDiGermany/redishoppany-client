@@ -14,19 +14,18 @@ import {
   textBox,
   timeBox,
 } from '../../styles/RecipesListStyle'
-import Navigation from '../../components/Navigation'
 import Language from '../../language/Language'
 // @ts-ignore
 import recipeImageNotFound from '../../../assets/recipe_not_found.jpg'
 import { Redirect } from '../../Router/react-router'
 import AddBar from '../../components/AddBar'
-import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
 import AnonAlert from '../../components/AnonAlert'
 import InfoMoveable from '../../components/Moveable/InfoMoveable'
+import HomeNavigation from '../../components/HomeNavigation'
 
 export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   state: IRecipesState = {
@@ -86,30 +85,19 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
       source: item.image,
     })
     let renderedItems = 0
-    const buttons: INavigationPropsButton[] = [
-      {
-        icon: 'plus',
-        name: 'add',
-        onClick: () => this.setState({ redirect: '/recipe/add' }),
-      },
-    ]
-    if (this.props.user?.notificationCount)
-      buttons.unshift({
-        icon: 'bell',
-        name: 'notifications',
-        onClick: () => this.setState({ redirect: '/notifications' }),
-        badge: {
-          color: '#900000',
-          text: this.props.user?.notificationCount.toString(),
-        },
-      })
 
     return (
       <>
-        <Navigation
-          label={Language.get('recipes')}
-          simple={true}
-          buttons={buttons}
+        <HomeNavigation
+          name="recipes"
+          user={this.props.user}
+          buttons={[
+            {
+              icon: 'plus',
+              name: 'add',
+              onClick: () => this.setState({ redirect: '/recipe/add' }),
+            },
+          ]}
         />
         <ScrollView
           hasBottomBar={true}
