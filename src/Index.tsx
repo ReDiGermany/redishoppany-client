@@ -24,6 +24,7 @@ import SafeComponent from './components/SafeComponent'
 import Reload from './pages/Reload'
 import Backgrounds from './pages/Backgrounds'
 import LoginAnon from './pages/Login/LoginAnon'
+import NotConnected from './pages/NotConnected'
 
 export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   state: IIndexState = {
@@ -75,6 +76,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
           path="/reload"
           render={() => <Reload onReload={async () => this.reloadMe(false)} />}
         />
+        <Route path="/notconnected" render={() => <NotConnected />} />
         <Route path="/backgrounds" render={() => <Backgrounds />} />
         <Route path="/about" render={() => <About user={user} />} />
         <Route path="/register" render={() => <Register />} />
