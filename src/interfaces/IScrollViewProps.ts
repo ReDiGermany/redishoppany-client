@@ -6,4 +6,5 @@ export default interface IScrollViewProps {
   dark?: boolean
   hasBottomBar?: boolean
   bgVisible?: boolean
+  noRefresh?: boolean
 }

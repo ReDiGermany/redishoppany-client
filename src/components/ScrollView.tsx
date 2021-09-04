@@ -12,14 +12,16 @@ export default class ScrollView extends Component<IScrollViewProps> {
     return (
       <SV
         refreshControl={
-          <RefreshControl
-            colors={['#fff']}
-            progressBackgroundColor={
-              this.props.dark ?? false ? '#111' : 'rgba(255,255,255,.1)'
-            }
-            refreshing={this.props.refreshing ?? false}
-            onRefresh={() => this.props.onRefresh()}
-          />
+          !(this.props.noRefresh ?? false) ? (
+            <RefreshControl
+              colors={['#fff']}
+              progressBackgroundColor={
+                this.props.dark ?? false ? '#111' : 'rgba(255,255,255,.1)'
+              }
+              refreshing={this.props.refreshing ?? false}
+              onRefresh={() => this.props.onRefresh()}
+            />
+          ) : undefined
         }
         onScroll={e => this.props.isTop?.(e.nativeEvent.contentOffset.y <= 0)}
         style={{
