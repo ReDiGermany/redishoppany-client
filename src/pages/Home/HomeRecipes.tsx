@@ -13,7 +13,6 @@ import {
   nameBox,
   textBox,
   timeBox,
-  notFoundText,
 } from '../../styles/RecipesListStyle'
 import Navigation from '../../Navigation'
 import Language from '../../language/Language'
@@ -24,7 +23,6 @@ import AddBar from '../../components/AddBar'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import SafeComponent from '../../components/SafeComponent'
-import Moveable from '../../components/Moveable/Moveable'
 import ScrollView from '../../components/ScrollView'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
 import AnonAlert from '../../components/AnonAlert'
