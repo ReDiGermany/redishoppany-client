@@ -1,21 +1,20 @@
 import React from 'react'
-import { Text, View, Dimensions } from 'react-native'
+import { Text, Dimensions } from 'react-native'
 import AddBar from '../../components/AddBar'
 import AnonAlert from '../../components/AnonAlert'
+import HomeListListItem from '../../components/HomeListListItem'
 import InfoMoveable from '../../components/Moveable/InfoMoveable'
-import Moveable from '../../components/Moveable/Moveable'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
 import Row from '../../components/Row'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import APIShoppingList from '../../helper/API/APIShoppingList'
 import APIUser from '../../helper/API/APIUser'
-import IMoveableProps from '../../interfaces/IMoveableProps'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
 import IPageProps from '../../interfaces/IPageProps'
 import Language from '../../language/Language'
 import Navigation from '../../Navigation'
-import { Redirect } from '../../Router/react-router'
+import { RedirectIfPossible } from '../../Router/react-router'
 import HomeStyles from '../../styles/HomeStyles'
 
 export default class HomeList extends SafeComponent<IPageProps> {
@@ -55,9 +54,6 @@ export default class HomeList extends SafeComponent<IPageProps> {
   }
 
   render() {
-    if (this.state.redirect !== '')
-      return <Redirect push to={this.state.redirect} />
-
     const buttons: INavigationPropsButton[] = [
       {
         icon: 'plus',
@@ -79,6 +75,7 @@ export default class HomeList extends SafeComponent<IPageProps> {
 
     return (
       <>
+        <RedirectIfPossible to={this.state.redirect} />
         <Navigation
           solid={this.state.isTop}
           label={Language.get('overview')}
@@ -92,7 +89,7 @@ export default class HomeList extends SafeComponent<IPageProps> {
           onRefresh={() => this.onRefresh()}
         >
           <AddBar
-            placeholder={Language.get('listname')}
+            placeholder="listname"
             visible={this.state.add}
             onChange={name => this.addList(name)}
           />
@@ -101,61 +98,25 @@ export default class HomeList extends SafeComponent<IPageProps> {
           <InfoMoveable
             show={this.state.lists.length === 0}
             name="Nothing here. Add a new List!"
-            onClick={() => {
-              this.setState({ add: true })
-            }}
+            onClick={() => this.setState({ add: true })}
           />
-          {this.state.lists.map((list, index) => {
-            const title =
-              index > 0 ? (
-                <Text style={HomeStyles.heading}>
-                  {list.ownerName}
-                  {Language.get('list_suffix')}
-                </Text>
-              ) : (
-                <></>
-              )
-
-            return (
-              <View key={index}>
-                {title}
-                {list.items.map(item => {
-                  const moveable: IMoveableProps = {
-                    large: true,
-                    name: item.name,
-                    onClick: () =>
-                      this.setState({ redirect: `/list/${item.id}` }),
-                    badge: item.count > 0 ? item.count : undefined,
-                    shared: item.shared,
-                  }
-
-                  return <Moveable key={item.name} {...moveable} />
-                })}
-              </View>
-            )
-          })}
+          {this.state.lists.map((list, index) => (
+            <HomeListListItem key={list.ownerName} list={list} index={index} />
+          ))}
           <Text style={HomeStyles.heading}>{Language.get('other')}</Text>
-          <Moveable
-            name={Language.get('settings')}
-            centerText={true}
-            large={true}
-            onClick={() => {
-              this.setState({ redirect: '/settings' })
-            }}
+          <InfoMoveable
+            name="settings"
+            onClick={() => this.setState({ redirect: '/settings' })}
           />
           <Row style={{ marginTop: 10, marginBottom: 30 }}>
-            <Moveable
+            <InfoMoveable
               style={{ width: Dimensions.get('window').width / 2 - 20 }}
-              name={Language.get('about')}
-              centerText={true}
-              large={true}
+              name="about"
               onClick={() => this.setState({ redirect: '/about' })}
             />
-            <Moveable
+            <InfoMoveable
               style={{ width: Dimensions.get('window').width / 2 - 20 }}
-              name={Language.get('imprint')}
-              centerText={true}
-              large={true}
+              name="imprint"
               onClick={() => this.setState({ redirect: '/imprint' })}
             />
           </Row>

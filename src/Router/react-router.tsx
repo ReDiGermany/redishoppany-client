@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   NativeRouter,
   Route as NativeRoute,
@@ -11,3 +12,9 @@ export const Route = NativeRoute
 export const Link = NativeLink
 export const UseHistory = NativeUseHistory
 export const Redirect = NativeRedirect
+
+export const RedirectIfPossible = (props: { to: string }) => {
+  if (props.to !== '') return <NativeRedirect to={props.to} />
+
+  return <></>
+}

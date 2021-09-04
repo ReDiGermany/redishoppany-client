@@ -5,6 +5,7 @@ import IAddBarProps from '../interfaces/IAddBarProps'
 import Row from './Row'
 import AddBarStyles from '../styles/AddBarStyles'
 import SafeComponent from './SafeComponent'
+import Language from '../language/Language'
 
 export default class AddBar extends SafeComponent<IAddBarProps> {
   state = {
@@ -22,7 +23,7 @@ export default class AddBar extends SafeComponent<IAddBarProps> {
     const textInput: any = {
       value: this.state.value,
       autoFocus: this.props.autoFocus ?? true,
-      placeholder: this.props.placeholder,
+      placeholder: Language.getOrText(this.props.placeholder ?? ''),
       placeholderTextColor: '#ffffff30',
       autoCapitalize: 'none',
       onSubmitEditing: () => this.save(),

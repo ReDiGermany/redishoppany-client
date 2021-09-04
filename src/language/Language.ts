@@ -45,6 +45,12 @@ export default class Language {
     return this.file[name]
   }
 
+  public static getOrText(name: string) {
+    if (!(name in this.getInstance().file)) return name
+
+    return this.getInstance().get(name)
+  }
+
   public static get(name: string) {
     return this.getInstance().get(name)
   }
