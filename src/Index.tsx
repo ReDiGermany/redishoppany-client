@@ -37,10 +37,8 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   async reloadMe(updateAll: boolean) {
     const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
     const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
-    console.log({ token, email })
     if (token !== '' && email !== '') {
       const user = await APIUser.getMe()
-      console.log({ user })
       if (typeof user === 'boolean') {
         console.log('[index.tsx] error logging in. Wrong credentials?')
         if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
