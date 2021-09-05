@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text } from 'react-native'
 import SafeComponent from '../../components/SafeComponent'
-import Language from '../../language/Language'
 
 const Style = StyleSheet.create({
   headline: {

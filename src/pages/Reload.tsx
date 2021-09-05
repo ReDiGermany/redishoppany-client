@@ -9,7 +9,7 @@ export default class Reload extends SafeComponent<{ onReload: () => void }> {
   }
 
   async componentDidMount() {
-    await this.props.onReload()
+    this.props.onReload()
     this.setState({ redirect: '/' })
   }
 

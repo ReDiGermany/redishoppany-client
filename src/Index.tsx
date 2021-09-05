@@ -1,6 +1,4 @@
 import React from 'react'
-import { View } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import NetInfo from '@react-native-community/netinfo'
 import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
@@ -35,26 +33,22 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   }
 
   async reloadMe(updateAll: boolean) {
-    const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
-    const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
-    if (token !== '' && email !== '') {
-      const user = await APIUser.getMe()
+    APIUser.getMe(user => {
       if (typeof user === 'boolean') {
         console.log('[index.tsx] error logging in. Wrong credentials?')
         if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
       } else {
         this.setState({ user, checkMeDone: true, loggedin: true })
       }
-    } else if (updateAll) this.setState({ checkMeDone: true, loggedin: false })
+    })
   }
 
   unsubscribe: any = null
 
   async componentDidMount() {
     this.unsubscribe = NetInfo.addEventListener(state => {
-      this.setState({
-        connected: state.isConnected ?? false,
-      })
+      const connected = state.isConnected ?? false
+      this.setState({ connected })
     })
     await this.reloadMe(true)
   }
@@ -67,7 +61,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
     if (!this.state.checkMeDone) return <SplashScreen />
 
     return (
-      <View>
+      <>
         <Route path="/reload">
           <Reload onReload={async () => this.reloadMe(false)} />
         </Route>
@@ -144,7 +138,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
             )
           }
         />
-      </View>
+      </>
     )
   }
 }

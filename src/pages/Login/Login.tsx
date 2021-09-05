@@ -1,7 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
 import * as AuthSession from 'expo-auth-session'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Row from '../../components/Row'
 import LoginTitle from './LoginTitle'
 import LoginInputEmail from './LoginInputEmail'
@@ -11,7 +10,7 @@ import LoginHeading from './LoginHeading'
 import LoginSocialButton from './LoginSocialButton'
 import LoginLongButton from './LoginLongButton'
 import GlobalStyles from '../../styles/GlobalStyles'
-import {  RedirectIfPossible } from '../../Router/react-router'
+import { RedirectIfPossible } from '../../Router/react-router'
 import APIUser from '../../helper/API/APIUser'
 import Alert from '../../components/Alert'
 import ILoginState from '../../interfaces/ILoginState'
@@ -24,16 +23,12 @@ import {
   DefPreInfoAlert,
   DefPreSuccessAlert,
   DefPreWarningAlert,
-  PreInfoAlert,
-  PreSuccessAlert,
   SuccessAlert,
 } from '../../helper/DefinedAlerts'
-import {
-  filterFacebookRedirectUrl,
-  filterGoogleRedirectUrl,
-} from '../../helper/Functions'
+import { filterRedirectUrl } from '../../helper/Functions'
 import { FB_APP_ID, GOOGLE_CLIENT_ID } from '../../helper/Constants'
 import SafeComponent from '../../components/SafeComponent'
+import TokenStorage from '../../helper/DB/TokenStorage'
 
 export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -53,17 +48,18 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
 
   loginAnonAsync = async () => {
     this.setState({ alert: DefPreInfoAlert('anon.register') })
-    const loggedin = await APIUser.registerAnon()
-    this.setState({ loggedin })
+    APIUser.registerAnon(loggedin => {
+      this.setState({ loggedin })
 
-    setTimeout(async () => {
-      if (loggedin) {
-        this.setState({ alert: DefPreSuccessAlert('anon.register.success') })
-        this.reloadApp()
-      } else {
-        this.setState({ alert: DefPreErrorAlert('anon.register.fail') })
-      }
-    }, 3000)
+      setTimeout(async () => {
+        if (loggedin) {
+          this.setState({ alert: DefPreSuccessAlert('anon.register.success') })
+          this.reloadApp()
+        } else {
+          this.setState({ alert: DefPreErrorAlert('anon.register.fail') })
+        }
+      }, 3000)
+    })
   }
 
   handleGooglePressAsync = async () => {
@@ -75,25 +71,26 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=${scope}&include_granted_scopes=true&response_type=token&state=state_parameter_passthrough_value&redirect_uri=${redirectUrl}&client_id=${GOOGLE_CLIENT_ID}`
     const result = await AuthSession.startAsync({ authUrl, returnUrl })
     if ('url' in result && result.errorCode === null) {
-      const token = filterGoogleRedirectUrl(result.url)
+      const token = filterRedirectUrl(result.url)
       try {
         this.setState({
-          alert: PreInfoAlert('login.facebook.check.', 'text', 'info'),
+          alert: DefPreInfoAlert('login.facebook.check.'),
         })
-        const tokenResult = await APIUser.checkGoogleToken(token)
-        setTimeout(async () => {
-          if (typeof tokenResult === 'boolean') {
-            DefPreWarningAlert('login.facebook.error.email.')
-          } else {
-            this.setState({
-              alert: PreSuccessAlert('login.facebook.success.', 'text', 'info'),
-              loggedin: true,
-            })
-            await AsyncStorage.setItem('redishoppany-token', tokenResult.token)
-            await AsyncStorage.setItem('redishoppany-email', tokenResult.email)
-            this.reloadApp()
-          }
-        }, 2000)
+        APIUser.checkGoogleToken(token, tokenResult => {
+          setTimeout(async () => {
+            if (typeof tokenResult === 'boolean') {
+              DefPreWarningAlert('login.facebook.error.email.')
+            } else {
+              this.setState({
+                alert: DefPreSuccessAlert('login.facebook.success.'),
+                loggedin: true,
+              })
+              const { email, token: t1 } = tokenResult
+              await TokenStorage.set(email, t1)
+              this.reloadApp()
+            }
+          }, 2000)
+        })
       } catch (e: any) {
         console.log(e.message)
         DefPreWarningAlert('login.facebook.error.')
@@ -107,36 +104,27 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
       const authUrl = `https://www.facebook.com/v2.8/dialog/oauth?response_type=token&client_id=${FB_APP_ID}&scope=email&redirect_uri=${redirectUrl}`
       const result = await AuthSession.startAsync({ authUrl })
       if ('url' in result && result.errorCode === null) {
-        const token = filterFacebookRedirectUrl(result.url)
+        const token = filterRedirectUrl(result.url)
         if (token !== null) {
           try {
             this.setState({
-              alert: PreInfoAlert('login.facebook.check.', 'text', 'info'),
+              alert: DefPreInfoAlert('login.facebook.check.'),
             })
-            const tokenResult = await APIUser.checkFacebookToken(token)
-            setTimeout(async () => {
-              if (typeof tokenResult === 'boolean') {
-                DefPreWarningAlert('login.facebook.error.email.')
-              } else {
-                this.setState({
-                  alert: PreSuccessAlert(
-                    'login.facebook.success.',
-                    'text',
-                    'info'
-                  ),
-                  loggedin: true,
-                })
-                await AsyncStorage.setItem(
-                  'redishoppany-token',
-                  tokenResult.token
-                )
-                await AsyncStorage.setItem(
-                  'redishoppany-email',
-                  tokenResult.email
-                )
-                this.reloadApp()
-              }
-            }, 2000)
+            APIUser.checkFacebookToken(token, tokenResult => {
+              setTimeout(async () => {
+                if (typeof tokenResult === 'boolean') {
+                  DefPreWarningAlert('login.facebook.error.email.')
+                } else {
+                  this.setState({
+                    alert: DefPreSuccessAlert('login.facebook.success.'),
+                    loggedin: true,
+                  })
+                  const { email, token: t1 } = tokenResult
+                  await TokenStorage.set(email, t1)
+                  this.reloadApp()
+                }
+              }, 2000)
+            })
           } catch (E) {
             DefPreWarningAlert('login.facebook.error.')
           }
@@ -153,16 +141,16 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
       const { email, password } = this.state
       this.setState({ loginChecking: true })
 
-      const loggedin = await APIUser.checkLogin(email, password)
-
-      if (loggedin) {
-        const alert = SuccessAlert('login.welcome')
-        this.setState({ loggedin, alert, loginChecking: false })
-        this.reloadApp()
-      } else {
-        const alert = DefPreErrorAlert('login.wrong.credentials')
-        this.setState({ alert, loginChecking: false })
-      }
+      APIUser.checkLogin(email, password, loggedin => {
+        if (loggedin) {
+          const alert = SuccessAlert('login.welcome')
+          this.setState({ loggedin, alert, loginChecking: false })
+          this.reloadApp()
+        } else {
+          const alert = DefPreErrorAlert('login.wrong.credentials')
+          this.setState({ alert, loginChecking: false })
+        }
+      })
     }
   }
 

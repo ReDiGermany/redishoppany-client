@@ -32,17 +32,18 @@ export default class LoginAnon extends SafeComponent<ILoginAnonProps> {
 
   loginAnonAsync = async () => {
     this.setState({ alert: DefPreInfoAlert('anon.register') })
-    const loggedin = await APIUser.registerAnon()
-    this.setState({ loggedin })
+    APIUser.registerAnon(loggedin => {
+      this.setState({ loggedin })
 
-    setTimeout(async () => {
-      if (loggedin) {
-        this.setState({ alert: DefPreSuccessAlert('anon.register.success') })
-        this.reloadApp()
-      } else {
-        this.setState({ alert: DefPreErrorAlert('anon.register.fail') })
-      }
-    }, 3000)
+      setTimeout(async () => {
+        if (loggedin) {
+          this.setState({ alert: DefPreSuccessAlert('anon.register.success') })
+          this.reloadApp()
+        } else {
+          this.setState({ alert: DefPreErrorAlert('anon.register.fail') })
+        }
+      }, 3000)
+    })
   }
 
   render() {

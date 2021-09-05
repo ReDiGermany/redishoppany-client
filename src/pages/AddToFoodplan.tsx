@@ -1,6 +1,5 @@
 import React from 'react'
 import { ScrollView, View, Image, Text, Pressable } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import APIRecipe from '../helper/API/APIRecipe'
 import IPageProps from '../interfaces/IPageProps'
 import GlobalStyles from '../styles/GlobalStyles'
@@ -35,28 +34,30 @@ export default class AddToFoodplan extends SafeComponent<
 
   constructor(props: IPageProps) {
     super(props)
-    ;(async () => {
-      const recipes = await AsyncStorage.getItem('recipeList')
-      if (recipes !== null) {
-        const rec: IAPIRecipe[] = JSON.parse(recipes)
-        let image: string | number | { uri: string } = -1
-        try {
-          rec.forEach((item, idx) => {
-            image = item.image
-            if (
-              typeof image === 'number' ||
-              (typeof image === 'string' && image === '') ||
-              (typeof image === 'object' && 'uri' in image && image.uri === '')
-            )
-              rec[idx].image = recipeImageNotFound
-            else rec[idx].image = { uri: item.image }
-          })
-        } catch (e) {
-          console.log('HomeRecipes.tsx', { e, rec, image })
-        }
-        this.setState({ recipes: rec })
-      }
-    })()
+    // APIFoodplan.listPlans
+    // ;(async () => {
+    //   const recipes = await AsyncStorage.getItem('recipeList')
+    //   if (recipes !== null) {
+    //     const rec: IAPIRecipe[] = JSON.parse(recipes)
+    //     let image: string | number | { uri: string } = -1
+    //     try {
+    //       rec.forEach((item, idx) => {
+    //         image = item.image
+    //         if (
+    //           typeof image === 'number' ||
+    //           (typeof image === 'string' && image === '') ||
+    //           (typeof image === 'object' && 'uri' in image && image.uri === '')
+    //         )
+    //           rec[idx].image = recipeImageNotFound
+    //         else rec[idx].image = { uri: item.image }
+    //       })
+    //     } catch (e) {
+    //       console.log('HomeRecipes.tsx', { e, rec, image })
+    //     }
+    //     this.setState({ recipes: rec })
+    //   }
+    // })()
+    this.refresh()
   }
 
   async componentDidMount() {
@@ -64,13 +65,14 @@ export default class AddToFoodplan extends SafeComponent<
   }
 
   async refresh() {
-    const recipes = await APIRecipe.list()
-    recipes.forEach((item, idx) => {
-      if (item.image === '') recipes[idx].image = recipeImageNotFound
-      else recipes[idx].image = { uri: item.image }
+    APIRecipe.list(async r => {
+      const recipes = r
+      recipes.forEach((item, idx) => {
+        if (item.image === '') recipes[idx].image = recipeImageNotFound
+        else recipes[idx].image = { uri: item.image }
+      })
+      this.setState({ recipes, refreshing: false })
     })
-    await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
-    this.setState({ recipes, refreshing: false })
   }
 
   render() {

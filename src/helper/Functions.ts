@@ -123,6 +123,9 @@ export const filterFacebookRedirectUrl = (url: string): string | null =>
 export const filterGoogleRedirectUrl = (url: string): string | null =>
   filterUrl(url, 'access_token', '#')
 
+export const filterRedirectUrl = (url: string): string | null =>
+  filterUrl(url, 'access_token', '#')
+
 export const randomString = (length: number) => {
   let result = ''
   const characters =

@@ -5,76 +5,12 @@ import IAPIShoppingListItemResponse from '../../interfaces/IAPIShoppingListItemR
 import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListItemResponseItem'
 import Language from '../../language/Language'
 import { randomColor } from '../Functions'
+import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 
 export default class APIShoppingList {
-  public static async updateItemCategory(
-    itemId: number,
-    catId: number
-  ): Promise<boolean> {
-    const ret = await API.post<boolean>('/shoppinglist/updatecat', {
-      itemId,
-      catId,
-    })
-
-    return ret ?? false
-  }
-
-  public static async deleteAllItems(id: number): Promise<boolean> {
-    const ret = await API.get<boolean>(`/shoppinglist/clear/${id}`)
-
-    return ret ?? false
-  }
-
-  public static async create(name: string): Promise<boolean> {
-    const color = randomColor()
-    const ret = await API.post<boolean>('/shoppinglist/create', { name, color })
-
-    return ret ?? false
-  }
-
-  public static async list(): Promise<IAPIShoppingListItemResponse[]> {
-    const ret =
-      (await API.get<IAPIShoppingListResponse>('/shoppinglist')) ??
-      this.defaultSimpleList
-
-    return ret.items
-  }
-
   private static defaultSimpleList: IAPIShoppingListResponse = {
     items: [],
     page: { count: 0, page: 0, limit: 0 },
-  }
-
-  public static async simpleList(): Promise<
-    IAPIShoppingListItemResponseItem[]
-  > {
-    const ret =
-      (await API.get<IAPIShoppingListResponse>('/shoppinglist')) ??
-      this.defaultSimpleList
-
-    const arr: IAPIShoppingListItemResponseItem[] = []
-
-    ret.items.forEach(grp => {
-      grp.items.forEach(item => {
-        arr.push(item)
-      })
-    })
-
-    return arr
-  }
-
-  public static async addToList(
-    listId: number,
-    name: string,
-    amount: number
-  ): Promise<boolean> {
-    const ret = await API.post<boolean>(`/shoppinglist/item/add`, {
-      listId,
-      name,
-      amount,
-    })
-
-    return ret ?? false
   }
 
   // TODO: Check
@@ -86,66 +22,140 @@ export default class APIShoppingList {
     name: '',
   }
 
-  public static async singleList(id: number): Promise<IShoppingList> {
-    const ret =
-      (await API.get<IShoppingList>(`/shoppinglist/${id}`)) ??
-      APIShoppingList.defaultSingleList
-
-    ret.categories.push({
-      color: '#111',
-      id: -1,
-      items: [],
-      name: Language.get('items.bought'),
-    })
-
-    return ret
+  public static async updateItemCategory(
+    itemId: number,
+    catId: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.post<boolean>('/shoppinglist/updatecat', {
+      itemId,
+      catId,
+    }).then(ret => callback?.(ret ?? false))
   }
 
-  public static async deleteItemFromList(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/shoppinglist/${id}`)
-
-    return ret ?? false
+  public static async deleteAllItems(id: number, callback?: ICallbackBoolean) {
+    return API.get<boolean>(`/shoppinglist/clear/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async deleteList(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/shoppinglist/destroy/${id}`)
+  public static async create(name: string, callback?: ICallbackBoolean) {
+    const color = randomColor()
 
-    return ret ?? false
+    return API.post<boolean>('/shoppinglist/create', { name, color }).then(
+      ret => callback?.(ret ?? false)
+    )
+  }
+
+  public static async list(
+    callback?: ICallback<IAPIShoppingListItemResponse[]>
+  ) {
+    return API.get<IAPIShoppingListResponse>('/shoppinglist')
+      .then(ret => (ret === null ? this.defaultSimpleList : ret))
+      .then(ret => callback?.(ret.items))
+  }
+
+  // TODO: do
+  public static async simpleList(
+    callback?: ICallback<IAPIShoppingListItemResponseItem[]>
+  ) {
+    return API.get<IAPIShoppingListResponse>('/shoppinglist')
+      .then(ret => (ret === null ? this.defaultSimpleList : ret))
+      .then(ret => {})
+    // this.defaultSimpleList
+
+    // const arr: IAPIShoppingListItemResponseItem[] = []
+
+    // ret.items.forEach(grp => {
+    //   grp.items.forEach(item => {
+    //     arr.push(item)
+    //   })
+    // })
+
+    // return arr
+  }
+
+  public static async addToList(
+    listId: number,
+    name: string,
+    amount: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.post<boolean>(`/shoppinglist/item/add`, {
+      listId,
+      name,
+      amount,
+    }).then(ret => callback?.(ret ?? false))
+  }
+
+  public static async singleList(
+    id: number,
+    callback: ICallback<IShoppingList>
+  ) {
+    return API.get<IShoppingList>(`/shoppinglist/${id}`).then(ret =>
+      callback?.({ ...(ret ?? this.defaultSingleList) })
+    )
+
+    // ret.categories.push({
+    //   color: '#111',
+    //   id: -1,
+    //   items: [],
+    //   name: Language.get('items.bought'),
+    // })
+
+    // return ret
+  }
+
+  public static async deleteItemFromList(
+    id: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.delete<boolean>(`/shoppinglist/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
+  }
+
+  public static async deleteList(id: number, callback?: ICallbackBoolean) {
+    return API.delete<boolean>(`/shoppinglist/destroy/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
   public static async moveItemToList(
     itemId: number,
-    catId: number
-  ): Promise<boolean> {
-    const ret = await API.put<boolean>(`/shoppinglist/item`, {
+    catId: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.put<boolean>(`/shoppinglist/item`, {
       itemId,
       catId,
-    })
-
-    return ret ?? false
+    }).then(ret => callback?.(ret ?? false))
   }
 
-  public static async setItemBought(itemId: number): Promise<boolean> {
-    const ret = await API.putNoArgs<boolean>(
-      `/shoppinglist/item/cart/${itemId}`
+  public static async setItemBought(
+    itemId: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.putNoArgs<boolean>(`/shoppinglist/item/cart/${itemId}`).then(
+      ret => callback?.(ret ?? false)
     )
-
-    return ret ?? false
   }
 
-  public static async setItemUnBought(itemId: number): Promise<boolean> {
-    const ret = await API.putNoArgs<boolean>(
-      `/shoppinglist/item/uncart/${itemId}`
+  public static async setItemUnBought(
+    itemId: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.putNoArgs<boolean>(`/shoppinglist/item/uncart/${itemId}`).then(
+      ret => callback?.(ret ?? false)
     )
-
-    return ret ?? false
   }
 
-  public static async deleteBoughtItems(itemId: number): Promise<boolean> {
-    const ret = await API.putNoArgs<boolean>(
-      `/shoppinglist/deletebought/${itemId}`
+  public static async deleteBoughtItems(
+    itemId: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.putNoArgs<boolean>(`/shoppinglist/deletebought/${itemId}`).then(
+      ret => callback?.(ret ?? false)
     )
-
-    return ret ?? false
   }
 }

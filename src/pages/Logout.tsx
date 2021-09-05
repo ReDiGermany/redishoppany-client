@@ -6,9 +6,8 @@ import IPageProps from '../interfaces/IPageProps'
 import { Redirect } from '../Router/react-router'
 
 export default class Logout extends SafeComponent<IPageProps> {
-  async componentDidMount() {
-    await APIUser.logout()
-    await AsyncStorage.clear()
+  componentDidMount() {
+    APIUser.logout(() => AsyncStorage.clear())
   }
 
   render() {

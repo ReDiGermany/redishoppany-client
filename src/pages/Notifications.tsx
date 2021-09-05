@@ -19,16 +19,18 @@ export default class Notifications extends SafeComponent<
   }
 
   async refresh() {
-    const notifications = await APINotification.list()
-    this.setState({ refreshing: false, notifications })
-    await AsyncStorage.setItem('notifications', JSON.stringify(notifications))
+    APINotification.list(notifications => {
+      this.setState({ refreshing: false, notifications })
+      AsyncStorage.setItem('notifications', JSON.stringify(notifications))
+    })
   }
 
   async componentDidMount() {
     const notifications = await AsyncStorage.getItem('notifications')
-    if (notifications)
+    if (notifications) {
       this.setState({ notifications: JSON.parse(notifications) })
-    this.refresh()
+      this.refresh()
+    }
   }
 
   async delete(item: IAPINotification) {
@@ -42,34 +44,30 @@ export default class Notifications extends SafeComponent<
   }
 
   render() {
-    const navigation = {
-      user: this.props.user,
-      label: 'Benachrichtigungen',
-      buttons: [
-        {
-          name: 'deleteAll',
-          onClick: () => this.deleteAll(),
-          icon: 'trash',
-        },
-      ],
-    }
-
-    const refreshControl = {
-      refreshing: this.state.refreshing,
-      onRefresh: async () => {
-        this.setState({ refreshing: true })
-        await this.refresh()
-      },
-    }
-
-    const scrollView = {
-      refreshControl: <RefreshControl {...refreshControl} />,
-    }
-
     return (
       <View>
-        <Navigation {...navigation} />
-        <ScrollView {...scrollView}>
+        <Navigation
+          user={this.props.user}
+          label={'Benachrichtigungen'}
+          buttons={[
+            {
+              name: 'deleteAll',
+              onClick: () => this.deleteAll(),
+              icon: 'trash',
+            },
+          ]}
+        />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={async () => {
+                this.setState({ refreshing: true })
+                await this.refresh()
+              }}
+            />
+          }
+        >
           {this.state.notifications.map(item => (
             <Moveable
               key={item.name}

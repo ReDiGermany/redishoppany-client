@@ -61,18 +61,27 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
     })()
   }
 
-  async componentDidMount() {
-    this.refresh()
+  async refresh() {
+    APIRecipe.list(async r => {
+      const recipes = r
+      recipes.forEach((item, idx) => {
+        if (
+          typeof item.image === 'number' ||
+          (typeof item.image === 'string' && item.image === '') ||
+          (typeof item.image === 'object' &&
+            'uri' in item.image &&
+            item.image.uri === '')
+        )
+          recipes[idx].image = recipeImageNotFound
+        else recipes[idx].image = { uri: item.image }
+      })
+      await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
+      this.setState({ recipes, refreshing: false })
+    })
   }
 
-  async refresh() {
-    const recipes = await APIRecipe.list()
-    recipes.forEach((item, idx) => {
-      if (item.image === '') recipes[idx].image = recipeImageNotFound
-      else recipes[idx].image = { uri: item.image }
-    })
-    await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
-    this.setState({ recipes, refreshing: false })
+  async componentDidMount() {
+    this.refresh()
   }
 
   render() {

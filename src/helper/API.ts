@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Constants from 'expo-constants'
+import TokenStorage from './DB/TokenStorage'
 
 // Error Handling from https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
 
@@ -35,12 +35,9 @@ export default class API {
   }
 
   private static async getAuth() {
-    const username = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
-    const password = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
+    const { email: username, token: password } = await TokenStorage.get()
 
-    return {
-      auth: { username, password },
-    }
+    return { auth: { username, password } }
   }
 
   public static async get<T>(uri: string): Promise<T | null> {

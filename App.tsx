@@ -3,7 +3,6 @@ import { AppearanceProvider } from 'react-native-appearance'
 import { StatusBar } from 'expo-status-bar'
 import { Platform, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Notifications from 'expo-notifications'
 import Index from './src/Index'
 import APIUser from './src/helper/API/APIUser'
@@ -60,6 +59,22 @@ export default class App extends Component {
     super(props)
 
     Language.getInstance().init('de')
+    APIUser.getMe(async me => {
+      if (typeof me === 'boolean') {
+        this.setState({ checkMeDone: true, loggedin: false })
+      } else {
+        const expoPushToken = await registerForPushNotificationsAsync()
+        Notifications.addNotificationReceivedListener(this.handleNotification)
+
+        Notifications.addNotificationResponseReceivedListener(
+          this.handleNotificationResponse
+        )
+        if (expoPushToken && !me.profile.isAnon) {
+          APIUser.sendRemoteToken(expoPushToken)
+        }
+        this.setState({ checkMeDone: true, loggedin: me !== undefined })
+      }
+    })
   }
 
   handleNotification = (notification: Notifications.Notification) => {
@@ -69,30 +84,8 @@ export default class App extends Component {
   }
 
   handleNotificationResponse = (response: any) => {
-    console.log('response', response)
-  }
-
-  // async componentWillUnmount() {}
-
-  async componentDidMount() {
-    const token = (await AsyncStorage.getItem('redishoppany-token')) ?? ''
-    const email = (await AsyncStorage.getItem('redishoppany-email')) ?? ''
-    if (token !== '' && email !== '') {
-      const me = await APIUser.getMeByToken(token, email)
-      if (typeof me === 'boolean')
-        this.setState({ checkMeDone: true, loggedin: false })
-      else {
-        const expoPushToken = await registerForPushNotificationsAsync()
-        Notifications.addNotificationReceivedListener(this.handleNotification)
-
-        Notifications.addNotificationResponseReceivedListener(
-          this.handleNotificationResponse
-        )
-        if (expoPushToken && !me.profile.isAnon)
-          await APIUser.sendRemoteToken(expoPushToken)
-        this.setState({ checkMeDone: true, loggedin: me !== undefined })
-      }
-    } else this.setState({ checkMeDone: true, loggedin: false })
+    // TODO: Add handler
+    console.log('notification:response', response)
   }
 
   render() {

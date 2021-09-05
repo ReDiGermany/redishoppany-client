@@ -14,6 +14,11 @@ export default class LoginInput extends SafeComponent<ILoginInputPasswordProps> 
     if (this.props.value !== undefined) this.onChange(this.props.value, true)
   }
 
+  onChange(value: string, valid: boolean) {
+    this.setState({ value, valid })
+    this.props.onChange(value, valid)
+  }
+
   render() {
     return (
       <TextInput
@@ -25,10 +30,5 @@ export default class LoginInput extends SafeComponent<ILoginInputPasswordProps> 
         placeholder={this.props.placeholder ?? ''}
       />
     )
-  }
-
-  onChange(value: string, valid: boolean) {
-    this.setState({ value, valid })
-    this.props.onChange(value, valid)
   }
 }

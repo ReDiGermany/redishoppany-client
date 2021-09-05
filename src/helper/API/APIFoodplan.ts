@@ -1,57 +1,60 @@
 import API from '../API'
 import IFoodplanPlan from '../../interfaces/IFoodplanPlan'
 import IFoodplanKw from '../../interfaces/IFoodplanKw'
+import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 
 export default class APIFoodplan {
-  public static async add(recipe: number): Promise<boolean> {
-    return this.addToDate(recipe, undefined)
+  public static async add(recipe: number, callback?: ICallbackBoolean) {
+    return this.addToDate(recipe, callback, undefined)
   }
 
   public static async addToDate(
     recipe: number,
+    callback?: ICallbackBoolean,
     date?: string
-  ): Promise<boolean> {
-    const ret = await API.post<boolean>('/foodplan/add', { recipe, date })
-
-    return ret ?? false
+  ) {
+    return API.post<boolean>('/foodplan/add', { recipe, date }).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async list(): Promise<IFoodplanKw[]> {
-    const ret = await API.get<IFoodplanKw[]>('/foodplan')
-
-    return ret ?? []
+  public static async list(callback?: ICallback<IFoodplanKw[]>) {
+    return API.get<IFoodplanKw[]>('/foodplan').then(ret =>
+      callback?.(ret ?? [])
+    )
   }
 
-  public static async remove(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/foodplan/delete/${id}`)
-
-    return ret ?? false
+  public static async remove(id: number, callback?: ICallbackBoolean) {
+    return API.delete<boolean>(`/foodplan/delete/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
   public static async addToCart(
     itemId: number,
-    listId: number
-  ): Promise<boolean> {
-    const ret = await API.post<boolean>('/foodplan/cart', { itemId, listId })
-
-    return ret ?? false
+    listId: number,
+    callback?: ICallbackBoolean
+  ) {
+    return API.post<boolean>('/foodplan/cart', { itemId, listId }).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async sort(nums: number[]): Promise<boolean> {
-    const ret = await API.post<boolean>('/foodplan/sort', nums)
-
-    return ret ?? false
+  public static async sort(nums: number[], callback?: ICallbackBoolean) {
+    return API.post<boolean>('/foodplan/sort', nums).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async changePlan(id: number): Promise<boolean> {
-    const ret = await API.put<boolean>('/foodplan/plans', { id })
-
-    return ret ?? false
+  public static async changePlan(id: number, callback?: ICallbackBoolean) {
+    return API.put<boolean>('/foodplan/plans', { id }).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async listPlans(): Promise<IFoodplanPlan[]> {
-    const ret = await API.get<IFoodplanPlan[]>('/foodplan/plans')
-
-    return ret ?? []
+  public static async listPlans(callback?: ICallback<IFoodplanPlan[]>) {
+    return API.get<IFoodplanPlan[]>('/foodplan/plans').then(ret =>
+      callback?.(ret ?? [])
+    )
   }
 }

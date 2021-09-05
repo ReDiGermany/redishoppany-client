@@ -1,87 +1,97 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import IAPIUserMe from '../../interfaces/IAPIUserMe'
 import API from '../API'
 import { IAPIVendorLogin } from '../../interfaces/IAPIVendorLogin'
+import TokenStorage from '../DB/TokenStorage'
+import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
+import UserStorage from '../DB/UserStorage'
 
 export default class APIUser {
   public static async checkGoogleToken(
-    token: string | null
-  ): Promise<IAPIVendorLogin | boolean> {
-    const ret = await API.post<IAPIVendorLogin>('/user/login/vendor/google', {
+    token: string | null,
+    callback?: ICallback<IAPIVendorLogin | boolean>
+  ) {
+    return API.post<IAPIVendorLogin>('/user/login/vendor/google', {
       token,
-    })
-
-    return ret ?? false
+    }).then(ret => callback?.(ret ?? false))
   }
 
   public static async checkFacebookToken(
-    token: string
-  ): Promise<IAPIVendorLogin | boolean> {
-    const ret = await API.post<IAPIVendorLogin>('/user/login/vendor/facebook', {
+    token: string,
+    callback?: ICallback<IAPIVendorLogin | boolean>
+  ) {
+    return API.post<IAPIVendorLogin>('/user/login/vendor/facebook', {
       token,
-    })
-
-    return ret ?? false
+    }).then(ret => callback?.(ret ?? false))
   }
 
-  public static async getMe(): Promise<IAPIUserMe | boolean> {
-    const ret = await API.get<IAPIUserMe>('/user/me')
-
-    return ret ?? false
+  public static async getMe(callback?: ICallback<IAPIUserMe | boolean>) {
+    const hasToken = await TokenStorage.exists()
+    if (hasToken) {
+      UserStorage.get().then(user => {
+        callback?.(user)
+        API.get<IAPIUserMe>('/user/me').then(ret => {
+          if (ret) {
+            callback?.(ret)
+            UserStorage.set(ret)
+          }
+        })
+      })
+    } else callback?.(false)
   }
 
-  public static async sendRemoteToken(token: string): Promise<boolean> {
-    console.log(`sending token ${token}`)
-    const ret = await API.post<boolean>(`/user/token/fcm`, { token }).catch(
-      e => {
+  public static async sendRemoteToken(
+    token: string,
+    callback?: ICallbackBoolean
+  ) {
+    return API.post<boolean>(`/user/token/fcm`, { token })
+      .catch(e => {
         console.log(`error sending token ${token}`)
 
         return e
-      }
-    )
+      })
 
-    return ret.data ?? false
+      .then(ret => callback?.(ret.data ?? false))
   }
 
   public static async getMeByToken(
     password: string,
-    username: string
-  ): Promise<IAPIUserMe | boolean> {
-    const ret = await API.axiosInstance.get<{
-      status: string
-      success: boolean
-      data: IAPIUserMe
-    }>('/user/me', {
-      auth: { password, username },
-    })
+    username: string,
+    callback?: ICallback<IAPIUserMe | boolean>
+  ) {
+    return API.axiosInstance
+      .get<{
+        status: string
+        success: boolean
+        data: IAPIUserMe
+      }>('/user/me', {
+        auth: { password, username },
+      })
 
-    return ret.data.data ?? false
+      .then(ret => callback?.(ret.data.data ?? false))
   }
 
   public static async checkLogin(
     email: string,
-    password: string
-  ): Promise<boolean> {
+    password: string,
+    callback?: ICallbackBoolean
+  ) {
     const ret = await API.axiosInstance.post('/user/login', {
       email,
       password,
     })
 
-    if (ret.status === 202) {
-      await AsyncStorage.setItem('redishoppany-token', ret.data.data.token)
-      await AsyncStorage.setItem('redishoppany-email', email)
-    }
+    if (ret.status === 202) await TokenStorage.set(email, ret.data.data.token)
 
-    return ret.status === 202
+    callback?.(ret.status === 202)
   }
 
-  public static async logout(): Promise<boolean> {
-    const ret = await API.get<boolean>('/user/logout')
-
-    return ret ?? false
+  public static async logout(callback?: ICallbackBoolean) {
+    return API.get<boolean>('/user/logout').then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async registerAnon(): Promise<boolean> {
+  public static async registerAnon(callback?: ICallbackBoolean) {
     const data = await API.axiosInstance.post<{
       data: { token: string; email: string }
       status: string
@@ -90,10 +100,11 @@ export default class APIUser {
 
     if (!data) return false
 
-    await AsyncStorage.setItem('redishoppany-token', data.data.data.token)
-    await AsyncStorage.setItem('redishoppany-email', data.data.data.email)
+    await TokenStorage.set(data.data.data.email, data.data.data.token)
 
-    return true
+    callback?.(true)
+
+    return data
   }
 
   public static async register(
@@ -101,16 +112,15 @@ export default class APIUser {
     lastname: string,
     email: string,
     password: string,
-    passwordConfirm: string
-  ): Promise<boolean> {
-    const ret = await API.post<boolean>('/user/register', {
+    passwordConfirm: string,
+    callback?: ICallbackBoolean
+  ) {
+    return API.post<boolean>('/user/register', {
       firstname,
       lastname,
       email,
       password,
       passwordConfirm,
-    })
-
-    return ret ?? false
+    }).then(ret => callback?.(ret ?? false))
   }
 }

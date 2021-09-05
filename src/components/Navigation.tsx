@@ -33,7 +33,7 @@ export default class Navigation extends SafeComponent<INavigationProps> {
         <View style={container(this.props.solid)}>
           <NavigationTitle {...this.props} onPress={() => this.backHandler()} />
           {this.props.buttons?.map(item => (
-            <NavigationButton item={item} />
+            <NavigationButton key={item.name} item={item} />
           ))}
         </View>
       </View>

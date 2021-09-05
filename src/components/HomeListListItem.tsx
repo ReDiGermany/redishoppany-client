@@ -9,24 +9,23 @@ import SafeComponent from './SafeComponent'
 export default class HomeListListItem extends SafeComponent<{
   list: IAPIUserMeLists
   index: number
+  redirect: (_url: string) => void
 }> {
   render() {
     return (
       <View>
-        {this.props.index > 0 ? (
+        {this.props.index > 0 && (
           <Text style={HomeStyles.heading}>
             {this.props.list.ownerName}
             {Language.get('list_suffix')}
           </Text>
-        ) : (
-          <></>
         )}
         {this.props.list.items.map(item => (
           <Moveable
             key={item.name}
             large={true}
             name={item.name}
-            onClick={() => this.setState({ redirect: `/list/${item.id}` })}
+            onClick={() => this.props.redirect(`/list/${item.id}`)}
             badge={item.count > 0 ? item.count : undefined}
             shared={item.shared}
           />

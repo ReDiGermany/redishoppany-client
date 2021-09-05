@@ -1,31 +1,11 @@
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import IAPIRecipeDetails from '../../interfaces/IAPIRecipeDetails'
 import IAPIRecipeDetailsItem from '../../interfaces/IAPIRecipeDetailsItem'
+import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 import API from '../API'
+import RecipeStorage from '../DB/RecipeStorage'
 
 export default class APIRecipe {
-  public static async create(
-    name: string,
-    time: string,
-    text: string,
-    items: IAPIRecipeDetailsItem[]
-  ): Promise<boolean> {
-    const ret = await API.post<boolean>('/recipe/create', {
-      name,
-      time,
-      text,
-      items,
-    })
-
-    return ret ?? false
-  }
-
-  public static async list(): Promise<IAPIRecipe[]> {
-    const ret = await API.get<IAPIRecipe[]>('/recipe')
-
-    return ret ?? []
-  }
-
   private static defaultGetSingle: IAPIRecipeDetails = {
     id: -1,
     image: '',
@@ -36,16 +16,44 @@ export default class APIRecipe {
     time: '',
   }
 
-  public static async getSingle(id: number): Promise<IAPIRecipeDetails> {
-    const ret = await API.get<IAPIRecipeDetails>(`/recipe/${id}`)
-
-    return ret ?? this.defaultGetSingle
+  public static async create(
+    name: string,
+    time: string,
+    text: string,
+    items: IAPIRecipeDetailsItem[],
+    callback?: ICallbackBoolean
+  ) {
+    return API.post<boolean>('/recipe/create', {
+      name,
+      time,
+      text,
+      items,
+    }).then(ret => callback?.(ret ?? false))
   }
 
-  public static async delete(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/recipe/delete/${id}`)
+  public static async list(callback?: ICallback<IAPIRecipe[]>) {
+    RecipeStorage.getList().then(list => {
+      callback?.(list)
+      API.get<IAPIRecipe[]>('/recipe').then(ret => {
+        callback?.(ret ?? [])
+        RecipeStorage.setList(ret ?? [])
+      })
+    })
+  }
 
-    return ret ?? false
+  public static async getSingle(
+    id: number,
+    callback?: ICallback<IAPIRecipeDetails>
+  ) {
+    return API.get<IAPIRecipeDetails>(`/recipe/${id}`).then(ret =>
+      callback?.(ret ?? this.defaultGetSingle)
+    )
+  }
+
+  public static async delete(id: number, callback?: ICallbackBoolean) {
+    return API.delete<boolean>(`/recipe/delete/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
   public static async edit(
@@ -53,22 +61,24 @@ export default class APIRecipe {
     name: string,
     time: string,
     text: string,
-    items: IAPIRecipeDetailsItem[]
-  ): Promise<boolean> {
-    const ret = await API.put<boolean>(`/recipe/update/${id}`, {
+    items: IAPIRecipeDetailsItem[],
+    callback?: ICallbackBoolean
+  ) {
+    return API.put<boolean>(`/recipe/update/${id}`, {
       id,
       name,
       time,
       text,
       items,
-    })
-
-    return ret ?? false
+    }).then(ret => callback?.(ret ?? false))
   }
 
-  public static async search(name: string): Promise<IAPIRecipeDetails[]> {
-    const ret = await API.put<IAPIRecipeDetails[]>('/recipe/find', { name })
-
-    return ret ?? []
+  public static async search(
+    name: string,
+    callback?: ICallback<IAPIRecipeDetails[]>
+  ) {
+    return API.put<IAPIRecipeDetails[]>('/recipe/find', { name }).then(ret =>
+      callback?.(ret ?? [])
+    )
   }
 }

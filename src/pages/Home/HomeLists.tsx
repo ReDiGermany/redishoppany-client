@@ -40,10 +40,13 @@ export default class HomeList extends SafeComponent<IPageProps> {
   }
 
   async addList(name: string) {
-    await APIShoppingList.create(name)
-    const user = await APIUser.getMe()
-    if (typeof user !== 'boolean')
-      this.setState({ lists: user.lists, add: false })
+    APIShoppingList.create(name, () => {
+      APIUser.getMe(user => {
+        if (typeof user !== 'boolean') {
+          this.setState({ lists: user.lists, add: false })
+        }
+      })
+    })
   }
 
   onRefresh() {
@@ -87,7 +90,12 @@ export default class HomeList extends SafeComponent<IPageProps> {
             onClick={() => this.setState({ add: true })}
           />
           {this.state.lists.map((list, index) => (
-            <HomeListListItem key={list.ownerName} list={list} index={index} />
+            <HomeListListItem
+              redirect={redirect => this.setState({ redirect })}
+              key={list.ownerName}
+              list={list}
+              index={index}
+            />
           ))}
           <Text style={HomeStyles.heading}>{Language.get('other')}</Text>
           <InfoMoveable

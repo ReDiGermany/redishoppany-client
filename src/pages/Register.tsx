@@ -54,9 +54,10 @@ export default class Register extends SafeComponent<
   }
 
   ResetAlert() {
-    setTimeout(() => {
-      this.setState({ checking: false, disabled: false })
-    }, 1 * 1000)
+    setTimeout(
+      () => this.setState({ checking: false, disabled: false }),
+      1 * 1000
+    )
   }
 
   async submit() {
@@ -75,24 +76,25 @@ export default class Register extends SafeComponent<
     if (pwMatch) return this.WAlert('unmatch.passwords')
 
     try {
-      const account = await APIUser.register(
+      APIUser.register(
         firstName,
         lastName,
         email,
         password,
-        passwordRepeat
+        passwordRepeat,
+        account => {
+          if (account) {
+            const alert = PreSuccessAlert('register.welcome.', 'text', 'info')
+            const { text } = alert
+
+            const t = text.replace('%firstname%', firstName)
+            alert.text = t
+            this.setState({ alert })
+
+            setTimeout(() => this.setState({ redirect: '/' }), 3 * 1000)
+          } else this.setState({ alert: WarningAlert('register.unsuccess') })
+        }
       )
-
-      if (account) {
-        const alert = PreSuccessAlert('register.welcome.', 'text', 'info')
-        const { text } = alert
-
-        const t = text.replace('%firstname%', firstName)
-        alert.text = t
-        this.setState({ alert })
-
-        setTimeout(async () => this.setState({ redirect: '/' }), 3 * 1000)
-      } else this.setState({ alert: WarningAlert('register.unsuccess') })
     } catch (e: any) {
       if (e.message === 'Request failed with status code 406')
         this.setState({ alert: ErrorAlert('register.406') })
@@ -114,22 +116,10 @@ export default class Register extends SafeComponent<
   }
 
   render() {
-    const keyboardDetection = {
-      update: (keyboardHeight: any) => this.setState({ keyboardHeight }),
-    }
-
-    const outerBox = {
-      style: {
-        height:
-          GlobalStyles().appHeight -
-          GlobalStyles().statusbarHeight -
-          GlobalStyles().barHeight -
-          this.state.keyboardHeight,
-      },
-    }
-
     return (
-      <KeyboardDetection {...keyboardDetection}>
+      <KeyboardDetection
+        update={(keyboardHeight: any) => this.setState({ keyboardHeight })}
+      >
         <RedirectIfPossible to={this.state.redirect} />
         <BackgroundImage>
           <Navigation url="/login" label="Registration" />
@@ -142,7 +132,15 @@ export default class Register extends SafeComponent<
               {...this.state.alert}
             />
           )}
-          <ScrollView {...outerBox}>
+          <ScrollView
+            style={{
+              height:
+                GlobalStyles().appHeight -
+                GlobalStyles().statusbarHeight -
+                GlobalStyles().barHeight -
+                this.state.keyboardHeight,
+            }}
+          >
             <RegisterTitle />
             <LoginInput
               onChange={firstName => this.setState({ firstName })}

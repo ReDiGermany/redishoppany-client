@@ -16,21 +16,14 @@ export default class LoginInputEmail extends SafeComponent<ILoginInputEmailProps
     },
   }
 
-  // onChange = (dimensions: { window: IScreen; screen: IScreen }) => {
-  //   // console.log('LoginInputEmail', dimensions)
-  //   this.setState({ dimensions })
-  // }
-
-  // componentDidMount() {
-  //   Dimensions.addEventListener('change', this.onChange)
-  // }
-
-  // componentWillUnmount() {
-  //   Dimensions.removeEventListener('change', this.onChange)
-  // }
-
   componentDidMount() {
     if (this.props.value !== undefined) this.onChange(this.props.value)
+  }
+
+  onChange(value: string): void {
+    const valid = value !== '' && value.match(mailRegex) !== null
+    this.setState({ value, valid })
+    this.props.onChange(value, valid)
   }
 
   render() {
@@ -49,11 +42,5 @@ export default class LoginInputEmail extends SafeComponent<ILoginInputEmailProps
         keyboardType="email-address"
       />
     )
-  }
-
-  onChange(value: string): void {
-    const valid = value !== '' && value.match(mailRegex) !== null
-    this.setState({ value, valid })
-    this.props.onChange(value, valid)
   }
 }

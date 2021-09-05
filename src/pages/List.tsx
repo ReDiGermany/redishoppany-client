@@ -135,41 +135,43 @@ export default class List extends SafeComponent<
   }
 
   async refresh() {
-    const data = await APIShoppingList.singleList(this.props.id)
+    await APIShoppingList.singleList(this.props.id, async d => {
+      const data = d
+      data.categories.forEach((cat, catIdx) => {
+        const items: any[] = []
+        if (catIdx !== data.categories.length - 1) {
+          cat.items.forEach(item => {
+            if (item.inCart) {
+              data.categories[data.categories.length - 1].items.push({
+                ...item,
+                catId: catIdx,
+              })
+            } else {
+              items.push({ ...item, catId: catIdx })
+            }
+          })
+          data.categories[catIdx].items = items
+        }
+      })
+      this.setState({
+        owned: data.owned,
+        owner: data.owner,
+        items: data.categories,
+        listName: data.name,
+        listId: data.id,
+      })
 
-    data.categories.forEach((cat, catIdx) => {
-      const items: any[] = []
-      if (catIdx !== data.categories.length - 1) {
-        cat.items.forEach(item => {
-          if (item.inCart) {
-            data.categories[data.categories.length - 1].items.push({
-              ...item,
-              catId: catIdx,
-            })
-          } else {
-            items.push({ ...item, catId: catIdx })
-          }
-        })
-        data.categories[catIdx].items = items
-      }
+      await AsyncStorage.setItem(
+        `list-${this.props.id}`,
+        JSON.stringify(data.categories)
+      )
+      await AsyncStorage.setItem(`listname-${this.props.id}`, data.name)
+
+      await APIShoppingList.simpleList(async lists => {
+        this.setState({ refreshing: false, lists })
+        await AsyncStorage.setItem('lists', JSON.stringify(lists))
+      })
     })
-    this.setState({
-      owned: data.owned,
-      owner: data.owner,
-      items: data.categories,
-      listName: data.name,
-      listId: data.id,
-    })
-
-    const lists = await APIShoppingList.simpleList()
-
-    this.setState({ refreshing: false, lists })
-    await AsyncStorage.setItem('lists', JSON.stringify(lists))
-    await AsyncStorage.setItem(
-      `list-${this.props.id}`,
-      JSON.stringify(data.categories)
-    )
-    await AsyncStorage.setItem(`listname-${this.props.id}`, data.name)
   }
 
   async updateItemCategory(cat: IShoppingListCategory) {
@@ -186,8 +188,9 @@ export default class List extends SafeComponent<
   }
 
   async moveItemToOtherList(listId: number) {
-    const newListCats = await APICategory.list(listId)
-    this.setState({ newListCats, bottomBox: false, moveToListBox: true })
+    APICategory.list(listId, newListCats =>
+      this.setState({ newListCats, bottomBox: false, moveToListBox: true })
+    )
   }
 
   render() {

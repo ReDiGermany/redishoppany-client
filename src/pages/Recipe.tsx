@@ -67,34 +67,30 @@ export default class Recipes extends SafeComponent<
     const url =
       'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg'
 
-    const shareButton = [
-      {
-        icon: 'share-alt',
-        name: 'edit',
-        onClick: async () => {
-          const friends = await APIFriends.shortList()
-          this.setState({ friends, shareBox: true })
-        },
-      },
-    ]
-
-    const headerImage = {
-      width: GlobalStyles().appWidth,
-      height: 150,
-      style: header,
-      source: { uri: url },
-    }
-
     return (
       <View>
         <RedirectIfPossible to={this.state.redirect} />
         <Navigation
           user={this.props.user}
           label="Rezept"
-          buttons={shareButton}
+          buttons={[
+            {
+              icon: 'share-alt',
+              name: 'edit',
+              onClick: async () =>
+                APIFriends.shortList(friends =>
+                  this.setState({ friends, shareBox: true })
+                ),
+            },
+          ]}
         />
         <ScrollView>
-          <Image {...headerImage} />
+          <Image
+            width={GlobalStyles().appWidth}
+            height={150}
+            style={header}
+            source={{ uri: url }}
+          />
           <View>
             <Text style={titleText}>Rezept</Text>
             <Text style={titleInfo}>ca. 3h</Text>

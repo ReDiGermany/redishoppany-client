@@ -11,7 +11,7 @@ import APIFriends from '../../helper/API/APIFriends'
 import IPageState from '../../interfaces/IPageState'
 import IFriend from '../../interfaces/IFriend'
 import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
-import {  RedirectIfPossible } from '../../Router/react-router'
+import { RedirectIfPossible } from '../../Router/react-router'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
@@ -38,10 +38,9 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
 
   constructor(props: IPageProps) {
     super(props)
-    ;(async () => {
-      const list = await AsyncStorage.getItem('friendlist')
+    AsyncStorage.getItem('friendlist').then(list => {
       if (list != null) this.setState({ list: JSON.parse(list) })
-    })()
+    })
   }
 
   async componentDidMount() {
@@ -61,8 +60,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
   }
 
   async onRefresh() {
-    const list = await APIFriends.list()
-    this.update(list)
+    APIFriends.list(list => this.update(list))
   }
 
   async update(list: IAPIFriendsList) {
@@ -122,8 +120,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
       this.setState({
         alert: { type: 'success', text: 'Freund hinzugefügt' },
       })
-      const list = await APIFriends.list()
-      this.update(list)
+      APIFriends.list(list => this.update(list))
     } else {
       this.setState({
         alert: {

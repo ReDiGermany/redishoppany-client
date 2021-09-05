@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import { Pressable, View } from 'react-native'
 import { SvgXml } from 'react-native-svg'
@@ -18,15 +17,7 @@ export default class QRCode extends SafeComponent<IQRCodeScanned> {
 
   constructor(props: IQRCodeScanned) {
     super(props)
-    ;(async () => {
-      this.setState({ qrcode: await AsyncStorage.getItem('qrcode') })
-    })()
-  }
-
-  async componentDidMount() {
-    const qrcode = await APIFriends.qr()
-    this.setState({ qrcode })
-    await AsyncStorage.setItem('qrcode', qrcode)
+    APIFriends.qr(qrcode => this.setState({ qrcode }))
   }
 
   render() {

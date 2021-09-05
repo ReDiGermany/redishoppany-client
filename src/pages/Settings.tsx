@@ -43,14 +43,17 @@ export default class Settings extends SafeComponent<
   }
 
   async componentDidMount() {
-    const plans = await APIFoodplan.listPlans()
-    const foodplanFriends = await APIShareFoodplan.list()
-    this.setState({ plans, foodplanFriends })
-    await AsyncStorage.setItem('settings-plans', JSON.stringify(plans))
-    await AsyncStorage.setItem(
-      'settings-foodplanFriends',
-      JSON.stringify(foodplanFriends)
-    )
+    APIFoodplan.listPlans(async plans => {
+      this.setState({ plans })
+      await AsyncStorage.setItem('settings-plans', JSON.stringify(plans))
+    })
+    APIShareFoodplan.list(async foodplanFriends => {
+      this.setState({ foodplanFriends })
+      await AsyncStorage.setItem(
+        'settings-foodplanFriends',
+        JSON.stringify(foodplanFriends)
+      )
+    })
   }
 
   setFoodplan(item: { label: string; value: string }) {}
@@ -60,7 +63,7 @@ export default class Settings extends SafeComponent<
   }
 
   async inviteToFoodplan(id: number) {
-    await APIShareFoodplan.invite(id)
+    APIShareFoodplan.invite(id)
     const { foodplanFriends } = this.state
     foodplanFriends.forEach((item, idx) => {
       if (item.id === id) foodplanFriends[idx].inList = true
@@ -69,7 +72,7 @@ export default class Settings extends SafeComponent<
   }
 
   async setActiveFoodplan(id: number) {
-    await APIFoodplan.changePlan(id)
+    APIFoodplan.changePlan(id)
     const { plans } = this.state
     plans.forEach((item, idx) => {
       plans[idx].active = item.id === id

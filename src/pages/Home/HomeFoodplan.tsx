@@ -57,10 +57,11 @@ export default class Foodplan extends SafeComponent<
 
   async refresh() {
     this.setState({ refreshing: true })
-    const plan = await APIFoodplan.list()
-    this.setState({ plan })
-    await AsyncStorage.setItem('foodplanList', JSON.stringify(plan))
-    this.setState({ refreshing: false, suspendFirstRefresh: true })
+    APIFoodplan.list(plan => {
+      this.setState({ plan })
+      AsyncStorage.setItem('foodplanList', JSON.stringify(plan))
+      this.setState({ refreshing: false, suspendFirstRefresh: true })
+    })
   }
 
   render() {

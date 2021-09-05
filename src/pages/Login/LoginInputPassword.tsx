@@ -15,6 +15,11 @@ export default class LoginInputPassword extends SafeComponent<ILoginInputPasswor
     if (this.props.value !== undefined) this.onChange(this.props.value)
   }
 
+  onChange(value: string): void {
+    this.setState({ value, valid: value.length >= 8 })
+    this.props.onChange(value, value.length >= 8)
+  }
+
   render() {
     let style: 'unknown' | 'valid' | 'invalid' = 'unknown'
     if (this.state.valid !== undefined)
@@ -32,10 +37,5 @@ export default class LoginInputPassword extends SafeComponent<ILoginInputPasswor
         secureTextEntry={true}
       />
     )
-  }
-
-  onChange(value: string): void {
-    this.setState({ value, valid: value.length >= 8 })
-    this.props.onChange(value, value.length >= 8)
   }
 }

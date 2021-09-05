@@ -1,6 +1,12 @@
 import IFriend from '../../interfaces/IFriend'
 import API from '../API'
 import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
+import {
+  ICallback,
+  ICallbackBoolean,
+  ICallbackString,
+} from '../../interfaces/ICallbacks'
+import UserStorage from '../DB/UserStorage'
 
 export default class APIFriends {
   private static defaultList: IAPIFriendsList = {
@@ -9,54 +15,60 @@ export default class APIFriends {
     outgoing: [],
   }
 
-  public static async list(): Promise<IAPIFriendsList> {
-    const ret = await API.get<IAPIFriendsList>('/friends')
-
-    return ret ?? this.defaultList
+  public static async list(callback?: ICallback<IAPIFriendsList>) {
+    return API.get<IAPIFriendsList>('/friends').then(ret =>
+      callback?.(ret ?? this.defaultList)
+    )
   }
 
-  public static async shortList(): Promise<IFriend[]> {
-    const ret = await API.get<IFriend[]>('/friends?short')
-
-    return ret ?? []
+  public static async shortList(callback?: ICallback<IFriend[]>) {
+    return API.get<IFriend[]>('/friends?short').then(ret =>
+      callback?.(ret ?? [])
+    )
   }
 
-  public static async add(email: string, isMail: boolean): Promise<boolean> {
-    const ret = await API.post<boolean>(
+  public static async add(
+    email: string,
+    isMail: boolean,
+    callback?: ICallbackBoolean
+  ) {
+    return API.post<boolean>(
       '/friends/add',
       isMail ? { email } : { uuid: email }
+    ).then(ret => callback?.(ret ?? false))
+  }
+
+  public static async accept(id: number, callback?: ICallbackBoolean) {
+    return API.put<boolean>('/friends/accept', { id }).then(ret =>
+      callback?.(ret ?? false)
     )
-
-    return ret ?? false
   }
 
-  public static async accept(id: number): Promise<boolean> {
-    const ret = await API.put<boolean>('/friends/accept', { id })
-
-    return ret ?? false
+  public static async deny(id: number, callback?: ICallbackBoolean) {
+    return API.delete<boolean>(`/friends/deny/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async deny(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/friends/deny/${id}`)
-
-    return ret ?? false
+  public static async delete(id: number, callback?: ICallbackBoolean) {
+    return API.delete<boolean>(`/friends/delete/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async delete(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/friends/delete/${id}`)
-
-    return ret ?? false
+  public static async cancel(id: number, callback?: ICallbackBoolean) {
+    return API.delete<boolean>(`/friends/cancel/${id}`).then(ret =>
+      callback?.(ret ?? false)
+    )
   }
 
-  public static async cancel(id: number): Promise<boolean> {
-    const ret = await API.delete<boolean>(`/friends/cancel/${id}`)
-
-    return ret ?? false
-  }
-
-  public static async qr(): Promise<string> {
-    const ret = await API.get<string>('/friends/qr')
-
-    return ret ?? ''
+  public static async qr(callback?: ICallbackString) {
+    UserStorage.getQR(qr => {
+      callback?.(qr)
+      API.get<string>('/friends/qr').then(ret => {
+        callback?.(ret ?? '')
+        UserStorage.setQR(ret ?? '')
+      })
+    })
   }
 }
