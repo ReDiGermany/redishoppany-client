@@ -68,8 +68,6 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   render() {
     if (!this.state.checkMeDone) return <SplashScreen />
 
-    const { user } = this.state
-
     return (
       <View>
         <Route path="/reload">
@@ -82,28 +80,28 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
           <Backgrounds />
         </Route>
         <Route path="/about">
-          <About user={user} />
+          <About user={this.state.user} />
         </Route>
         <Route path="/register">
           <Register />
         </Route>
         <Route path="/foodplan/add">
-          <AddToFoodplan user={user} />
+          <AddToFoodplan user={this.state.user} />
         </Route>
         <Route path="/imprint">
-          <Imprint user={user} />
+          <Imprint user={this.state.user} />
         </Route>
         <Route path="/settings">
-          <Settings user={user} />
+          <Settings user={this.state.user} />
         </Route>
         <Route path="/notifications">
-          <Notifications user={user} />
+          <Notifications user={this.state.user} />
         </Route>
         <Route path="/recipe/add">
-          <EditRecipe user={user} />
+          <EditRecipe user={this.state.user} />
         </Route>
         <Route path="/logout">
-          <Logout user={user} />
+          <Logout user={this.state.user} />
         </Route>
         <Route path="/login">
           <Login onReloadMe={() => this.reloadMe(false)} />
@@ -114,19 +112,19 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
         <Route
           path="/list/:id"
           render={(props: any) => (
-            <List user={user} id={props.match.params.id} />
+            <List user={this.state.user} id={props.match.params.id} />
           )}
         ></Route>
         <Route
           path="/recipe/edit/:id"
           render={props => (
-            <EditRecipe user={user} id={props.match.params.id} />
+            <EditRecipe user={this.state.user} id={props.match.params.id} />
           )}
         />
         <Route
           path="/recipe/:id"
           render={(props: any) => (
-            <Recipe user={user} id={props.match.params.id} />
+            <Recipe user={this.state.user} id={props.match.params.id} />
           )}
         />
         <Route
@@ -141,7 +139,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
               <Home
                 connected={this.state.connected}
                 onReload={async () => this.reloadMe(false)}
-                user={user}
+                user={this.state.user}
               />
             ) : (
               <Redirect to="/login" />
