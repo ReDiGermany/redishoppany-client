@@ -22,7 +22,7 @@ import {
 import IPageProps from '../interfaces/IPageProps'
 import APIFriends from '../helper/API/APIFriends'
 import IFriend from '../interfaces/IFriend'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 import SafeComponent from '../components/SafeComponent'
 
 interface IRecipeState {
@@ -63,8 +63,6 @@ export default class Recipes extends SafeComponent<
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     // TODO: Add recipe API
     const url =
       'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg'
@@ -89,6 +87,7 @@ export default class Recipes extends SafeComponent<
 
     return (
       <View>
+        <RedirectIfPossible to={this.state.redirect} />
         <Navigation
           user={this.props.user}
           label="Rezept"

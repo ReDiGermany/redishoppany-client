@@ -17,7 +17,7 @@ import {
 import Language from '../../language/Language'
 // @ts-ignore
 import recipeImageNotFound from '../../../assets/recipe_not_found.jpg'
-import { Redirect } from '../../Router/react-router'
+import { RedirectIfPossible } from '../../Router/react-router'
 import AddBar from '../../components/AddBar'
 import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import SafeComponent from '../../components/SafeComponent'
@@ -76,8 +76,6 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     const image = (item: any) => ({
       width: GlobalStyles().appWidth,
       height: 150,
@@ -88,6 +86,7 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
 
     return (
       <>
+        <RedirectIfPossible to={this.state.redirect} />
         <HomeNavigation
           name="recipes"
           user={this.props.user}

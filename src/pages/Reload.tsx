@@ -1,31 +1,32 @@
 import React from 'react'
 import { Text } from 'react-native'
 import SafeComponent from '../components/SafeComponent'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 
 export default class Reload extends SafeComponent<{ onReload: () => void }> {
   state = {
-    go: false,
+    redirect: '',
   }
 
   async componentDidMount() {
     await this.props.onReload()
-    this.setState({ go: true })
+    this.setState({ redirect: '/' })
   }
 
   render() {
-    if (this.state.go) return <Redirect to="/" />
-
     return (
-      <Text
-        style={{
-          color: '#fff',
-          textAlign: 'center',
-          textAlignVertical: 'center',
-        }}
-      >
-        Reloading...
-      </Text>
+      <>
+        <RedirectIfPossible to={this.state.redirect} />
+        <Text
+          style={{
+            color: '#fff',
+            textAlign: 'center',
+            textAlignVertical: 'center',
+          }}
+        >
+          Reloading...
+        </Text>
+      </>
     )
   }
 }

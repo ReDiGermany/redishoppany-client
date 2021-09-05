@@ -16,7 +16,7 @@ import Navigation from '../components/Navigation'
 import Language from '../language/Language'
 // @ts-ignore
 import recipeImageNotFound from '../../assets/recipe_not_found.jpg'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 import AddBar from '../components/AddBar'
 import APIFoodplan from '../helper/API/APIFoodplan'
 import SafeComponent from '../components/SafeComponent'
@@ -74,8 +74,6 @@ export default class AddToFoodplan extends SafeComponent<
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     const image = (item: any) => ({
       width: GlobalStyles().appWidth,
       height: 150,
@@ -90,6 +88,7 @@ export default class AddToFoodplan extends SafeComponent<
           height: GlobalStyles().appHeight - GlobalStyles().statusbarHeight,
         }}
       >
+        <RedirectIfPossible to={this.state.redirect} />
         <Navigation label={Language.get('addrecipetofoodplan')} />
         <AddBar
           onType={showOnly => this.setState({ showOnly })}

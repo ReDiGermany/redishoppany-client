@@ -11,7 +11,7 @@ import {
 import Navigation from '../../components/Navigation'
 import Moveable from '../../components/Moveable/Moveable'
 import GlobalStyles from '../../styles/GlobalStyles'
-import { Redirect } from '../../Router/react-router'
+import { RedirectIfPossible } from '../../Router/react-router'
 import Alert from '../../components/Alert'
 import Language from '../../language/Language'
 
@@ -46,10 +46,9 @@ export default class LoginAnon extends SafeComponent<ILoginAnonProps> {
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     return (
       <>
+        <RedirectIfPossible to={this.state.redirect} />
         {this.state.alert.text !== '' && (
           <Alert
             onClose={() => {

@@ -20,7 +20,7 @@ import LoginInputEmail from './Login/LoginInputEmail'
 import LoginInputPassword from './Login/LoginInputPassword'
 import RegisterTitle from './Login/RegisterTitle'
 import IRegisterState from '../interfaces/IRegisterState'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 import SafeComponent from '../components/SafeComponent'
 
 export default class Register extends SafeComponent<
@@ -93,7 +93,7 @@ export default class Register extends SafeComponent<
 
         setTimeout(async () => this.setState({ redirect: '/' }), 3 * 1000)
       } else this.setState({ alert: WarningAlert('register.unsuccess') })
-    } catch (e) {
+    } catch (e: any) {
       if (e.message === 'Request failed with status code 406')
         this.setState({ alert: ErrorAlert('register.406') })
       else if (e.message === 'Request failed with status code 400')
@@ -114,8 +114,6 @@ export default class Register extends SafeComponent<
   }
 
   render() {
-    if (this.state.redirect) return <Redirect to={this.state.redirect} />
-
     const keyboardDetection = {
       update: (keyboardHeight: any) => this.setState({ keyboardHeight }),
     }
@@ -132,6 +130,7 @@ export default class Register extends SafeComponent<
 
     return (
       <KeyboardDetection {...keyboardDetection}>
+        <RedirectIfPossible to={this.state.redirect} />
         <BackgroundImage>
           <Navigation url="/login" label="Registration" />
           {this.state.alert.text !== '' && (

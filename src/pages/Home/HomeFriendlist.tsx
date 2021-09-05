@@ -11,7 +11,7 @@ import APIFriends from '../../helper/API/APIFriends'
 import IPageState from '../../interfaces/IPageState'
 import IFriend from '../../interfaces/IFriend'
 import IAPIFriendsList from '../../interfaces/IAPIFriendsList'
-import { Redirect } from '../../Router/react-router'
+import {  RedirectIfPossible } from '../../Router/react-router'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import INavigationPropsButton from '../../interfaces/INavigationPropsButton'
@@ -136,8 +136,6 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     const allowed =
       (this.props.user?.profile.isAnon && this.props.user?.profile.confirmed) ??
       false
@@ -193,6 +191,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
 
     return (
       <View>
+        <RedirectIfPossible to={this.state.redirect} />
         {this.state.alert.text !== '' && (
           <Alert
             onClose={() =>

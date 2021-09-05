@@ -6,12 +6,12 @@ import NavigationButtonIconStyle from '../styles/NavigationButtonIconStyle'
 import NavigationTitle from './NavigationTitle'
 import IconBoxStyle from '../styles/IconBoxStyle'
 import INavigationProps from '../interfaces/INavigationProps'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 import SafeComponent from './SafeComponent'
 
 export default class Navigation extends SafeComponent<INavigationProps> {
   state = {
-    back: false,
+    redirect: '',
   }
 
   componentDidMount() {
@@ -20,7 +20,7 @@ export default class Navigation extends SafeComponent<INavigationProps> {
 
   backHandler() {
     if (!this.props.simple) {
-      this.setState({ back: true })
+      this.setState({ redirect: this.props.url ?? '/' })
 
       return true
     }
@@ -35,8 +35,6 @@ export default class Navigation extends SafeComponent<INavigationProps> {
   }
 
   render() {
-    if (this.state.back) return <Redirect to={this.props.url ?? '/'} />
-
     const navigationTitle = {
       ...this.props,
       onPress: () => this.setState({ back: true }),
@@ -60,6 +58,7 @@ export default class Navigation extends SafeComponent<INavigationProps> {
 
     return (
       <View>
+        <RedirectIfPossible to={this.state.redirect} />
         <View style={ContainerStyle}>
           <NavigationTitle {...navigationTitle} />
           {this.props.buttons?.map(item => (

@@ -10,7 +10,7 @@ import IPageProps from '../interfaces/IPageProps'
 import Language from '../language/Language'
 import ListHeader from '../components/ListHeader'
 import Navigation from '../components/Navigation'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 import GlobalStyles from '../styles/GlobalStyles'
 import ISettingsState from '../interfaces/ISettingsState'
 import SafeComponent from '../components/SafeComponent'
@@ -78,7 +78,6 @@ export default class Settings extends SafeComponent<
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
     const activeFoodplanName =
       this.state.plans
         .filter(item => item.active)
@@ -87,6 +86,7 @@ export default class Settings extends SafeComponent<
 
     return (
       <>
+        <RedirectIfPossible to={this.state.redirect} />
         <View
           style={{
             height: GlobalStyles().appHeight - GlobalStyles().statusbarHeight,

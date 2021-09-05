@@ -11,7 +11,7 @@ import LoginHeading from './LoginHeading'
 import LoginSocialButton from './LoginSocialButton'
 import LoginLongButton from './LoginLongButton'
 import GlobalStyles from '../../styles/GlobalStyles'
-import { Redirect } from '../../Router/react-router'
+import {  RedirectIfPossible } from '../../Router/react-router'
 import APIUser from '../../helper/API/APIUser'
 import Alert from '../../components/Alert'
 import ILoginState from '../../interfaces/ILoginState'
@@ -175,8 +175,6 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     let boxHeight = 30 + 20 // welcome text + subline text
     boxHeight += 2 * (GlobalStyles().barHeight + 30) // input fields
     boxHeight += GlobalStyles().barHeight + 30 // login btn
@@ -185,12 +183,9 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
     boxHeight += 40 // heading
     boxHeight += GlobalStyles().lineHeight // register / anonym
 
-    // if (this.state.loggedin) return <Redirect to="/" />
-
-    // console.log(this.state.alert)
-
     return (
       <BackgroundImage>
+        <RedirectIfPossible to={this.state.redirect} />
         {this.state.alert.text !== '' && (
           <Alert
             onClose={async () => {

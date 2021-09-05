@@ -1,5 +1,5 @@
 import React from 'react'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 import Moveable from './Moveable/Moveable'
 import SafeComponent from './SafeComponent'
 
@@ -9,10 +9,9 @@ export default class RestrictedAnon extends SafeComponent {
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     return (
       <>
+        <RedirectIfPossible to={this.state.redirect} />
         <Moveable
           name="Du must eingeloggt sein,"
           secondText="um diese Seite nutzen zu können"
