@@ -72,31 +72,51 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
 
     return (
       <View>
-        <Route
-          path="/reload"
-          render={() => <Reload onReload={async () => this.reloadMe(false)} />}
-        />
-        <Route path="/notconnected" render={() => <NotConnected />} />
-        <Route path="/backgrounds" render={() => <Backgrounds />} />
-        <Route path="/about" render={() => <About user={user} />} />
-        <Route path="/register" render={() => <Register />} />
-        <Route
-          path="/foodplan/add"
-          render={() => <AddToFoodplan user={user} />}
-        />
-        <Route path="/imprint" render={() => <Imprint user={user} />} />
+        <Route path="/reload">
+          <Reload onReload={async () => this.reloadMe(false)} />
+        </Route>
+        <Route path="/notconnected">
+          <NotConnected />
+        </Route>
+        <Route path="/backgrounds">
+          <Backgrounds />
+        </Route>
+        <Route path="/about">
+          <About user={user} />
+        </Route>
+        <Route path="/register">
+          <Register />
+        </Route>
+        <Route path="/foodplan/add">
+          <AddToFoodplan user={user} />
+        </Route>
+        <Route path="/imprint">
+          <Imprint user={user} />
+        </Route>
+        <Route path="/settings">
+          <Settings user={user} />
+        </Route>
+        <Route path="/notifications">
+          <Notifications user={user} />
+        </Route>
+        <Route path="/recipe/add">
+          <EditRecipe user={user} />
+        </Route>
+        <Route path="/logout">
+          <Logout user={user} />
+        </Route>
+        <Route path="/login">
+          <Login onReloadMe={() => this.reloadMe(false)} />
+        </Route>
+        <Route path="/login/anon">
+          <LoginAnon onReloadMe={() => this.reloadMe(false)} />
+        </Route>
         <Route
           path="/list/:id"
           render={(props: any) => (
             <List user={user} id={props.match.params.id} />
           )}
-        />
-        <Route path="/settings" render={() => <Settings user={user} />} />
-        <Route
-          path="/notifications"
-          render={() => <Notifications user={user} />}
-        />
-        <Route path="/recipe/add" render={() => <EditRecipe user={user} />} />
+        ></Route>
         <Route
           path="/recipe/edit/:id"
           render={props => (
@@ -108,15 +128,6 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
           render={(props: any) => (
             <Recipe user={user} id={props.match.params.id} />
           )}
-        />
-        <Route path="/logout" render={() => <Logout user={user} />} />
-        <Route
-          path="/login"
-          render={() => <Login onReloadMe={() => this.reloadMe(false)} />}
-        />
-        <Route
-          path="/login/anon"
-          render={() => <LoginAnon onReloadMe={() => this.reloadMe(false)} />}
         />
         <Route
           path="/updatecat/:id"
@@ -137,7 +148,6 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
             )
           }
         />
-        {/* <Settings user={this.state.user} /> */}
       </View>
     )
   }
