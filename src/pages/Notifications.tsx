@@ -10,6 +10,7 @@ import SafeComponent from '../components/SafeComponent'
 import GlobalStyles from '../styles/GlobalStyles'
 import Language from '../language/Language'
 import ScrollView from '../components/ScrollView'
+import InfoMoveable from '../components/Moveable/InfoMoveable'
 
 export default class Notifications extends SafeComponent<
   IPageProps,
@@ -21,9 +22,10 @@ export default class Notifications extends SafeComponent<
   }
 
   async refresh() {
-    APINotification.list(notifications =>
+    APINotification.list(notifications => {
       this.setState({ refreshing: false, notifications })
-    )
+      this.props.onReload?.()
+    })
   }
 
   constructor(props: IPageProps) {
@@ -66,6 +68,9 @@ export default class Notifications extends SafeComponent<
             await this.refresh()
           }}
         >
+          {this.state.notifications.length === 0 && (
+            <InfoMoveable name="notifications.empty" />
+          )}
           {this.state.notifications.map(item => (
             <Moveable
               key={item.id}
