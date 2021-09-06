@@ -92,5 +92,6 @@
   "notification.friend_denied": "Freundschaftsanfrage verneint",
   "notification.friend_deleted": "Freund entfernt",
   "notification.recipe_invite": "Rezepteinladung",
-  "notification.friend_add": "Eingehende Freundschaftsanfrage"
+  "notification.friend_add": "Eingehende Freundschaftsanfrage",
+  "notifications.empty": "Du hast keine Benachrichtungen"
 }
