@@ -4,6 +4,7 @@ import SafeComponent from './SafeComponent'
 import IFriend from '../interfaces/IFriend'
 import Language from '../language/Language'
 import ListHeader from './ListHeader'
+import IMoveableButtonProps from '../interfaces/IMoveableButtonProps'
 
 export default class HomeFriendlistListItem extends SafeComponent<{
   list: IFriend[]
@@ -14,13 +15,7 @@ export default class HomeFriendlistListItem extends SafeComponent<{
   removeFriend?: (_friend: IFriend) => void
 }> {
   getButtons(friend: IFriend) {
-    const buttons: {
-      name: string
-      icon: string
-      color: string
-      onPress: () => void
-      disabled?: boolean | undefined
-    }[] = []
+    const buttons: IMoveableButtonProps[] = []
 
     if (this.props.denyInvite) {
       buttons.push({

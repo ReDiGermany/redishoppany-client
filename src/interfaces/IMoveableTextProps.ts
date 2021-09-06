@@ -1,3 +1,5 @@
+import IMoveableButtonProps from './IMoveableButtonProps'
+
 export default interface IMoveableTextProps {
   posX: number
   onStart?: (_x: number, _y: number) => void
@@ -6,13 +8,8 @@ export default interface IMoveableTextProps {
   touchStart?: () => void
   text?: string
   secondText?: string
-  buttons?: {
-    name: string
-    icon: string
-    color: string
-    onPress: () => void
-    disabled?: boolean
-  }[]
+  secondTextOpacity?: number
+  buttons?: IMoveableButtonProps[]
   prefix?: number | string
   to?: string
   onLongPress?: () => void
