@@ -13,7 +13,7 @@ export default class APIToken {
   }
 
   public static async list(callback?: ICallback<ITokenList>) {
-    return API.get<ITokenList>('/user/token').then(ret =>
+    return API.get<ITokenList>('/user/token', ret =>
       callback?.(ret ?? this.defaultListResponse)
     )
   }

@@ -3,7 +3,6 @@ import IShoppingList from '../../interfaces/IShoppingList'
 import IAPIShoppingListResponse from '../../interfaces/IAPIShoppingListResponse'
 import IAPIShoppingListItemResponse from '../../interfaces/IAPIShoppingListItemResponse'
 import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListItemResponseItem'
-import Language from '../../language/Language'
 import { randomColor } from '../Functions'
 import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 
@@ -34,7 +33,7 @@ export default class APIShoppingList {
   }
 
   public static async deleteAllItems(id: number, callback?: ICallbackBoolean) {
-    return API.get<boolean>(`/shoppinglist/clear/${id}`).then(ret =>
+    return API.get<boolean>(`/shoppinglist/clear/${id}`, ret =>
       callback?.(ret ?? false)
     )
   }
@@ -50,9 +49,9 @@ export default class APIShoppingList {
   public static async list(
     callback?: ICallback<IAPIShoppingListItemResponse[]>
   ) {
-    return API.get<IAPIShoppingListResponse>('/shoppinglist')
-      .then(ret => (ret === null ? this.defaultSimpleList : ret))
-      .then(ret => callback?.(ret.items))
+    return API.get<IAPIShoppingListResponse>('/shoppinglist', ret =>
+      callback?.((ret === null ? this.defaultSimpleList : ret).items)
+    )
   }
 
   // TODO: do
@@ -92,7 +91,7 @@ export default class APIShoppingList {
     id: number,
     callback: ICallback<IShoppingList>
   ) {
-    return API.get<IShoppingList>(`/shoppinglist/${id}`).then(ret =>
+    return API.get<IShoppingList>(`/shoppinglist/${id}`, ret =>
       callback?.({ ...(ret ?? this.defaultSingleList) })
     )
 

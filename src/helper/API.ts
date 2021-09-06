@@ -1,6 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios, { AxiosInstance } from 'axios'
 import * as Constants from 'expo-constants'
-import TokenStorage from './DB/TokenStorage'
+import { ICallback } from '../interfaces/ICallbacks'
 
 // Error Handling from https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
 
@@ -35,36 +36,50 @@ export default class API {
   }
 
   private static async getAuth() {
-    const { email: username, token: password } = await TokenStorage.get()
+    const password = (await AsyncStorage.getItem('token')) ?? ''
+    const username = (await AsyncStorage.getItem('email')) ?? ''
 
     return { auth: { username, password } }
   }
 
-  public static async get<T>(uri: string): Promise<T | null> {
-    const auth = await API.getAuth()
-    const ret = await API.axiosInstance.get(uri, auth).catch(error => {
-      console.log('AXIOS::GET::ERROR', { url: this.config.baseURL + uri, auth })
-      // Error 😨
-      if (error.response) {
-        // The request was made and the server responded with a status code that falls out of the range of 2xx
-        console.log(
-          'error.response',
-          error.response.status,
-          error.response.statusText
-        )
-      } else if (error.request) {
-        // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
-        console.log('error.request', error.request)
-      } else {
-        // Something happened in setting up the request and triggered an Error
-        console.log('Error', error.message)
+  public static async get<T>(uri: string, callback?: ICallback<T>) {
+    AsyncStorage.getItem(uri).then(async strRet => {
+      if (strRet) {
+        const storeData: T = JSON.parse(strRet)
+        callback?.(storeData)
       }
+      const auth = await API.getAuth()
+      const ret = await API.axiosInstance.get(uri, auth).catch(error => {
+        console.log('AXIOS::GET::ERROR', {
+          url: this.config.baseURL + uri,
+          auth,
+        })
+        // Error 😨
+        if (error.response) {
+          // The request was made and the server responded with a status code that falls out of the range of 2xx
+          console.log(
+            'error.response',
+            error.response.status,
+            error.response.statusText
+          )
+        } else if (error.request) {
+          // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
+          console.log('error.request', error.request)
+        } else {
+          // Something happened in setting up the request and triggered an Error
+          console.log('Error', error.message)
+        }
+      })
+
+      if (!ret) return null
+
+      const returnData =
+        typeof ret.data === 'object' && 'data' in ret.data
+          ? ret.data.data
+          : ret.data
+      callback?.(returnData)
+      await AsyncStorage.setItem(uri, JSON.stringify(returnData))
     })
-    if (!ret) return null
-
-    if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
-
-    return ret.data
   }
 
   public static async post<T>(uri: string, data: any): Promise<T | null> {

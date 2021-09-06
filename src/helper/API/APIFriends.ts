@@ -6,7 +6,6 @@ import {
   ICallbackBoolean,
   ICallbackString,
 } from '../../interfaces/ICallbacks'
-import UserStorage from '../DB/UserStorage'
 
 export default class APIFriends {
   private static defaultList: IAPIFriendsList = {
@@ -16,15 +15,13 @@ export default class APIFriends {
   }
 
   public static async list(callback?: ICallback<IAPIFriendsList>) {
-    return API.get<IAPIFriendsList>('/friends').then(ret =>
+    return API.get<IAPIFriendsList>('/friends', ret =>
       callback?.(ret ?? this.defaultList)
     )
   }
 
   public static async shortList(callback?: ICallback<IFriend[]>) {
-    return API.get<IFriend[]>('/friends?short').then(ret =>
-      callback?.(ret ?? [])
-    )
+    return API.get<IFriend[]>('/friends?short', ret => callback?.(ret ?? []))
   }
 
   public static async add(
@@ -63,12 +60,8 @@ export default class APIFriends {
   }
 
   public static async qr(callback?: ICallbackString) {
-    UserStorage.getQR(qr => {
-      callback?.(qr)
-      API.get<string>('/friends/qr').then(ret => {
-        callback?.(ret ?? '')
-        UserStorage.setQR(ret ?? '')
-      })
+    API.get<string>('/friends/qr', ret => {
+      callback?.(ret ?? '')
     })
   }
 }

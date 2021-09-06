@@ -1,6 +1,5 @@
 import API from '../API'
 import IAPICategory from '../../interfaces/IAPICategory'
-import CategoryStorage from '../DB/CategoryStorage'
 import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 
 export default class APICategory {
@@ -31,10 +30,9 @@ export default class APICategory {
     listId: number,
     callback?: ICallback<IAPICategory[]>
   ) {
-    return API.get<IAPICategory[]>(`/category/${listId}`).then(ret => {
+    return API.get<IAPICategory[]>(`/category/${listId}`, ret => {
       if (ret) {
         callback?.(ret ?? [])
-        CategoryStorage.set(listId, ret ?? [])
       }
     })
   }

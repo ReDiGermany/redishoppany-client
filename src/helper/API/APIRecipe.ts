@@ -3,7 +3,6 @@ import IAPIRecipeDetails from '../../interfaces/IAPIRecipeDetails'
 import IAPIRecipeDetailsItem from '../../interfaces/IAPIRecipeDetailsItem'
 import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 import API from '../API'
-import RecipeStorage from '../DB/RecipeStorage'
 
 export default class APIRecipe {
   private static defaultGetSingle: IAPIRecipeDetails = {
@@ -32,12 +31,8 @@ export default class APIRecipe {
   }
 
   public static async list(callback?: ICallback<IAPIRecipe[]>) {
-    RecipeStorage.getList().then(list => {
-      callback?.(list)
-      API.get<IAPIRecipe[]>('/recipe').then(ret => {
-        callback?.(ret ?? [])
-        RecipeStorage.setList(ret ?? [])
-      })
+    API.get<IAPIRecipe[]>('/recipe', ret => {
+      callback?.(ret ?? [])
     })
   }
 
@@ -45,7 +40,7 @@ export default class APIRecipe {
     id: number,
     callback?: ICallback<IAPIRecipeDetails>
   ) {
-    return API.get<IAPIRecipeDetails>(`/recipe/${id}`).then(ret =>
+    return API.get<IAPIRecipeDetails>(`/recipe/${id}`, ret =>
       callback?.(ret ?? this.defaultGetSingle)
     )
   }

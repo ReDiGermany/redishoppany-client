@@ -19,9 +19,7 @@ export default class APIFoodplan {
   }
 
   public static async list(callback?: ICallback<IFoodplanKw[]>) {
-    return API.get<IFoodplanKw[]>('/foodplan').then(ret =>
-      callback?.(ret ?? [])
-    )
+    return API.get<IFoodplanKw[]>('/foodplan', ret => callback?.(ret ?? []))
   }
 
   public static async remove(id: number, callback?: ICallbackBoolean) {
@@ -53,7 +51,7 @@ export default class APIFoodplan {
   }
 
   public static async listPlans(callback?: ICallback<IFoodplanPlan[]>) {
-    return API.get<IFoodplanPlan[]>('/foodplan/plans').then(ret =>
+    return API.get<IFoodplanPlan[]>('/foodplan/plans', ret =>
       callback?.(ret ?? [])
     )
   }

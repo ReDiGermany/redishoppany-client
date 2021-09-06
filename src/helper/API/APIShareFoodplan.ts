@@ -28,8 +28,8 @@ export default class APIShareFoodplan {
   }
 
   public static async list(callback?: ICallback<IAPIShareFoodplanFriends[]>) {
-    return API.get<IAPIShareFoodplanFriends[]>(`/share/foodplan/invite`).then(
-      ret => callback?.(ret ?? [])
+    return API.get<IAPIShareFoodplanFriends[]>(`/share/foodplan/invite`, ret =>
+      callback?.(ret ?? [])
     )
   }
 }

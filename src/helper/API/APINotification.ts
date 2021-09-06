@@ -4,7 +4,7 @@ import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 
 export default class APINotification {
   public static async list(callback?: ICallback<IAPINotification[]>) {
-    return API.get<IAPINotification[]>('/notification').then(ret =>
+    return API.get<IAPINotification[]>('/notification', ret =>
       callback?.(ret ?? [])
     )
   }

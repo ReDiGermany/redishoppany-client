@@ -1,9 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import IAPIUserMe from '../../interfaces/IAPIUserMe'
 import API from '../API'
 import { IAPIVendorLogin } from '../../interfaces/IAPIVendorLogin'
-import TokenStorage from '../DB/TokenStorage'
 import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
-import UserStorage from '../DB/UserStorage'
 
 export default class APIUser {
   public static async checkGoogleToken(
@@ -25,17 +24,10 @@ export default class APIUser {
   }
 
   public static async getMe(callback?: ICallback<IAPIUserMe | boolean>) {
-    const hasToken = await TokenStorage.exists()
-    if (hasToken) {
-      UserStorage.get().then(user => {
-        callback?.(user)
-        API.get<IAPIUserMe>('/user/me').then(ret => {
-          if (ret) {
-            callback?.(ret)
-            UserStorage.set(ret)
-          }
-        })
-      })
+    const password = (await AsyncStorage.getItem('token')) ?? ''
+    const username = (await AsyncStorage.getItem('email')) ?? ''
+    if (password !== '' && username !== '') {
+      API.get<IAPIUserMe>('/user/me', ret => callback?.(ret))
     } else callback?.(false)
   }
 
@@ -80,15 +72,15 @@ export default class APIUser {
       password,
     })
 
-    if (ret.status === 202) await TokenStorage.set(email, ret.data.data.token)
-
+    if (ret.status === 202) {
+      await AsyncStorage.setItem('token', ret.data.data.token)
+      await AsyncStorage.setItem('email', email)
+    }
     callback?.(ret.status === 202)
   }
 
   public static async logout(callback?: ICallbackBoolean) {
-    return API.get<boolean>('/user/logout').then(ret =>
-      callback?.(ret ?? false)
-    )
+    return API.get<boolean>('/user/logout', ret => callback?.(ret ?? false))
   }
 
   public static async registerAnon(callback?: ICallbackBoolean) {
@@ -100,7 +92,8 @@ export default class APIUser {
 
     if (!data) return false
 
-    await TokenStorage.set(data.data.data.email, data.data.data.token)
+    await AsyncStorage.setItem('token', data.data.data.token)
+    await AsyncStorage.setItem('email', data.data.data.email)
 
     callback?.(true)
 
