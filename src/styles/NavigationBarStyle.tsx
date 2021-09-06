@@ -13,13 +13,16 @@ export const container = (solid?: boolean) => {
 export const badge = (color: string) => {
   const d: TextStyle = {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    color,
+    top: 15,
+    right: 15,
+    height: 10,
+    width: 10,
+    backgroundColor: color,
     fontWeight: 'bold',
     paddingVertical: 2,
     paddingHorizontal: 5,
-    borderRadius: 3,
+    // borderRadius: 3,
+    borderRadius: 10,
     zIndex: 1,
     fontSize: 10,
   }

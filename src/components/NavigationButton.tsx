@@ -1,6 +1,6 @@
 import React from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { Text, Pressable } from 'react-native'
+import { Text, Pressable, View } from 'react-native'
 import INavigationPropsButton from '../interfaces/INavigationPropsButton'
 import IconBoxStyle from '../styles/IconBoxStyle'
 import { badge } from '../styles/NavigationBarStyle'
@@ -18,9 +18,9 @@ export default class NavigationButton extends SafeComponent<{
         style={IconBoxStyle}
       >
         {this.props.item.badge && (
-          <Text style={badge(this.props.item.badge.color)}>
-            {this.props.item.badge.text}
-          </Text>
+          <View style={badge(this.props.item.badge.color)}>
+            {/* {this.props.item.badge.text} */}
+          </View>
         )}
         <Text style={NavigationButtonIconStyle}>
           <Icon name={this.props.item.icon} size={15} />
