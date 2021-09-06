@@ -2,6 +2,7 @@ import React from 'react'
 import IAPIUserMe from '../interfaces/IAPIUserMe'
 import INavigationPropsButton from '../interfaces/INavigationPropsButton'
 import Language from '../language/Language'
+import { RedirectIfPossible } from '../Router/react-router'
 import Navigation from './Navigation'
 import SafeComponent from './SafeComponent'
 
@@ -11,6 +12,10 @@ export default class HomeNavigation extends SafeComponent<{
   user?: IAPIUserMe
   buttons?: INavigationPropsButton[]
 }> {
+  state = {
+    redirect: '',
+  }
+
   render() {
     const buttons: INavigationPropsButton[] = this.props.buttons ?? []
 
@@ -26,12 +31,15 @@ export default class HomeNavigation extends SafeComponent<{
       })
 
     return (
-      <Navigation
-        solid={this.props.isTop}
-        label={Language.getOrText(this.props.name)}
-        simple={true}
-        buttons={buttons}
-      />
+      <>
+        <RedirectIfPossible to={this.state.redirect} />
+        <Navigation
+          solid={this.props.isTop}
+          label={Language.getOrText(this.props.name)}
+          simple={true}
+          buttons={buttons}
+        />
+      </>
     )
   }
 }
