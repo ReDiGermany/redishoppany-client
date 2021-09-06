@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, ToastAndroid } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Navigation from '../components/Navigation'
 import ListHeader from '../components/ListHeader'
 import GlobalStyles, { KeyboardDetection } from '../styles/GlobalStyles'
@@ -11,7 +10,7 @@ import BottomBox from '../components/BottomBox'
 import IShoppingListItem from '../interfaces/IShoppingListItem'
 import IPageListState from '../interfaces/IPageListState'
 import IPageListProps from '../interfaces/IPageListProps'
-import { Redirect } from '../Router/react-router'
+import { RedirectIfPossible } from '../Router/react-router'
 import IShoppingListCategory from '../interfaces/IShoppingListCategory'
 import APICategory from '../helper/API/APICategory'
 import SafeComponent from '../components/SafeComponent'
@@ -23,6 +22,7 @@ import {
 import Alert from '../components/Alert'
 import BackgroundImage from '../components/BackgroundImage'
 import ScrollView from '../components/ScrollView'
+import APIShareShoppinglist from '../helper/API/APIShareShoppinglist'
 
 // TODO: Finalize
 export default class List extends SafeComponent<
@@ -46,11 +46,13 @@ export default class List extends SafeComponent<
     listId: 0,
     newCatBox: false,
     moveToListBox: false,
+    shareBox: false,
     newCatItem: undefined,
     newItemList: undefined,
     newListCats: [],
     alert: DefAlert,
     keyboardHeight: 0,
+    friends: [],
   }
 
   showUpdateCategories() {
@@ -78,6 +80,7 @@ export default class List extends SafeComponent<
   }
 
   showShareContext() {
+    this.setState({ settings: false, shareBox: true })
     // TODO: implement
   }
 
@@ -133,6 +136,9 @@ export default class List extends SafeComponent<
   }
 
   async refresh() {
+    APIShareShoppinglist.friends(this.props.id, friends =>
+      this.setState({ friends })
+    )
     APIShoppingList.singleList(this.props.id, async d => {
       const data = d
       data.categories.forEach((cat, catIdx) => {
@@ -170,8 +176,10 @@ export default class List extends SafeComponent<
     await this.refresh()
   }
 
-  leaveList(): Promise<void> {
-    throw new Error('Method not implemented.')
+  leaveList() {
+    APIShareShoppinglist.leave(this.props.id)
+    this.props.onReload?.()
+    this.setState({ redirect: '/' })
   }
 
   async moveItemToOtherList(listId: number) {
@@ -181,8 +189,6 @@ export default class List extends SafeComponent<
   }
 
   render() {
-    if (this.state.redirect !== '') return <Redirect to={this.state.redirect} />
-
     const onRefresh = async () => {
       this.setState({ refreshing: true })
       await this.refresh()
@@ -194,47 +200,45 @@ export default class List extends SafeComponent<
         this.state.items[0].items.length === 0 &&
         this.state.items[1].items.length === 0)
 
-    const listOptions = [
-      {
-        active: false,
-        name: 'Update Categories',
-        onClick: () => this.showUpdateCategories(),
-        icon: 'edit',
-      },
-      {
-        active: false,
-        name: 'Share List',
-        onClick: () => this.showShareContext(),
-        icon: 'share-alt',
-      },
-      {
-        active: false,
-        name: 'Delete List',
-        onClick: () => {
-          ToastAndroid.show('Swipe to delete', 1000)
+    let listOptions: any[] = []
+
+    if (this.state.owned)
+      listOptions = [
+        ...listOptions,
+        {
+          active: false,
+          name: 'Update Categories',
+          onClick: () => this.showUpdateCategories(),
+          icon: 'edit',
         },
-        onDelete: () => this.delteList(),
-        icon: 'times',
-      },
-    ]
+        {
+          active: false,
+          name: 'Share List',
+          onClick: () => this.showShareContext(),
+          icon: 'share-alt',
+        },
+        {
+          active: false,
+          name: 'Delete List',
+          onClick: () => ToastAndroid.show('Swipe to delete', 1000),
+          onDelete: () => this.delteList(),
+          icon: 'times',
+        },
+      ]
 
     if (!emptyList)
       listOptions.unshift(
         {
           active: false,
           name: 'Delete bought Items',
-          onClick: () => {
-            ToastAndroid.show('Swipe to delete', 1000)
-          },
+          onClick: () => ToastAndroid.show('Swipe to delete', 1000),
           onDelete: () => this.deleteBoughtItems(),
           icon: 'hand-holding-usd',
         },
         {
           active: false,
           name: 'Delete all items on List',
-          onClick: () => {
-            ToastAndroid.show('Swipe to delete', 1000)
-          },
+          onClick: () => ToastAndroid.show('Swipe to delete', 1000),
           onDelete: () => this.deleteItems(),
           icon: 'trash',
         }
@@ -244,9 +248,7 @@ export default class List extends SafeComponent<
       listOptions.push({
         active: false,
         name: 'Leave list',
-        onClick: () => {
-          ToastAndroid.show('Swipe to delete', 1000)
-        },
+        onClick: () => ToastAndroid.show('Swipe to delete', 1000),
         onDelete: () => this.leaveList(),
         icon: 'sign-out-alt',
       })
@@ -255,6 +257,7 @@ export default class List extends SafeComponent<
       <KeyboardDetection
         update={(keyboardHeight: any) => this.setState({ keyboardHeight })}
       >
+        <RedirectIfPossible to={this.state.redirect} />
         {this.state.alert.text !== '' && <Alert {...this.state.alert} />}
         <BackgroundImage>
           <Navigation
@@ -364,24 +367,39 @@ export default class List extends SafeComponent<
           <BottomBox
             title="Listen Optionen"
             style={{ bottom: 0, zIndex: this.state.settings ? 10000 : -1 }}
+            onClose={() => this.setState({ settings: false })}
             items={listOptions}
-            onClose={() => {
-              this.setState({ settings: false })
-            }}
             open={this.state.settings}
+          />
+          <BottomBox
+            title="Liste Teilen"
+            style={{ bottom: 0, zIndex: this.state.shareBox ? 10000 : -1 }}
+            items={this.state.friends.map(item => ({
+              onClick: async () => {
+                await APIShareShoppinglist.invite(this.props.id, item.userId)
+                this.setState({ shareBox: false })
+              },
+              onDelete: item.inList
+                ? async () => {
+                    await APIShareShoppinglist.revoke(item.id)
+                    this.setState({ shareBox: false })
+                    this.refresh()
+                  }
+                : undefined,
+              name: item.name,
+              active: item.inList,
+            }))}
+            onClose={() => this.setState({ shareBox: false })}
+            open={this.state.shareBox}
           />
           <BottomBox
             title="Select new List"
             items={this.state.lists.map(item => ({
               active: item.id === this.state.listId,
               name: item.name,
-              onClick: () => {
-                this.moveItemToOtherList(item.id)
-              },
+              onClick: () => this.moveItemToOtherList(item.id),
             }))}
-            onClose={() => {
-              this.setState({ bottomBox: false })
-            }}
+            onClose={() => this.setState({ bottomBox: false })}
             open={this.state.bottomBox}
           />
           <BottomBox
@@ -398,9 +416,7 @@ export default class List extends SafeComponent<
                 this.refresh()
               },
             }))}
-            onClose={() => {
-              this.setState({ moveToListBox: false })
-            }}
+            onClose={() => this.setState({ moveToListBox: false })}
             open={this.state.moveToListBox}
           />
           <BottomBox
@@ -415,9 +431,7 @@ export default class List extends SafeComponent<
                   await this.updateItemCategory(cat)
                 },
               }))}
-            onClose={() => {
-              this.setState({ newCatBox: false })
-            }}
+            onClose={() => this.setState({ newCatBox: false })}
             open={this.state.newCatBox}
           />
         </BackgroundImage>
