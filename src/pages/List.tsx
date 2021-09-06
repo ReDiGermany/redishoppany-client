@@ -89,14 +89,8 @@ export default class List extends SafeComponent<
     }
   }
 
-  async componentDidMount() {
-    const listName =
-      (await AsyncStorage.getItem(`listname-${this.props.id}`)) ?? 'Loading..'
-    this.setState({ listName })
-    const items = await AsyncStorage.getItem(`list-${this.props.id}`)
-    if (items) this.setState({ items: JSON.parse(items) })
-    const lists = await AsyncStorage.getItem('lists')
-    if (lists) this.setState({ lists: JSON.parse(lists) })
+  constructor(props: IPageListProps) {
+    super(props)
     this.refresh()
   }
 
@@ -139,7 +133,7 @@ export default class List extends SafeComponent<
   }
 
   async refresh() {
-    await APIShoppingList.singleList(this.props.id, async d => {
+    APIShoppingList.singleList(this.props.id, async d => {
       const data = d
       data.categories.forEach((cat, catIdx) => {
         const items: any[] = []
@@ -163,17 +157,6 @@ export default class List extends SafeComponent<
         items: data.categories,
         listName: data.name,
         listId: data.id,
-      })
-
-      await AsyncStorage.setItem(
-        `list-${this.props.id}`,
-        JSON.stringify(data.categories)
-      )
-      await AsyncStorage.setItem(`listname-${this.props.id}`, data.name)
-
-      await APIShoppingList.simpleList(async lists => {
-        this.setState({ refreshing: false, lists })
-        await AsyncStorage.setItem('lists', JSON.stringify(lists))
       })
     })
   }
