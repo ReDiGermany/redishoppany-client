@@ -17,18 +17,22 @@ export default class HomeNavigation extends SafeComponent<{
   }
 
   render() {
-    const buttons: INavigationPropsButton[] = this.props.buttons ?? []
+    let buttons = this.props.buttons ?? []
 
-    if (this.props.user?.notificationCount)
-      buttons.unshift({
-        icon: 'bell',
-        name: 'notifications',
-        onClick: () => this.setState({ redirect: '/notifications' }),
-        badge: {
-          color: '#900000',
-          text: this.props.user?.notificationCount.toString(),
+    if (this.props.user?.notificationCount) {
+      buttons = [
+        {
+          icon: 'bell',
+          name: 'notifications',
+          onClick: () => this.setState({ redirect: '/notifications' }),
+          badge: {
+            color: '#900000',
+            text: this.props.user?.notificationCount.toString(),
+          },
         },
-      })
+        ...buttons,
+      ]
+    }
 
     return (
       <>
