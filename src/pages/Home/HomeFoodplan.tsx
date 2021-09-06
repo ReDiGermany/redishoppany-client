@@ -69,6 +69,7 @@ export default class Foodplan extends SafeComponent<
       <View>
         <RedirectIfPossible to={this.state.redirect} />
         <HomeNavigation
+          user={this.props.user}
           isTop={this.state.isTop}
           name="foodlist"
           buttons={[
