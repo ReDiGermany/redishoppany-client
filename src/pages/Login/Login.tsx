@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import { View } from 'react-native'
 import * as AuthSession from 'expo-auth-session'
@@ -28,7 +29,6 @@ import {
 import { filterRedirectUrl } from '../../helper/Functions'
 import { FB_APP_ID, GOOGLE_CLIENT_ID } from '../../helper/Constants'
 import SafeComponent from '../../components/SafeComponent'
-import TokenStorage from '../../helper/DB/TokenStorage'
 
 export default class Login extends SafeComponent<ILoginProps, ILoginState> {
   state: ILoginState = {
@@ -62,6 +62,11 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
     })
   }
 
+  async setToken(email: string, token: string) {
+    await AsyncStorage.setItem('email', email)
+    await AsyncStorage.setItem('token', token)
+  }
+
   handleGooglePressAsync = async () => {
     const redirectUrl = 'https://auth.expo.io/@redigermany/lisha'
     const returnUrl = AuthSession.getDefaultReturnUrl()
@@ -86,7 +91,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
                 loggedin: true,
               })
               const { email, token: t1 } = tokenResult
-              await TokenStorage.set(email, t1)
+              await this.setToken(email, t1)
               this.reloadApp()
             }
           }, 2000)
@@ -120,7 +125,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
                     loggedin: true,
                   })
                   const { email, token: t1 } = tokenResult
-                  await TokenStorage.set(email, t1)
+                  await this.setToken(email, t1)
                   this.reloadApp()
                 }
               }, 2000)

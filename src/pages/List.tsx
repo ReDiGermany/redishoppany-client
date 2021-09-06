@@ -15,7 +15,11 @@ import { Redirect } from '../Router/react-router'
 import IShoppingListCategory from '../interfaces/IShoppingListCategory'
 import APICategory from '../helper/API/APICategory'
 import SafeComponent from '../components/SafeComponent'
-import { DefPreErrorAlert, SuccessAlert } from '../helper/DefinedAlerts'
+import {
+  DefAlert,
+  DefPreErrorAlert,
+  SuccessAlert,
+} from '../helper/DefinedAlerts'
 import Alert from '../components/Alert'
 import BackgroundImage from '../components/BackgroundImage'
 import ScrollView from '../components/ScrollView'
@@ -35,7 +39,7 @@ export default class List extends SafeComponent<
     lists: [],
     settings: false,
     preventScroll: false,
-    isTop: true,
+    isTop: false,
     bottomBoxState: 0,
     listName: 'Loading...',
     redirect: '',
@@ -45,7 +49,7 @@ export default class List extends SafeComponent<
     newCatItem: undefined,
     newItemList: undefined,
     newListCats: [],
-    alert: { text: '', type: 'error' },
+    alert: DefAlert,
     keyboardHeight: 0,
   }
 
@@ -297,7 +301,7 @@ export default class List extends SafeComponent<
               hasNavi={true}
               refreshing={this.state.refreshing}
               onRefresh={onRefresh}
-              isTop={isTop => this.setState({ isTop })}
+              notTop={isTop => this.setState({ isTop })}
             >
               {emptyList && (
                 <>

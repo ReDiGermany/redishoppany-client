@@ -1,4 +1,5 @@
 import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Pressable, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Language from '../language/Language'
@@ -6,7 +7,6 @@ import BottomNavigationStyle from '../styles/BottomNavigationStyle'
 import IBottomNavigationProps from '../interfaces/IBottomNavigationProps'
 import Row from './Row'
 import SafeComponent from './SafeComponent'
-import HomePageStorage from '../helper/DB/HomePageStorage'
 
 export default class BottomNavigation extends SafeComponent<IBottomNavigationProps> {
   state = {
@@ -19,12 +19,13 @@ export default class BottomNavigation extends SafeComponent<IBottomNavigationPro
     ],
   }
 
-  componentDidMount() {
-    HomePageStorage.get().then(active => this.setState({ active }))
+  async componentDidMount() {
+    const active = (await AsyncStorage.getItem('homepane')) ?? '0'
+    this.setState({ active: parseInt(active, 10) })
   }
 
   async navUpdate(index: number) {
-    HomePageStorage.set(index)
+    await AsyncStorage.setItem('homepane', index.toString())
     this.props.navUpdate(index)
   }
 

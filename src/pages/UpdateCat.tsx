@@ -12,7 +12,6 @@ import IUpdateCatState from '../interfaces/IUpdateCatState'
 import CategoryUpdater from '../components/CategoryUpdater'
 import SafeComponent from '../components/SafeComponent'
 import ScrollView from '../components/ScrollView'
-import CategoryStorage from '../helper/DB/CategoryStorage'
 
 export default class Index extends SafeComponent<
   IUpdateCatProps,
@@ -30,10 +29,9 @@ export default class Index extends SafeComponent<
     color: '',
   }
 
-  async componentDidMount() {
-    const list = await CategoryStorage.get(this.props.id)
-    if (list) this.setState({ list })
-    await this.refresh()
+  constructor(props: IUpdateCatProps) {
+    super(props)
+    this.refresh()
   }
 
   async refresh() {

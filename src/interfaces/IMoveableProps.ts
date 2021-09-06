@@ -1,16 +1,12 @@
+import IMoveableButtonProps from './IMoveableButtonProps'
+
 export default interface IMoveableProps {
   style?: any
   name?: string
   secondText?: string
   onDelete?: () => void
   right?: { icon: string; color: string; click: () => void }[]
-  buttons?: {
-    name: string
-    icon: string
-    color: string
-    onPress: () => void
-    disabled?: boolean
-  }[]
+  buttons?: IMoveableButtonProps[]
   prefix?: number | string
   to?: string
   onPop?: () => void

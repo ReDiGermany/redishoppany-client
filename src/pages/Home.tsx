@@ -1,9 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import React from 'react'
 import { View } from 'react-native'
 import BackgroundImage from '../components/BackgroundImage'
 import BottomNavigation from '../components/BottomNavigation'
 import SafeComponent from '../components/SafeComponent'
-import HomePageStorage from '../helper/DB/HomePageStorage'
 import IPageProps from '../interfaces/IPageProps'
 import HomeStyles from '../styles/HomeStyles'
 import HomeFoodplan from './Home/HomeFoodplan'
@@ -17,8 +17,8 @@ export default class Home extends SafeComponent<IPageProps> {
   }
 
   async componentDidMount() {
-    const active = await HomePageStorage.get()
-    this.setState({ active })
+    const active = (await AsyncStorage.getItem('homepane')) ?? '0'
+    this.setState({ active: parseInt(active, 10) })
   }
 
   render() {
