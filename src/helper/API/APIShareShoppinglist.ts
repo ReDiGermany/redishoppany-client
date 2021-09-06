@@ -1,7 +1,22 @@
-import { ICallbackBoolean } from '../../interfaces/ICallbacks'
+import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
+import ISharedFriend from '../../interfaces/ISharedFriend'
 import API from '../API'
 
 export default class APIShareShoppinglist {
+  public static async friends(
+    listId: number,
+    callback: ICallback<ISharedFriend[]>
+  ) {
+    return API.get<ISharedFriend[]>(
+      `/share/shoppinglist/friends/${listId}`,
+      ret => callback?.(ret ?? [])
+    )
+  }
+
+  public static async leave(listId: number) {
+    return API.delete<boolean>(`/share/shoppinglist/leave/${listId}`)
+  }
+
   public static async invite(
     listId: number,
     id: number,
