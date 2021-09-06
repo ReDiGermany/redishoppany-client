@@ -71,8 +71,12 @@ export default class Recipes extends SafeComponent<
 
   constructor(props: IRecipesProps) {
     super(props)
+    this.refresh()
+  }
+
+  refresh() {
     APIRecipe.getSingle(this.props.id, recipe => this.setState({ recipe }))
-    APIShareRecipe.list(this.props.id, friends => this.setState({ friends }))
+    APIShareRecipe.friends(this.props.id, friends => this.setState({ friends }))
   }
 
   render() {
@@ -177,13 +181,19 @@ export default class Recipes extends SafeComponent<
           open={this.state.shareBox}
           items={this.state.friends.map((friend: ISharedFriend) => ({
             onClick: () => {
-              APIShareRecipe.invite(this.props.id, friend.id, () => {
+              APIShareRecipe.invite(this.props.id, friend.userId, () => {
                 this.setState({
                   alert: SuccessAlert('Invited'),
                   shareBox: false,
                 })
               })
             },
+            onDelete: friend.inList
+              ? () => {
+                  APIShareRecipe.revoke(friend.id)
+                  this.refresh()
+                }
+              : undefined,
             name: friend.name,
             active: friend.inList,
           }))}
