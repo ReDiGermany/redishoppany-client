@@ -152,6 +152,9 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
                     ...fullTextStyle,
                     marginTop: 20,
                     position: 'absolute',
+                    color: `rgba(255,255,255,${
+                      this.props.secondTextOpacity ?? 1
+                    })`,
                   }}
                 >
                   {this.props.secondText}
