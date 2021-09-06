@@ -1,6 +1,7 @@
 import IAlertProps from './IAlertProps'
 import IAPICategory from './IAPICategory'
 import IAPIShoppingListItemResponseItem from './IAPIShoppingListItemResponseItem'
+import ISharedFriend from './ISharedFriend'
 import IShoppingListCategory from './IShoppingListCategory'
 import IShoppingListItem from './IShoppingListItem'
 
@@ -26,4 +27,6 @@ export default interface IPageListState {
   newItemList?: IShoppingListItem
   alert: IAlertProps
   keyboardHeight: number
+  shareBox: boolean
+  friends: ISharedFriend[]
 }
