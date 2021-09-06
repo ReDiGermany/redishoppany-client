@@ -17,6 +17,7 @@ export default class BackgroundImage extends SafeComponent<{ image?: number }> {
       require(`../../assets/background9.png`),
       require(`../../assets/background10.png`),
       require(`../../assets/background11.png`),
+      require(`../../assets/background.red.jpg`),
     ]
 
     return (
