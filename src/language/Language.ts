@@ -1,5 +1,10 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
+
+interface ILanguageOption {
+  [key: string]: string
+}
+
 export default class Language {
   private static instance: Language
 
@@ -30,7 +35,7 @@ export default class Language {
     }
   }
 
-  public get(name: string) {
+  public get(name: string, data: ILanguageOption = {}) {
     if (this.file === undefined) {
       console.error('[LANGUAGE::ERROR] file unknown')
 
@@ -42,16 +47,22 @@ export default class Language {
       return `{${name}}`
     }
 
-    return this.file[name]
+    let text = this.file[name]
+
+    for (const k in data) {
+      text = text.replace(`%${k}%`, data[k])
+    }
+
+    return text
   }
 
-  public static getOrText(name: string) {
+  public static getOrText(name: string, data: ILanguageOption = {}) {
     if (!(name in this.getInstance().file)) return name
 
-    return this.getInstance().get(name)
+    return this.getInstance().get(name, data)
   }
 
-  public static get(name: string) {
-    return this.getInstance().get(name)
+  public static get(name: string, data: ILanguageOption = {}) {
+    return this.getInstance().get(name, data)
   }
 }
