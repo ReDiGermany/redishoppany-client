@@ -31,28 +31,11 @@ export default class Settings extends SafeComponent<
 
   constructor(props: IPageProps) {
     super(props)
-    ;(async () => {
-      const plans = await AsyncStorage.getItem('settings-plans')
-      if (plans) this.setState({ plans: JSON.parse(plans) })
-      const foodplanFriends = await AsyncStorage.getItem(
-        'settings-foodplanFriends'
-      )
-      if (foodplanFriends)
-        this.setState({ foodplanFriends: JSON.parse(foodplanFriends) })
-    })()
-  }
-
-  async componentDidMount() {
     APIFoodplan.listPlans(async plans => {
       this.setState({ plans })
-      await AsyncStorage.setItem('settings-plans', JSON.stringify(plans))
     })
     APIShareFoodplan.list(async foodplanFriends => {
       this.setState({ foodplanFriends })
-      await AsyncStorage.setItem(
-        'settings-foodplanFriends',
-        JSON.stringify(foodplanFriends)
-      )
     })
   }
 
