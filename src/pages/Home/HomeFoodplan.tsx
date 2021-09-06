@@ -23,7 +23,7 @@ export default class Foodplan extends SafeComponent<
     plan: [],
     refreshing: false,
     suspendFirstRefresh: false,
-    isTop: true,
+    isTop: false,
     redirect: '',
     item: undefined,
   }
@@ -86,7 +86,7 @@ export default class Foodplan extends SafeComponent<
           hasNavi={true}
           refreshing={this.state.refreshing && this.state.suspendFirstRefresh}
           onRefresh={() => this.refresh()}
-          isTop={isTop => this.setState({ isTop })}
+          notTop={isTop => this.setState({ isTop })}
         >
           <PhoneNotConnected connected={this.props.connected} />
           <AnonAlert user={this.props.user} />

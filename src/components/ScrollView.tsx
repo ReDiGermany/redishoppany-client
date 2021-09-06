@@ -23,7 +23,10 @@ export default class ScrollView extends Component<IScrollViewProps> {
             />
           ) : undefined
         }
-        onScroll={e => this.props.isTop?.(e.nativeEvent.contentOffset.y <= 0)}
+        onScroll={e => {
+          this.props.isTop?.(e.nativeEvent.contentOffset.y <= 0)
+          this.props.notTop?.(e.nativeEvent.contentOffset.y > 0)
+        }}
         style={{
           backgroundColor:
             this.props.bgVisible ?? false ? '#4ea53a' : 'transparent',

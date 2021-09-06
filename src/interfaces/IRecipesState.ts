@@ -5,4 +5,5 @@ export default interface IRecipesState {
   redirect: string
   showOnly: string
   refreshing: boolean
+  isTop: boolean
 }

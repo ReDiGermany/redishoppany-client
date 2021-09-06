@@ -19,7 +19,7 @@ import HomeNavigation from '../../components/HomeNavigation'
 export default class HomeList extends SafeComponent<IPageProps> {
   state = {
     redirect: '',
-    isTop: true,
+    isTop: false,
     add: false,
     lists: this.props.user?.lists ?? [],
     refreshing: false,
@@ -74,6 +74,7 @@ export default class HomeList extends SafeComponent<IPageProps> {
         <ScrollView
           hasBottomBar={true}
           hasNavi={true}
+          isTop={isTop => this.setState({ isTop: !isTop })}
           refreshing={this.state.refreshing}
           onRefresh={() => this.onRefresh()}
         >

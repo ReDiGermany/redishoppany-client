@@ -33,6 +33,7 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
     redirect: '',
     showOnly: '',
     refreshing: false,
+    isTop: false,
   }
 
   constructor(props: IPageProps) {
@@ -98,6 +99,7 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
         <RedirectIfPossible to={this.state.redirect} />
         <HomeNavigation
           name="recipes"
+          isTop={this.state.isTop}
           user={this.props.user}
           buttons={[
             {
@@ -110,6 +112,7 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
         <ScrollView
           hasBottomBar={true}
           hasNavi={true}
+          notTop={isTop => this.setState({ isTop })}
           refreshing={this.state.refreshing}
           onRefresh={() => {
             this.setState({ refreshing: true })
