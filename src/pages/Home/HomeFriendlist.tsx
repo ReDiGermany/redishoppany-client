@@ -21,6 +21,7 @@ import HomeFriendlistListItem from '../../components/HomeFriendlistListItem'
 import RestrictedAnon from '../../components/RestrictedAnon'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
 import AnonAlert from '../../components/AnonAlert'
+import { DefAlert } from '../../helper/DefinedAlerts'
 
 export default class Friends extends SafeComponent<IPageProps, IPageState> {
   state: IPageState = {
@@ -33,18 +34,15 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
       outgoing: [],
     },
     redirect: '',
-    alert: { text: '', type: 'error' },
+    alert: DefAlert,
   }
 
   constructor(props: IPageProps) {
     super(props)
-    AsyncStorage.getItem('friendlist').then(list => {
-      if (list != null) this.setState({ list: JSON.parse(list) })
-    })
+    this.onRefresh()
   }
 
   async componentDidMount() {
-    this.onRefresh()
     Notifications.addNotificationReceivedListener(this.handleNotification)
   }
 
@@ -134,7 +132,8 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
 
   render() {
     const allowed =
-      (this.props.user?.profile.isAnon && this.props.user?.profile.confirmed) ??
+      (!this.props.user?.profile.isAnon &&
+        this.props.user?.profile.confirmed) ??
       false
 
     const buttons: INavigationPropsButton[] = []
@@ -228,18 +227,18 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
               <HomeFriendlistListItem
                 title="friends"
                 list={this.state.list.friends}
-                removeFriend={this.removeFriend}
+                removeFriend={e => this.removeFriend(e)}
               />
               <HomeFriendlistListItem
                 title="friends.incomming"
                 list={this.state.list.incomming}
-                denyInvite={this.denyInvite}
-                acceptFriend={this.acceptFriend}
+                denyInvite={e => this.denyInvite(e)}
+                acceptFriend={e => this.acceptFriend(e)}
               />
               <HomeFriendlistListItem
                 title="friends.outgoing"
                 list={this.state.list.outgoing}
-                cancleInvite={this.cancleInvite}
+                cancleInvite={e => this.cancleInvite(e)}
               />
             </>
           ) : (
