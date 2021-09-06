@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, RefreshControl, ScrollView } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Moveable from '../components/Moveable/Moveable'
 import APINotification from '../helper/API/APINotification'
 import IPageProps from '../interfaces/IPageProps'
@@ -8,6 +7,8 @@ import Navigation from '../components/Navigation'
 import { INotificationPageState } from '../interfaces/INotificationPageState'
 import IAPINotification from '../interfaces/IAPINotification'
 import SafeComponent from '../components/SafeComponent'
+import GlobalStyles from '../styles/GlobalStyles'
+import Language from '../language/Language'
 
 export default class Notifications extends SafeComponent<
   IPageProps,
@@ -19,18 +20,14 @@ export default class Notifications extends SafeComponent<
   }
 
   async refresh() {
-    APINotification.list(notifications => {
+    APINotification.list(notifications =>
       this.setState({ refreshing: false, notifications })
-      AsyncStorage.setItem('notifications', JSON.stringify(notifications))
-    })
+    )
   }
 
-  async componentDidMount() {
-    const notifications = await AsyncStorage.getItem('notifications')
-    if (notifications) {
-      this.setState({ notifications: JSON.parse(notifications) })
-      this.refresh()
-    }
+  constructor(props: IPageProps) {
+    super(props)
+    this.refresh()
   }
 
   async delete(item: IAPINotification) {
@@ -45,10 +42,14 @@ export default class Notifications extends SafeComponent<
 
   render() {
     return (
-      <View>
+      <View
+        style={{
+          height: GlobalStyles().contentHeight - GlobalStyles().barHeight,
+        }}
+      >
         <Navigation
           user={this.props.user}
-          label={'Benachrichtigungen'}
+          label="notifications"
           buttons={[
             {
               name: 'deleteAll',
@@ -70,9 +71,11 @@ export default class Notifications extends SafeComponent<
         >
           {this.state.notifications.map(item => (
             <Moveable
-              key={item.name}
+              key={item.name + item.info}
               onDelete={() => this.delete(item)}
-              name={item.name}
+              name={Language.getOrText(`notification.${item.name}`)}
+              secondText={item.info}
+              secondTextOpacity={0.5}
             />
           ))}
         </ScrollView>
