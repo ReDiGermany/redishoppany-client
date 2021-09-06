@@ -20,19 +20,26 @@ import {
   titleText,
 } from '../styles/RecipeStyle'
 import IPageProps from '../interfaces/IPageProps'
-import APIFriends from '../helper/API/APIFriends'
-import IFriend from '../interfaces/IFriend'
 import { RedirectIfPossible } from '../Router/react-router'
 import SafeComponent from '../components/SafeComponent'
+import APIRecipe from '../helper/API/APIRecipe'
+// @ts-ignore
+import recipeImageNotFound from '../../assets/recipe_not_found.jpg'
+import IAPIRecipeDetails from '../interfaces/IAPIRecipeDetails'
+import APIShareRecipe from '../helper/API/APIShareRecipe'
+import { DefAlert, SuccessAlert } from '../helper/DefinedAlerts'
+import IAlertProps from '../interfaces/IAlertProps'
+import Alert from '../components/Alert'
+import ISharedFriend from '../interfaces/ISharedFriend'
 
 interface IRecipeState {
   deleteConfirmBox: boolean
   shareBox: boolean
   focusText: boolean
-  ingredients: string[]
-  text: string
-  friends: IFriend[]
+  friends: ISharedFriend[]
   redirect: string
+  recipe: IAPIRecipeDetails
+  alert: IAlertProps
 }
 
 interface IRecipesProps extends IPageProps {
@@ -43,33 +50,43 @@ export default class Recipes extends SafeComponent<
   IRecipesProps,
   IRecipeState
 > {
-  state = {
+  state: IRecipeState = {
+    recipe: {
+      text: '',
+      lastCooked: '',
+      name: '',
+      time: '',
+      id: -1,
+      image: '',
+      owner: true,
+      items: [],
+    },
     friends: [],
     deleteConfirmBox: false,
     shareBox: false,
     focusText: false,
-    ingredients: [
-      'test',
-      'test1',
-      'test2',
-      'test3',
-      'test',
-      'test1',
-      'test2',
-      'test3',
-    ],
     redirect: '',
-    text: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+    alert: DefAlert,
+  }
+
+  constructor(props: IRecipesProps) {
+    super(props)
+    APIRecipe.getSingle(this.props.id, recipe => this.setState({ recipe }))
+    APIShareRecipe.list(this.props.id, friends => this.setState({ friends }))
   }
 
   render() {
-    // TODO: Add recipe API
-    const url =
-      'https://www.tasteoftravel.at/wp-content/uploads/Burger-vegetarisch-mit-Kidneybohnen-Rezept.jpg'
-
     return (
-      <View>
+      <View
+        style={{ height: GlobalStyles().appHeight - GlobalStyles().barHeight }}
+      >
         <RedirectIfPossible to={this.state.redirect} />
+        {this.state.alert.text !== '' && (
+          <Alert
+            onClose={() => this.setState({ alert: DefAlert })}
+            {...this.state.alert}
+          />
+        )}
         <Navigation
           user={this.props.user}
           label="Rezept"
@@ -77,10 +94,7 @@ export default class Recipes extends SafeComponent<
             {
               icon: 'share-alt',
               name: 'edit',
-              onClick: async () =>
-                APIFriends.shortList(friends =>
-                  this.setState({ friends, shareBox: true })
-                ),
+              onClick: async () => this.setState({ shareBox: true }),
             },
           ]}
         />
@@ -89,16 +103,21 @@ export default class Recipes extends SafeComponent<
             width={GlobalStyles().appWidth}
             height={150}
             style={header}
-            source={{ uri: url }}
+            source={
+              this.state.recipe.image === ''
+                ? recipeImageNotFound
+                : { uri: this.state.recipe.image }
+            }
           />
           <View>
             <Text style={titleText}>Rezept</Text>
             <Text style={titleInfo}>ca. 3h</Text>
           </View>
           <View style={ingredients}>
-            {this.state.ingredients.map((txt, index) => (
+            {this.state.recipe.items.map((txt, index) => (
               <Text key={index} style={ingredient}>
-                <Text style={ingredientBull}>&bull;</Text> {txt}
+                <Text style={ingredientBull}>&bull;</Text> {txt.amount}{' '}
+                {txt.name}
               </Text>
             ))}
           </View>
@@ -110,8 +129,8 @@ export default class Recipes extends SafeComponent<
               style={text(this.state.focusText)}
             >
               {this.state.focusText
-                ? this.state.text
-                : `${this.state.text.substr(0, 200)}... [weiterlesen]`}
+                ? this.state.recipe.text
+                : `${this.state.recipe.text.substr(0, 200)}... [weiterlesen]`}
             </Text>
           </View>
           <View style={btnBox}>
@@ -141,10 +160,9 @@ export default class Recipes extends SafeComponent<
           open={this.state.deleteConfirmBox}
           items={[
             {
-              onClick: () => {
-                // TODO: Add delete API
+              onClick: async () => {
+                await APIRecipe.delete(this.props.id)
                 this.setState({ deleteConfirmBox: false })
-                // console.log('jetzt Löschen.')
               },
               name: 'Löschen',
               active: false,
@@ -157,12 +175,17 @@ export default class Recipes extends SafeComponent<
             this.setState({ shareBox: false })
           }}
           open={this.state.shareBox}
-          items={this.state.friends.map((friend: IFriend) => ({
+          items={this.state.friends.map((friend: ISharedFriend) => ({
             onClick: () => {
-              // TODO: Add Share API
+              APIShareRecipe.invite(this.props.id, friend.id, () => {
+                this.setState({
+                  alert: SuccessAlert('Invited'),
+                  shareBox: false,
+                })
+              })
             },
-            name: `${friend.firstName} ${friend.lastName}`,
-            active: false,
+            name: friend.name,
+            active: friend.inList,
           }))}
         />
       </View>

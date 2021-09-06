@@ -13,6 +13,7 @@ export default class APIRecipe {
     owner: false,
     text: '',
     time: '',
+    items: [],
   }
 
   public static async create(

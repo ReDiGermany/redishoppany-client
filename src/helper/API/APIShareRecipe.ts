@@ -1,7 +1,12 @@
-import { ICallbackBoolean } from '../../interfaces/ICallbacks'
+import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
 import API from '../API'
+import ISharedFriend from '../../interfaces/ISharedFriend'
 
 export default class APIShareRecipe {
+  static list(listId: number, callback?: ICallback<ISharedFriend[]>) {
+    return API.get<ISharedFriend[]>(`/share/recipe/list/${listId}`, callback)
+  }
+
   public static async invite(
     recipeId: number,
     id: number,

@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Image, Text } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Link } from 'react-router-native'
 import APIRecipe from '../../helper/API/APIRecipe'
@@ -19,7 +18,6 @@ import Language from '../../language/Language'
 import recipeImageNotFound from '../../../assets/recipe_not_found.jpg'
 import { RedirectIfPossible } from '../../Router/react-router'
 import AddBar from '../../components/AddBar'
-import IAPIRecipe from '../../interfaces/IAPIRecipe'
 import SafeComponent from '../../components/SafeComponent'
 import ScrollView from '../../components/ScrollView'
 import PhoneNotConnected from '../../components/PhoneNotConnected'
@@ -38,51 +36,11 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
 
   constructor(props: IPageProps) {
     super(props)
-    ;(async () => {
-      const recipes = await AsyncStorage.getItem('recipeList')
-      if (recipes !== null) {
-        const rec: IAPIRecipe[] = JSON.parse(recipes)
-        let image: string | number | { uri: string } = -1
-        try {
-          rec.forEach((item, idx) => {
-            image = item.image
-            if (
-              typeof image === 'number' ||
-              (typeof image === 'string' && image === '') ||
-              (typeof image === 'object' && 'uri' in image && image.uri === '')
-            )
-              rec[idx].image = recipeImageNotFound
-            else rec[idx].image = { uri: item.image }
-          })
-        } catch (e) {
-          console.log('HomeRecipes.tsx', { e, rec, image })
-        }
-        this.setState({ recipes: rec })
-      }
-    })()
+    this.refresh()
   }
 
   async refresh() {
-    APIRecipe.list(async r => {
-      const recipes = r
-      recipes.forEach((item, idx) => {
-        if (
-          typeof item.image === 'number' ||
-          (typeof item.image === 'string' && item.image === '') ||
-          (typeof item.image === 'object' &&
-            'uri' in item.image &&
-            item.image.uri === '')
-        )
-          recipes[idx].image = recipeImageNotFound
-        else recipes[idx].image = { uri: item.image }
-      })
-      await AsyncStorage.setItem('recipeList', JSON.stringify(recipes))
-      this.setState({ recipes, refreshing: false })
-    })
-  }
-
-  async componentDidMount() {
-    this.refresh()
+    APIRecipe.list(recipes => this.setState({ recipes, refreshing: false }))
   }
 
   render() {
@@ -90,7 +48,7 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
       width: GlobalStyles().appWidth,
       height: 150,
       style: imageStyle,
-      source: item.image,
+      source: item.image === '' ? recipeImageNotFound : { uri: item.image },
     })
     let renderedItems = 0
 
