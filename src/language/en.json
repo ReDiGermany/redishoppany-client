@@ -87,5 +87,10 @@
   "anon.register.success.info": "Du kannst die App nun nutzen!",
   "anon.register.text": "Logge ein!",
   "anon.register.info": "Dies kann einen Moment dauern!",
-  "anon.disclaimer": "Anonym nutzen und auf community features verzichten?\n\nDu kannst anonym nicht:\n• Freunde verwalten\n• Einkaufslisten Teilen\n• Rezepte Teilen\n• Essensplan Teilen\n• Einkaufslisten von anderen nutzen\n• Rezepte von anderen nutzen\n• Essensplan von anderen nutzen \n\nDu kannst dich jedoch später immer noch dazu entscheiden, dich einzuloggen!\n\nAußerdem kannst du:\n• Listen erstellen (bis zu 5)\n• Rezepte erstellen\n• Deinen eigenen Essensplan erstellen\n• Dich später einloggen\n\nSobald du dich ausloggst/ausgelogt wirst, sind deine Daten verloren!"
+  "anon.disclaimer": "Anonym nutzen und auf community features verzichten?\n\nDu kannst anonym nicht:\n• Freunde verwalten\n• Einkaufslisten Teilen\n• Rezepte Teilen\n• Essensplan Teilen\n• Einkaufslisten von anderen nutzen\n• Rezepte von anderen nutzen\n• Essensplan von anderen nutzen \n\nDu kannst dich jedoch später immer noch dazu entscheiden, dich einzuloggen!\n\nAußerdem kannst du:\n• Listen erstellen (bis zu 5)\n• Rezepte erstellen\n• Deinen eigenen Essensplan erstellen\n• Dich später einloggen\n\nSobald du dich ausloggst/ausgelogt wirst, sind deine Daten verloren!",
+
+  "notification.friend_denied": "Freundschaftsanfrage verneint",
+  "notification.friend_deleted": "Freund entfernt",
+  "notification.recipe_invite": "Rezepteinladung",
+  "notification.friend_add": "Eingehende Freundschaftsanfrage"
 }
