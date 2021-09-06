@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, RefreshControl, ScrollView } from 'react-native'
+import { View } from 'react-native'
 import Moveable from '../components/Moveable/Moveable'
 import APINotification from '../helper/API/APINotification'
 import IPageProps from '../interfaces/IPageProps'
@@ -9,6 +9,7 @@ import IAPINotification from '../interfaces/IAPINotification'
 import SafeComponent from '../components/SafeComponent'
 import GlobalStyles from '../styles/GlobalStyles'
 import Language from '../language/Language'
+import ScrollView from '../components/ScrollView'
 
 export default class Notifications extends SafeComponent<
   IPageProps,
@@ -59,19 +60,15 @@ export default class Notifications extends SafeComponent<
           ]}
         />
         <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={async () => {
-                this.setState({ refreshing: true })
-                await this.refresh()
-              }}
-            />
-          }
+          hasNavi={true}
+          onRefresh={async () => {
+            this.setState({ refreshing: true })
+            await this.refresh()
+          }}
         >
           {this.state.notifications.map(item => (
             <Moveable
-              key={item.name + item.info}
+              key={item.id}
               onDelete={() => this.delete(item)}
               name={Language.getOrText(`notification.${item.name}`)}
               secondText={item.info}
