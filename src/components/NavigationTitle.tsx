@@ -11,6 +11,7 @@ import INavigationTitleProps from '../interfaces/INavigationTitleProps'
 import WebStyle from '../helper/WebStyle'
 import NavigationTitleStyle from '../styles/NavigationTitleStyle'
 import SafeComponent from './SafeComponent'
+import Language from '../language/Language'
 
 export default class NavigationTitle extends SafeComponent<INavigationTitleProps> {
   render() {
@@ -45,7 +46,7 @@ export default class NavigationTitle extends SafeComponent<INavigationTitleProps
             )}
           </Pressable>
         )}
-        <Text style={textStyle}>{this.props.label}</Text>
+        <Text style={textStyle}>{Language.getOrText(this.props.label)}</Text>
         {this.props.subTitle !== undefined && (
           <Text
             style={{
