@@ -79,15 +79,15 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
       const token = filterRedirectUrl(result.url)
       try {
         this.setState({
-          alert: DefPreInfoAlert('login.facebook.check.'),
+          alert: DefPreInfoAlert('login.facebook.check'),
         })
         APIUser.checkGoogleToken(token, tokenResult => {
           setTimeout(async () => {
             if (typeof tokenResult === 'boolean') {
-              DefPreWarningAlert('login.facebook.error.email.')
+              DefPreWarningAlert('login.facebook.error.email')
             } else {
               this.setState({
-                alert: DefPreSuccessAlert('login.facebook.success.'),
+                alert: DefPreSuccessAlert('login.facebook.success'),
                 loggedin: true,
               })
               const { email, token: t1 } = tokenResult
@@ -98,7 +98,7 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
         })
       } catch (e: any) {
         console.log(e.message)
-        DefPreWarningAlert('login.facebook.error.')
+        DefPreWarningAlert('login.facebook.error')
       }
     }
   }
@@ -113,15 +113,15 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
         if (token !== null) {
           try {
             this.setState({
-              alert: DefPreInfoAlert('login.facebook.check.'),
+              alert: DefPreInfoAlert('login.facebook.check'),
             })
             APIUser.checkFacebookToken(token, tokenResult => {
               setTimeout(async () => {
                 if (typeof tokenResult === 'boolean') {
-                  DefPreWarningAlert('login.facebook.error.email.')
+                  DefPreWarningAlert('login.facebook.error.email')
                 } else {
                   this.setState({
-                    alert: DefPreSuccessAlert('login.facebook.success.'),
+                    alert: DefPreSuccessAlert('login.facebook.success'),
                     loggedin: true,
                   })
                   const { email, token: t1 } = tokenResult
@@ -131,13 +131,13 @@ export default class Login extends SafeComponent<ILoginProps, ILoginState> {
               }, 2000)
             })
           } catch (E) {
-            DefPreWarningAlert('login.facebook.error.')
+            DefPreWarningAlert('login.facebook.error')
           }
-        } else DefPreWarningAlert('login.facebook.error.')
-      } else DefPreWarningAlert('login.facebook.error.')
+        } else DefPreWarningAlert('login.facebook.error')
+      } else DefPreWarningAlert('login.facebook.error')
     } catch (e: any) {
       console.log(e.message)
-      DefPreWarningAlert('login.facebook.error.')
+      DefPreWarningAlert('login.facebook.error')
     }
   }
 
