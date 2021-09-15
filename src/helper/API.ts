@@ -2,13 +2,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios, { AxiosInstance } from 'axios'
 import * as Constants from 'expo-constants'
 import { ICallback } from '../interfaces/ICallbacks'
+import { getAuth, getPubAuth } from './Functions'
+import Socket from './Socket'
 
 // Error Handling from https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
 
 export default class API {
+  public static domain = 'http://192.168.0.30:3001'
+
+  // public static domain = 'https://api.lisha-app.com'
+
   private static config = {
-    baseURL: 'https://api.lisha-app.com',
-    // baseURL: 'http://192.168.0.30:3001',
+    baseURL: this.domain,
     timeout: 1000,
     httpAgent: Constants.default.deviceName,
     httpsAgent: Constants.default.deviceName,
@@ -35,11 +40,52 @@ export default class API {
     return this.INSTANCE
   }
 
-  private static async getAuth() {
-    const password = (await AsyncStorage.getItem('token')) ?? ''
-    const username = (await AsyncStorage.getItem('email')) ?? ''
+  public static async getAuth() {
+    const auth = await getAuth()
 
-    return { auth: { username, password } }
+    return auth
+  }
+
+  public static async getPubAuth() {
+    const auth = await getPubAuth()
+
+    return auth
+  }
+
+  private static async getFromAPI<T>(uri: string, callback?: ICallback<T>) {
+    const auth = await API.getAuth()
+    const ret = await API.axiosInstance.get(uri, auth).catch(error => {
+      console.log('AXIOS::GET::ERROR', {
+        url: this.config.baseURL + uri,
+        auth,
+      })
+      // Error 😨
+      if (error.response) {
+        // The request was made and the server responded with a status code that falls out of the range of 2xx
+        console.log(
+          'error.response',
+          error.response.status,
+          error.response.statusText
+        )
+      } else if (error.request) {
+        // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
+        console.log('error.request', error.request)
+      } else {
+        // Something happened in setting up the request and triggered an Error
+        console.log('Error', error.message)
+      }
+    })
+
+    if (!ret) return null
+
+    const returnData =
+      typeof ret.data === 'object' && 'data' in ret.data
+        ? ret.data.data
+        : ret.data
+    callback?.(returnData)
+    await AsyncStorage.setItem(uri, JSON.stringify(returnData))
+
+    return true
   }
 
   public static async get<T>(uri: string, callback?: ICallback<T>) {
@@ -48,37 +94,12 @@ export default class API {
         const storeData: T = JSON.parse(strRet)
         callback?.(storeData)
       }
-      const auth = await API.getAuth()
-      const ret = await API.axiosInstance.get(uri, auth).catch(error => {
-        console.log('AXIOS::GET::ERROR', {
-          url: this.config.baseURL + uri,
-          auth,
-        })
-        // Error 😨
-        if (error.response) {
-          // The request was made and the server responded with a status code that falls out of the range of 2xx
-          console.log(
-            'error.response',
-            error.response.status,
-            error.response.statusText
-          )
-        } else if (error.request) {
-          // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
-          console.log('error.request', error.request)
-        } else {
-          // Something happened in setting up the request and triggered an Error
-          console.log('Error', error.message)
-        }
+      this.getFromAPI<T>(uri, callback)
+      Socket.onReload(uri, () => {
+        this.getFromAPI<T>(uri, callback)
       })
 
-      if (!ret) return null
-
-      const returnData =
-        typeof ret.data === 'object' && 'data' in ret.data
-          ? ret.data.data
-          : ret.data
-      callback?.(returnData)
-      await AsyncStorage.setItem(uri, JSON.stringify(returnData))
+      return true
     })
   }
 

@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 export const inArray = (c: any, items: any[]) => {
   for (let i = 0; i < items.length; i++) {
     if (c === items[i]) return true
@@ -136,4 +138,18 @@ export const randomString = (length: number) => {
   }
 
   return result
+}
+
+export const getAuth = async () => {
+  const password = (await AsyncStorage.getItem('token')) ?? ''
+  const username = (await AsyncStorage.getItem('email')) ?? ''
+
+  return { auth: { username, password } }
+}
+
+export const getPubAuth = async () => {
+  const authData = await getAuth()
+  const auth = Object.values(authData.auth).join(':')
+
+  return `Basic ${Buffer.from(auth).toString('base64')}`
 }

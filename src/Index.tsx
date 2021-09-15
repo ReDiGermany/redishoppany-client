@@ -1,5 +1,6 @@
 import React from 'react'
 import NetInfo from '@react-native-community/netinfo'
+import { AppState } from 'react-native'
 import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
 import Imprint from './pages/Imprint'
@@ -23,6 +24,7 @@ import Reload from './pages/Reload'
 import Backgrounds from './pages/Backgrounds'
 import LoginAnon from './pages/Login/LoginAnon'
 import NotConnected from './pages/NotConnected'
+import Socket from './helper/Socket'
 
 export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   state: IIndexState = {
@@ -30,6 +32,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
     user: undefined,
     checkMeDone: this.props.checkMeDone,
     loggedin: this.props.loggedin,
+    appState: AppState.currentState,
   }
 
   async reloadMe(updateAll: boolean) {
@@ -45,16 +48,32 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
 
   unsubscribe: any = null
 
+  appStateSubscription: any = null
+
   async componentDidMount() {
     this.unsubscribe = NetInfo.addEventListener(state => {
       const connected = state.isConnected ?? false
       this.setState({ connected })
     })
     await this.reloadMe(true)
+    // Socket.open()
+    this.appStateSubscription = AppState.addEventListener(
+      'change',
+      nextAppState => {
+        const wasInactive =
+          (this.state.appState.match(/inactive|background/) ?? []).length >= 0
+        const isActive = nextAppState === 'active'
+        if (wasInactive && isActive) Socket.open()
+        else Socket.close(2)
+        this.setState({ appState: nextAppState })
+      }
+    )
   }
 
   componentWillUnmount() {
     this.unsubscribe()
+    this.appStateSubscription?.remove()
+    Socket.close(1)
   }
 
   render() {

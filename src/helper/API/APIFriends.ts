@@ -24,15 +24,13 @@ export default class APIFriends {
     return API.get<IFriend[]>('/friends?short', ret => callback?.(ret ?? []))
   }
 
-  public static async add(
-    email: string,
-    isMail: boolean,
-    callback?: ICallbackBoolean
-  ) {
-    return API.post<boolean>(
+  public static async add(email: string, isMail: boolean) {
+    const ret = await API.post<boolean>(
       '/friends/add',
       isMail ? { email } : { uuid: email }
-    ).then(ret => callback?.(ret ?? false))
+    )
+
+    return ret ?? false
   }
 
   public static async accept(id: number, callback?: ICallbackBoolean) {

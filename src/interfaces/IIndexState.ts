@@ -1,3 +1,4 @@
+import { AppStateStatus } from 'react-native'
 import IAPIUserMe from './IAPIUserMe'
 
 export default interface IIndexState {
@@ -5,4 +6,5 @@ export default interface IIndexState {
   connected?: boolean
   checkMeDone: boolean
   loggedin: boolean
+  appState: AppStateStatus
 }

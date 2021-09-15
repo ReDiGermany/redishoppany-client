@@ -9,6 +9,7 @@ import APIUser from './src/helper/API/APIUser'
 import Language from './src/language/Language'
 import { Router } from './src/Router/react-router'
 import MainWindowStyles from './src/styles/MainWindowStyles'
+import Socket from './src/helper/Socket'
 
 const registerForPushNotificationsAsync = async () => {
   let token = ''
@@ -70,6 +71,7 @@ export default class App extends Component {
           this.handleNotificationResponse
         )
         if (expoPushToken && !me.profile.isAnon) {
+          Socket.setPushToken(expoPushToken)
           APIUser.sendRemoteToken(expoPushToken)
         }
         this.setState({ checkMeDone: true, loggedin: me !== undefined })
