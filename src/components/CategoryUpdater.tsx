@@ -74,13 +74,6 @@ export default class CategoryUpdater extends SafeComponent<ICategoryUpdaterProps
       {
         disabled: false,
         color: '#fff',
-        icon: 'pen',
-        name: 'changeName',
-        onPress: () => this.props.onEditName(),
-      },
-      {
-        disabled: false,
-        color: '#fff',
         icon: 'palette',
         name: 'changeColorPalette',
         onPress: () => {
@@ -91,6 +84,15 @@ export default class CategoryUpdater extends SafeComponent<ICategoryUpdaterProps
         },
       },
     ]
+    if (this.props.onEditName) {
+      buttons.unshift({
+        disabled: false,
+        color: '#fff',
+        icon: 'pen',
+        name: 'changeName',
+        onPress: () => this.props.onEditName?.(),
+      })
+    }
 
     const moveable = {
       onSort,
