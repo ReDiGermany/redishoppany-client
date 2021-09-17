@@ -87,6 +87,7 @@ export default class Index extends SafeComponent<
             url={`/list/${this.props.id}`}
             solid={this.state.isTop}
             label={Language.get('category.update')}
+            subTitle="Halte gedrückt um zu sortieren"
           />
           <View
             style={{
@@ -127,11 +128,14 @@ export default class Index extends SafeComponent<
                       )
                     }
                   }}
-                  onEditName={() =>
-                    this.setState({
-                      isActiveItem: true,
-                      activeItem: index,
-                    })
+                  onEditName={
+                    index !== 0
+                      ? () =>
+                          this.setState({
+                            isActiveItem: true,
+                            activeItem: index,
+                          })
+                      : undefined
                   }
                   onLongPress={() => this.setState({ preventScroll: true })}
                   onEnd={async newItem => {
