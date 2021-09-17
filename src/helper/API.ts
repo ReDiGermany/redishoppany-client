@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios, { AxiosInstance } from 'axios'
+import * as Localization from 'expo-localization'
 import * as Constants from 'expo-constants'
 import { ICallback } from '../interfaces/ICallbacks'
 import { getAuth, getPubAuth } from './Functions'
@@ -19,16 +20,12 @@ export default class API {
     httpsAgent: Constants.default.deviceName,
   }
 
-  private initAPI() {
-    this.axiosInstance = axios.create(API.config)
-  }
-
   private static INSTANCE: API
 
   private axiosInstance!: AxiosInstance
 
-  public static get axiosInstance(): AxiosInstance {
-    return this.getInstace().axiosInstance
+  private initAPI() {
+    this.axiosInstance = axios.create(API.config)
   }
 
   public static getInstace() {
@@ -38,6 +35,10 @@ export default class API {
     }
 
     return this.INSTANCE
+  }
+
+  public static getPubInstance() {
+    return API.getInstace().axiosInstance
   }
 
   public static async getAuth() {
@@ -52,40 +53,8 @@ export default class API {
     return auth
   }
 
-  private static async getFromAPI<T>(uri: string, callback?: ICallback<T>) {
-    const auth = await API.getAuth()
-    const ret = await API.axiosInstance.get(uri, auth).catch(error => {
-      console.log('AXIOS::GET::ERROR', {
-        url: this.config.baseURL + uri,
-        auth,
-      })
-      // Error 😨
-      if (error.response) {
-        // The request was made and the server responded with a status code that falls out of the range of 2xx
-        console.log(
-          'error.response',
-          error.response.status,
-          error.response.statusText
-        )
-      } else if (error.request) {
-        // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
-        console.log('error.request', error.request)
-      } else {
-        // Something happened in setting up the request and triggered an Error
-        console.log('Error', error.message)
-      }
-    })
-
-    if (!ret) return null
-
-    const returnData =
-      typeof ret.data === 'object' && 'data' in ret.data
-        ? ret.data.data
-        : ret.data
-    callback?.(returnData)
-    await AsyncStorage.setItem(uri, JSON.stringify(returnData))
-
-    return true
+  private static getUrl(uri: string) {
+    return `${uri + (uri.match(/\?/) ? '&' : '?')}lang=${Localization.locale}`
   }
 
   public static async get<T>(
@@ -107,22 +76,29 @@ export default class API {
     })
   }
 
+  private static async getFromAPI<T>(uri: string, callback?: ICallback<T>) {
+    const auth = await API.getAuth()
+    console.log('get', this.getUrl(uri), auth)
+    const ret = await API.getInstace()
+      .axiosInstance.get(this.getUrl(uri), auth)
+      .catch(error => this.handleError(error, uri, auth, 'get'))
+    if (!ret) return null
+
+    const returnData =
+      typeof ret.data === 'object' && 'data' in ret.data
+        ? ret.data.data
+        : ret.data
+    callback?.(returnData)
+    await AsyncStorage.setItem(uri, JSON.stringify(returnData))
+
+    return true
+  }
+
   public static async post<T>(uri: string, data: any): Promise<T | null> {
     const auth = await API.getAuth()
-    const ret = await API.axiosInstance.post(uri, data, auth).catch(error => {
-      console.log('AXIOS::POST::ERROR', { uri, auth, data })
-      // Error 😨
-      if (error.response) {
-        // The request was made and the server responded with a status code that falls out of the range of 2xx
-        console.log('error.response', error.response.status, error.response)
-      } else if (error.request) {
-        // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
-        console.log('error.request', error.request)
-      } else {
-        // Something happened in setting up the request and triggered an Error
-        console.log('Error', error.message)
-      }
-    })
+    const ret = await API.getInstace()
+      .axiosInstance.post(this.getUrl(uri), data, auth)
+      .catch(error => this.handleError(error, uri, auth, 'post', data))
     if (!ret) return null
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
@@ -132,20 +108,9 @@ export default class API {
 
   public static async delete<T>(uri: string): Promise<T | null> {
     const auth = await API.getAuth()
-    const ret = await API.axiosInstance.delete(uri, auth).catch(error => {
-      console.log('AXIOS::DELETE::ERROR', { uri, auth })
-      // Error 😨
-      if (error.response) {
-        // The request was made and the server responded with a status code that falls out of the range of 2xx
-        console.log('error.response', error.response.status, error.response)
-      } else if (error.request) {
-        // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
-        console.log('error.request', error.request)
-      } else {
-        // Something happened in setting up the request and triggered an Error
-        console.log('Error', error.message)
-      }
-    })
+    const ret = await API.getInstace()
+      .axiosInstance.delete(this.getUrl(uri), auth)
+      .catch(error => this.handleError(error, uri, auth, 'delete'))
     if (!ret) return null
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
@@ -153,22 +118,14 @@ export default class API {
     return ret.data
   }
 
-  public static async put<T>(uri: string, data: any): Promise<T | null> {
+  public static async put<T>(
+    uri: string,
+    data: any = undefined
+  ): Promise<T | null> {
     const auth = await API.getAuth()
-    const ret = await API.axiosInstance.put(uri, data, auth).catch(error => {
-      console.log('AXIOS::PUT::ERROR', { uri, auth, data })
-      // Error 😨
-      if (error.response) {
-        // The request was made and the server responded with a status code that falls out of the range of 2xx
-        console.log('error.response', error.response.status, error.response)
-      } else if (error.request) {
-        // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
-        console.log('error.request', error.request)
-      } else {
-        // Something happened in setting up the request and triggered an Error
-        console.log('Error', error.message)
-      }
-    })
+    const ret = await API.getInstace()
+      .axiosInstance.put(this.getUrl(uri), data, auth)
+      .catch(error => this.handleError(error, uri, auth, 'put'))
     if (!ret) return null
 
     if (typeof ret.data === 'object' && 'data' in ret.data) return ret.data.data
@@ -176,9 +133,26 @@ export default class API {
     return ret.data
   }
 
-  public static async putNoArgs<T>(uri: string): Promise<T | null> {
-    const t = await API.put<T>(uri, undefined)
+  private static async handleError(
+    error: any,
+    uri: string,
+    auth: any,
+    type: string,
+    info: any = undefined
+  ) {
+    console.log(`AXIOS::${type.toUpperCase()}::ERROR`, { uri, auth, info })
+    // Error 😨
+    if (error.response) {
+      // The request was made and the server responded with a status code that falls out of the range of 2xx
+      console.log('error.response', error.response.status, error.response)
+    } else if (error.request) {
+      // The request was made but no response was received, `error.request` is an instance of XMLHttpRequest in the browser and an instance of http.ClientRequest in Node.js
+      console.log('error.request', error.request)
+    } else {
+      // Something happened in setting up the request and triggered an Error
+      console.log('Error', error.message)
+    }
 
-    return t
+    return error
   }
 }

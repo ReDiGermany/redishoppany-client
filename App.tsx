@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import * as Localization from 'expo-localization'
 import { AppearanceProvider } from 'react-native-appearance'
 import { StatusBar } from 'expo-status-bar'
 import { Platform, View } from 'react-native'
@@ -59,7 +60,8 @@ export default class App extends Component {
   constructor(props: any) {
     super(props)
 
-    Language.getInstance().init('de')
+    const lang = Localization.locale.split(/-/)[0]
+    Language.getInstance().init(lang === 'de' ? 'de' : 'en')
     APIUser.getMe(async me => {
       if (typeof me === 'boolean') {
         this.setState({ checkMeDone: true, loggedin: false })

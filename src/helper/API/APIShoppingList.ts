@@ -128,8 +128,8 @@ export default class APIShoppingList {
     itemId: number,
     callback?: ICallbackBoolean
   ) {
-    return API.putNoArgs<boolean>(`/shoppinglist/item/cart/${itemId}`).then(
-      ret => callback?.(ret ?? false)
+    return API.put<boolean>(`/shoppinglist/item/cart/${itemId}`).then(ret =>
+      callback?.(ret ?? false)
     )
   }
 
@@ -137,8 +137,8 @@ export default class APIShoppingList {
     itemId: number,
     callback?: ICallbackBoolean
   ) {
-    return API.putNoArgs<boolean>(`/shoppinglist/item/uncart/${itemId}`).then(
-      ret => callback?.(ret ?? false)
+    return API.put<boolean>(`/shoppinglist/item/uncart/${itemId}`).then(ret =>
+      callback?.(ret ?? false)
     )
   }
 
@@ -146,8 +146,8 @@ export default class APIShoppingList {
     itemId: number,
     callback?: ICallbackBoolean
   ) {
-    return API.putNoArgs<boolean>(`/shoppinglist/deletebought/${itemId}`).then(
-      ret => callback?.(ret ?? false)
+    return API.put<boolean>(`/shoppinglist/deletebought/${itemId}`).then(ret =>
+      callback?.(ret ?? false)
     )
   }
 }
