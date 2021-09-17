@@ -5,6 +5,7 @@ import IAPIShoppingListItemResponse from '../../interfaces/IAPIShoppingListItemR
 import IAPIShoppingListItemResponseItem from '../../interfaces/IAPIShoppingListItemResponseItem'
 import { randomColor } from '../Functions'
 import { ICallback, ICallbackBoolean } from '../../interfaces/ICallbacks'
+import Language from '../../language/Language'
 
 export default class APIShoppingList {
   private static defaultSimpleList: IAPIShoppingListResponse = {
@@ -58,20 +59,9 @@ export default class APIShoppingList {
   public static async simpleList(
     callback?: ICallback<IAPIShoppingListItemResponseItem[]>
   ) {
-    return API.get<IAPIShoppingListResponse>('/shoppinglist')
-      .then(ret => (ret === null ? this.defaultSimpleList : ret))
-      .then(ret => {})
-    // this.defaultSimpleList
-
-    // const arr: IAPIShoppingListItemResponseItem[] = []
-
-    // ret.items.forEach(grp => {
-    //   grp.items.forEach(item => {
-    //     arr.push(item)
-    //   })
-    // })
-
-    // return arr
+    return this.list(ret => {
+      callback?.(ret.map(user => user.items).flat())
+    })
   }
 
   public static async addToList(
@@ -89,27 +79,30 @@ export default class APIShoppingList {
 
   public static async singleList(
     id: number,
-    callback: ICallback<IShoppingList>
+    callback: ICallback<IShoppingList>,
+    noCache: boolean = false
   ) {
-    return API.get<IShoppingList>(`/shoppinglist/${id}`, ret =>
-      callback?.({ ...(ret ?? this.defaultSingleList) })
+    return API.get<IShoppingList>(
+      `/shoppinglist/${id}`,
+      ret => {
+        const data = ret ?? this.defaultSingleList
+        data.categories.push({
+          color: '#111',
+          id: -1,
+          items: [],
+          name: Language.get('items.bought'),
+        })
+        callback?.(data)
+      },
+      noCache
     )
-
-    // ret.categories.push({
-    //   color: '#111',
-    //   id: -1,
-    //   items: [],
-    //   name: Language.get('items.bought'),
-    // })
-
-    // return ret
   }
 
   public static async deleteItemFromList(
     id: number,
     callback?: ICallbackBoolean
   ) {
-    return API.delete<boolean>(`/shoppinglist/${id}`).then(ret =>
+    return API.delete<boolean>(`/shoppinglist/item/delete/${id}`).then(ret =>
       callback?.(ret ?? false)
     )
   }
