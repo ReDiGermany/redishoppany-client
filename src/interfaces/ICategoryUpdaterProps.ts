@@ -7,7 +7,7 @@ export default interface ICategoryUpdaterProps {
   onStart?: () => void
   onEnd: (_item: IAPICategory) => void
   onDelete: () => void
-  onEditName: () => void
+  onEditName?: () => void
   onSort: (_pos: number) => void
   onLongPress?: () => void
   selectorOpen: boolean
