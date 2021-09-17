@@ -42,7 +42,7 @@
     "expo-barcode-scanner": "~10.2.2",
     "expo-blur": "^9.0.3",
     "expo-camera": "~11.2.2",
-    "expo-cli": "^4.5.0",
+    "expo-cli": "^4.11.0",
     "expo-constants": "~11.0.1",
     "expo-error-recovery": "~2.2.0",
     "expo-font": "~9.2.1",
