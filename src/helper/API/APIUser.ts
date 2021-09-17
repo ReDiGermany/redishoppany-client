@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as Localization from 'expo-localization'
 import IAPIUserMe from '../../interfaces/IAPIUserMe'
 import API from '../API'
 import { IAPIVendorLogin } from '../../interfaces/IAPIVendorLogin'
@@ -9,25 +10,34 @@ export default class APIUser {
     token: string | null,
     callback?: ICallback<IAPIVendorLogin | boolean>
   ) {
-    return API.post<IAPIVendorLogin>('/user/login/vendor/google', {
-      token,
-    }).then(ret => callback?.(ret ?? false))
+    return API.post<IAPIVendorLogin>(
+      `/user/login/vendor/google?lang=${Localization.locale}`,
+      {
+        token,
+      }
+    ).then(ret => callback?.(ret ?? false))
   }
 
   public static async checkFacebookToken(
     token: string,
     callback?: ICallback<IAPIVendorLogin | boolean>
   ) {
-    return API.post<IAPIVendorLogin>('/user/login/vendor/facebook', {
-      token,
-    }).then(ret => callback?.(ret ?? false))
+    return API.post<IAPIVendorLogin>(
+      `/user/login/vendor/facebook?lang=${Localization.locale}`,
+      {
+        token,
+      }
+    ).then(ret => callback?.(ret ?? false))
   }
 
   public static async getMe(callback?: ICallback<IAPIUserMe | boolean>) {
+    // console.log(Localization.locale)
     const password = (await AsyncStorage.getItem('token')) ?? ''
     const username = (await AsyncStorage.getItem('email')) ?? ''
     if (password !== '' && username !== '') {
-      API.get<IAPIUserMe>('/user/me', ret => callback?.(ret))
+      API.get<IAPIUserMe>(`/user/me?lang=${Localization.locale}`, ret =>
+        callback?.(ret)
+      )
     } else callback?.(false)
   }
 
@@ -55,7 +65,7 @@ export default class APIUser {
         status: string
         success: boolean
         data: IAPIUserMe
-      }>('/user/me', {
+      }>(`/user/me?lang=${Localization.locale}`, {
         auth: { password, username },
       })
 
@@ -67,10 +77,13 @@ export default class APIUser {
     password: string,
     callback?: ICallbackBoolean
   ) {
-    const ret = await API.axiosInstance.post('/user/login', {
-      email,
-      password,
-    })
+    const ret = await API.axiosInstance.post(
+      `/user/login?lang=${Localization.locale}`,
+      {
+        email,
+        password,
+      }
+    )
 
     if (ret.status === 202) {
       await AsyncStorage.setItem('token', ret.data.data.token)
@@ -88,7 +101,7 @@ export default class APIUser {
       data: { token: string; email: string }
       status: string
       success: boolean
-    }>('/user/register/anon')
+    }>(`/user/register/anon?lang=${Localization.locale}`)
 
     if (!data) return false
 
@@ -108,7 +121,7 @@ export default class APIUser {
     passwordConfirm: string,
     callback?: ICallbackBoolean
   ) {
-    return API.post<boolean>('/user/register', {
+    return API.post<boolean>(`/user/register?lang=${Localization.locale}`, {
       firstname,
       lastname,
       email,
