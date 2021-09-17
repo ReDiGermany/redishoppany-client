@@ -88,9 +88,13 @@ export default class API {
     return true
   }
 
-  public static async get<T>(uri: string, callback?: ICallback<T>) {
+  public static async get<T>(
+    uri: string,
+    callback?: ICallback<T>,
+    noCache: boolean = false
+  ) {
     AsyncStorage.getItem(uri).then(async strRet => {
-      if (strRet) {
+      if (strRet && !noCache) {
         const storeData: T = JSON.parse(strRet)
         callback?.(storeData)
       }
