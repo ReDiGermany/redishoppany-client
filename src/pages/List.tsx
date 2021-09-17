@@ -135,39 +135,45 @@ export default class List extends SafeComponent<
     this.setState({ newCatBox: true, newCatItem: item })
   }
 
-  async refresh() {
-    APIShareShoppinglist.friends(this.props.id, friends =>
-      this.setState({ friends })
+  async refresh(noCache: boolean = false) {
+    const { id } = this.props
+    APIShoppingList.simpleList(lists => this.setState({ lists }))
+    APIShareShoppinglist.friends(id, friends => this.setState({ friends }))
+    APIShoppingList.singleList(
+      this.props.id,
+      async d => {
+        const data = d
+        data.categories.forEach((cat, catIdx) => {
+          const items: any[] = []
+          if (catIdx !== data.categories.length - 1) {
+            cat.items.forEach(item => {
+              if (item.inCart) {
+                data.categories[data.categories.length - 1].items.push({
+                  ...item,
+                  catId: catIdx,
+                })
+              } else {
+                items.push({ ...item, catId: catIdx })
+              }
+            })
+            data.categories[catIdx].items = items
+          }
+        })
+        this.setState({
+          owned: data.owned,
+          owner: data.owner,
+          items: data.categories,
+          listName: data.name,
+          listId: data.id,
+          refreshing: false,
+        })
+      },
+      noCache
     )
-    APIShoppingList.singleList(this.props.id, async d => {
-      const data = d
-      data.categories.forEach((cat, catIdx) => {
-        const items: any[] = []
-        if (catIdx !== data.categories.length - 1) {
-          cat.items.forEach(item => {
-            if (item.inCart) {
-              data.categories[data.categories.length - 1].items.push({
-                ...item,
-                catId: catIdx,
-              })
-            } else {
-              items.push({ ...item, catId: catIdx })
-            }
-          })
-          data.categories[catIdx].items = items
-        }
-      })
-      this.setState({
-        owned: data.owned,
-        owner: data.owner,
-        items: data.categories,
-        listName: data.name,
-        listId: data.id,
-      })
-    })
   }
 
   async updateItemCategory(cat: IShoppingListCategory) {
+    this.setState({ newCatBox: false })
     await APIShoppingList.updateItemCategory(
       this.state.newCatItem?.id ?? 0,
       cat.id
@@ -186,6 +192,18 @@ export default class List extends SafeComponent<
     APICategory.list(listId, newListCats =>
       this.setState({ newListCats, bottomBox: false, moveToListBox: true })
     )
+  }
+
+  async deleteSingleItem(id: number) {
+    const { items } = this.state
+    items.forEach((cat, catIdx) => {
+      cat.items.forEach((item, itemIdx) => {
+        if (item.id === id) delete items[catIdx].items[itemIdx]
+      })
+    })
+    this.setState({ items })
+    await APIShoppingList.deleteItemFromList(id)
+    this.refresh(true)
   }
 
   render() {
@@ -313,7 +331,7 @@ export default class List extends SafeComponent<
                       <Moveable
                         key={`item_${catindex}_${itemindex}`}
                         open={item.open}
-                        onDelete={() => {}}
+                        onDelete={() => this.deleteSingleItem(item.id)}
                         prefix={item.amount}
                         name={item.name}
                         last={itemindex + 1 === cat.items.length}
@@ -404,16 +422,27 @@ export default class List extends SafeComponent<
           />
           <BottomBox
             title="Select new Cat for item"
-            items={this.state.newListCats.map((cat, idx) => ({
-              active: idx === this.state.newItemList?.catId,
+            items={this.state.newListCats.map(cat => ({
+              active: false,
               name: cat.name,
               onClick: async () => {
+                const { items } = this.state
+                items.forEach((ncat, ncatidx) => {
+                  ncat.items.forEach((nitem, nitemidx) => {
+                    if (nitem.id === this.state.newItemList?.id) {
+                      delete items[ncatidx].items[nitemidx]
+                      if (items[ncatidx].items.length === 0) {
+                        delete items[ncatidx]
+                      }
+                    }
+                  })
+                })
+                this.setState({ moveToListBox: false, items })
                 await APIShoppingList.moveItemToList(
                   this.state.newItemList?.id ?? 0,
                   cat.id
                 )
-                this.setState({ items: [] })
-                this.refresh()
+                this.refresh(true)
               },
             }))}
             onClose={() => this.setState({ moveToListBox: false })}
@@ -426,10 +455,7 @@ export default class List extends SafeComponent<
               .map((cat, idx) => ({
                 active: idx === this.state.newCatItem?.catId,
                 name: cat.name,
-                onClick: async () => {
-                  this.setState({ newCatBox: false })
-                  await this.updateItemCategory(cat)
-                },
+                onClick: async () => this.updateItemCategory(cat),
               }))}
             onClose={() => this.setState({ newCatBox: false })}
             open={this.state.newCatBox}
