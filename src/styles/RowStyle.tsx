@@ -1,3 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { ViewStyle } from 'react-native'
 
-export default StyleSheet.create({ row: { flexDirection: 'row' } }).row
+const RowStyle: ViewStyle = { flexDirection: 'row', height: '100%' }
+export default RowStyle

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native'
 import GlobalStyles from './GlobalStyles'
 
 const box = (visible?: boolean, large?: boolean) =>
@@ -36,46 +36,33 @@ const iconBoxIcon = (width: number) =>
     },
   }).row
 
-const deleteIcon = (x: number) =>
-  StyleSheet.create({
-    row: {
-      textAlign: 'center',
-      textAlignVertical: 'center',
-      height: GlobalStyles().lineHeight,
-      lineHeight: GlobalStyles().lineHeight,
-      fontSize: (x / GlobalStyles().lineHeight) * 20,
-      fontWeight: 'bold',
-      opacity: x / GlobalStyles().lineHeight,
-      color: '#fff',
-    },
-  }).row
+const deleteIcon = (x: number): TextStyle => ({
+  textAlign: 'center',
+  textAlignVertical: 'center',
+  height: '100%',
+  fontSize: (x / GlobalStyles().lineHeight) * 20,
+  fontWeight: 'bold',
+  opacity: x / GlobalStyles().lineHeight,
+  color: '#fff',
+})
 
-const deleteBox = (x: number) =>
-  StyleSheet.create({
-    row: {
-      height: GlobalStyles().lineHeight,
-      width: x,
-      backgroundColor: GlobalStyles().color.red,
-      borderTopLeftRadius: 10,
-      borderBottomLeftRadius: 10,
-    },
-  }).row
+const deleteBox = (x: number): ViewStyle => ({
+  width: x,
+  backgroundColor: GlobalStyles().color.red,
+  borderTopLeftRadius: 10,
+  borderBottomLeftRadius: 10,
+})
 
-const buttonIcon = (color: string, textColor: string) =>
-  StyleSheet.create({
-    box: {
-      borderRadius: 5,
-      height: 30,
-      lineHeight: 30,
-      marginTop: 10,
-      marginLeft: 10,
-      width: 40,
-      backgroundColor: color,
-      textAlignVertical: 'center',
-      textAlign: 'center',
-      color: textColor,
-    },
-  }).box
+const buttonIcon = (color: string, textColor: string): TextStyle => ({
+  borderRadius: 5,
+  height: 30,
+  lineHeight: 30,
+  width: 40,
+  backgroundColor: color,
+  textAlignVertical: 'center',
+  textAlign: 'center',
+  color: textColor,
+})
 
 const iconBox = (width: number, right: number, color: string, last?: boolean) =>
   StyleSheet.create({

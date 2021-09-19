@@ -82,7 +82,7 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
         position: 'absolute',
         top: this.state.posY - this.state.startY,
         zIndex: 30000,
-        height: GlobalStyles().lineHeight,
+        // height: GlobalStyles().lineHeight,
 
         borderRadius: 0,
         borderBottomLeftRadius: 0,
