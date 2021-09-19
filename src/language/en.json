@@ -93,5 +93,9 @@
   "notification.friend_deleted": "Freund entfernt",
   "notification.recipe_invite": "Rezepteinladung",
   "notification.friend_add": "Eingehende Freundschaftsanfrage",
-  "notifications.empty": "Du hast keine Benachrichtungen"
+  "notifications.empty": "Du hast keine Benachrichtungen",
+  "notifications.shoppinglist_invite.accept.text": "Einladung angenommen.",
+  "notifications.shoppinglist_invite.accept.info": "Du kannst diese Shoppingliste absofort nutzen!",
+  "notification.shoppinglist_invite": "Einladung zur Shoppingliste",
+  "notification.language.changed": "Sprache geändert!"
 }
