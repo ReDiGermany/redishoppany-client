@@ -1,4 +1,5 @@
 import { io, Socket as IOSocket } from 'socket.io-client'
+import * as Notifications from 'expo-notifications'
 import { ICallback } from '../interfaces/ICallbacks'
 import { domain } from './Constants'
 import { getAuth } from './Functions'
@@ -53,7 +54,9 @@ export default class Socket {
       this.socket.on('status', (status: string) => {
         console.log('this.socket.io::status', status)
       })
-      this.socket.on('welcome', () => {
+      this.socket.on('welcome', async () => {
+        const expoPushToken = (await Notifications.getExpoPushTokenAsync()).data
+        if (this.socket) this.socket.emit('expoPushToken', expoPushToken)
         console.log('this.socket.io::welcome')
       })
       this.socket.on('connected', client => {
