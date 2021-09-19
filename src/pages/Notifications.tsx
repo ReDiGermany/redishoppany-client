@@ -11,6 +11,10 @@ import GlobalStyles from '../styles/GlobalStyles'
 import Language from '../language/Language'
 import ScrollView from '../components/ScrollView'
 import InfoMoveable from '../components/Moveable/InfoMoveable'
+import IMoveableButtonProps from '../interfaces/IMoveableButtonProps'
+import APIFriends from '../helper/API/APIFriends'
+import APIShareShoppinglist from '../helper/API/APIShareShoppinglist'
+import { DefAlert, DefPreSuccessAlert } from '../helper/DefinedAlerts'
 
 export default class Notifications extends SafeComponent<
   IPageProps,
@@ -19,6 +23,62 @@ export default class Notifications extends SafeComponent<
   state: INotificationPageState = {
     notifications: [],
     refreshing: false,
+    alert: DefAlert,
+  }
+
+  notificationButtons: {
+    [key: string]: (_item: IAPINotification) => IMoveableButtonProps[]
+  } = {
+    'language.changed': () => [],
+    'friend_add': item => [
+      {
+        color: '#fff',
+        icon: 'external-link-alt',
+        name: 'goto',
+        onPress: async () => {
+          await APIFriends.accept(parseInt(item.info, 10), async () => {
+            await APIFriends.list(async () => {
+              await APINotification.delete(item.id, () => {
+                this.refresh()
+              })
+            })
+          })
+        },
+      },
+    ],
+    'friend_deleted': () => [],
+    'friend_denied': () => [],
+    'foodplan_accepted': () => [],
+    'foodplan_denied': () => [],
+    'foodplan_invite': () => [],
+    'foodplan_revoked': () => [],
+    'recipe_accepted': () => [],
+    'recipe_invite': () => [],
+    'recipe_revoked': () => [],
+    'list_accepted': () => [],
+    'shoppinglist_invite': item => [
+      {
+        color: GlobalStyles().color.red,
+        icon: 'times',
+        name: 'deny',
+        onPress: () => this.delete(item),
+      },
+      {
+        color: GlobalStyles().color.accent,
+        icon: 'check',
+        name: 'accept',
+        onPress: () => {
+          APIShareShoppinglist.accept(item.id, () => {
+            this.setState({
+              alert: DefPreSuccessAlert(
+                'notifications.shoppinglist_invite.accept'
+              ),
+            })
+            this.refresh()
+          })
+        },
+      },
+    ],
   }
 
   async refresh() {
@@ -76,8 +136,10 @@ export default class Notifications extends SafeComponent<
               key={item.id}
               onDelete={() => this.delete(item)}
               name={Language.getOrText(`notification.${item.name}`)}
+              // name={item.name}
               secondText={item.info}
               secondTextOpacity={0.5}
+              buttons={this.notificationButtons[item.name](item)}
             />
           ))}
         </ScrollView>
