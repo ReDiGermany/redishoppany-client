@@ -67,18 +67,17 @@ export default class API {
         const storeData: T = JSON.parse(strRet)
         callback?.(storeData)
       }
-      this.getFromAPI<T>(uri, callback)
+      this.cacheFromAPI<T>(uri, callback)
       Socket.onReload(uri, () => {
-        this.getFromAPI<T>(uri, callback)
+        this.cacheFromAPI<T>(uri, callback)
       })
 
       return true
     })
   }
 
-  private static async getFromAPI<T>(uri: string, callback?: ICallback<T>) {
+  public static async cacheFromAPI<T>(uri: string, callback?: ICallback<T>) {
     const auth = await API.getAuth()
-    console.log('get', this.getUrl(uri), auth)
     const ret = await API.getInstace()
       .axiosInstance.get(this.getUrl(uri), auth)
       .catch(error => this.handleError(error, uri, auth, 'get'))
