@@ -14,7 +14,7 @@ export default class HomeListListItem extends SafeComponent<{
   render() {
     return (
       <View>
-        {this.props.index > 0 && (
+        {!this.props.list.owner && (
           <Text style={HomeStyles.heading}>
             {this.props.list.ownerName}
             {Language.get('list_suffix')}
