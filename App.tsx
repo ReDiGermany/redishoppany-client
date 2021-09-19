@@ -61,23 +61,24 @@ export default class App extends Component {
     super(props)
 
     const lang = Localization.locale.split(/-/)[0]
-    Language.getInstance().init(lang === 'de' ? 'de' : 'en')
-    APIUser.getMe(async me => {
-      if (typeof me === 'boolean') {
-        this.setState({ checkMeDone: true, loggedin: false })
-      } else {
-        const expoPushToken = await registerForPushNotificationsAsync()
-        Notifications.addNotificationReceivedListener(this.handleNotification)
+    Language.getInstance().init(lang === 'de' ? 'de' : 'en', () => {
+      APIUser.getMe(async me => {
+        if (typeof me === 'boolean') {
+          this.setState({ checkMeDone: true, loggedin: false })
+        } else {
+          const expoPushToken = await registerForPushNotificationsAsync()
+          Notifications.addNotificationReceivedListener(this.handleNotification)
 
-        Notifications.addNotificationResponseReceivedListener(
-          this.handleNotificationResponse
-        )
-        if (expoPushToken && !me.profile.isAnon) {
-          Socket.setPushToken(expoPushToken)
-          APIUser.sendRemoteToken(expoPushToken)
+          Notifications.addNotificationResponseReceivedListener(
+            this.handleNotificationResponse
+          )
+          if (expoPushToken && !me.profile.isAnon) {
+            Socket.setPushToken(expoPushToken)
+            APIUser.sendRemoteToken(expoPushToken)
+          }
+          this.setState({ checkMeDone: true, loggedin: me !== undefined })
         }
-        this.setState({ checkMeDone: true, loggedin: me !== undefined })
-      }
+      })
     })
   }
 

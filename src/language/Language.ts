@@ -1,6 +1,9 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-restricted-syntax */
 
+import API from '../helper/API'
+import { ICallback } from '../interfaces/ICallbacks'
+
 interface ILanguageOption {
   [key: string]: string
 }
@@ -22,25 +25,17 @@ export default class Language {
 
   private Language() {}
 
-  public init(lang: 'de' | 'en'): void {
+  public init(lang: 'de' | 'en', callback: ICallback<void>) {
     this.lang = lang
-    this.file = require('./en.json')
-
-    let temp
-    if (lang === 'de') temp = require('./de.json')
-    if (temp) {
-      for (const k in temp) {
-        this.file[k] = temp[k]
-      }
-    }
+    API.get<any>(`/language/${lang}`, temp => {
+      this.file = temp
+      callback()
+    })
   }
 
   public get(name: string, data: ILanguageOption = {}) {
-    if (this.file === undefined) {
-      console.error('[LANGUAGE::ERROR] file unknown')
+    if (this.file === undefined) return `{${name}}`
 
-      return `{${name}}`
-    }
     if (!(name in this.file)) {
       console.error('[LANGUAGE::ERROR]', name)
 
