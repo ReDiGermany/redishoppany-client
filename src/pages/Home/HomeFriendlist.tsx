@@ -115,9 +115,6 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
   async addFriend(email: string, isMail: boolean) {
     const added = await APIFriends.add(email, isMail)
     if (added) {
-      this.setState({
-        alert: { type: 'success', text: 'Freund hinzugefügt' },
-      })
       APIFriends.list(list => this.update(list))
     } else {
       this.setState({
