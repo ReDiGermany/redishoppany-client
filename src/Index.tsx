@@ -25,6 +25,8 @@ import Backgrounds from './pages/Backgrounds'
 import LoginAnon from './pages/Login/LoginAnon'
 import NotConnected from './pages/NotConnected'
 import Socket from './helper/Socket'
+import Alert from './components/Alert'
+import { DefAlert } from './helper/DefinedAlerts'
 
 export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   state: IIndexState = {
@@ -33,6 +35,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
     checkMeDone: this.props.checkMeDone,
     loggedin: this.props.loggedin,
     appState: AppState.currentState,
+    alert: DefAlert,
   }
 
   async reloadMe(updateAll: boolean) {
@@ -63,8 +66,11 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
         const wasInactive =
           (this.state.appState.match(/inactive|background/) ?? []).length >= 0
         const isActive = nextAppState === 'active'
-        if (wasInactive && isActive) Socket.open()
-        else Socket.close(2)
+        if (wasInactive && isActive) {
+          Socket.open({
+            onAlert: alert => this.setState({ alert }),
+          })
+        } else Socket.close(2)
         this.setState({ appState: nextAppState })
       }
     )
@@ -81,6 +87,12 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
 
     return (
       <>
+        {this.state.alert.text !== '' && (
+          <Alert
+            onClose={() => this.setState({ alert: DefAlert })}
+            {...this.state.alert}
+          />
+        )}
         <Route path="/reload">
           <Reload onReload={async () => this.reloadMe(false)} />
         </Route>

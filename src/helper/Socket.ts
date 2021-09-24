@@ -3,6 +3,11 @@ import * as Notifications from 'expo-notifications'
 import { ICallback } from '../interfaces/ICallbacks'
 import { domain } from './Constants'
 import { getAuth } from './Functions'
+import IAlertProps from '../interfaces/IAlertProps'
+
+interface ISocketInit {
+  onAlert?: (_alert: IAlertProps) => void
+}
 
 export default class Socket {
   private static socket: IOSocket | null = null
@@ -24,7 +29,7 @@ export default class Socket {
     })
   }
 
-  private static init() {
+  private static init(initData?: ISocketInit) {
     ;(async () => {
       const { auth } = await getAuth()
 
@@ -38,6 +43,9 @@ export default class Socket {
       })
       this.socket.on('ping', () => {
         this.socket?.emit('pong')
+      })
+      this.socket.on('alert', (data: IAlertProps) => {
+        initData?.onAlert?.(data)
       })
       this.socket.on('reload', path => {
         console.log('reload', path)
@@ -71,20 +79,20 @@ export default class Socket {
     })()
   }
 
-  public static getInstance(): IOSocket | null {
-    if (!this.socket) this.init()
+  public static getInstance(initData?: ISocketInit): IOSocket | null {
+    if (!this.socket) this.init(initData)
 
     return this.socket
   }
 
   public static close(r?: number) {
     console.log('socket.io::closing', r ?? -1, this.socket === null)
-    this.getInstance()?.disconnect()
+    this.getInstance({})?.disconnect()
     this.socket = null
   }
 
-  public static open() {
+  public static open(initData?: ISocketInit) {
     console.log('socket.io::opening')
-    this.getInstance()
+    this.getInstance(initData)
   }
 }
