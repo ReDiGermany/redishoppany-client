@@ -1,5 +1,6 @@
 import React from 'react'
 import NetInfo from '@react-native-community/netinfo'
+import * as Constants from 'expo-constants'
 import { AppState } from 'react-native'
 import { Route, Redirect } from './Router/react-router'
 import About from './pages/About'
@@ -39,6 +40,7 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
   }
 
   async reloadMe(updateAll: boolean) {
+    console.log('index reloadMe', Constants.default.deviceName)
     APIUser.getMe(user => {
       if (typeof user === 'boolean') {
         console.log('[index.tsx] error logging in. Wrong credentials?')
@@ -58,7 +60,6 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
       const connected = state.isConnected ?? false
       this.setState({ connected })
     })
-    await this.reloadMe(true)
     // Socket.open()
     this.appStateSubscription = AppState.addEventListener(
       'change',
@@ -68,8 +69,16 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
         const isActive = nextAppState === 'active'
         if (wasInactive && isActive) {
           Socket.open({
-            onAlert: alert => this.setState({ alert }),
-          })
+            onAlert: alert => {
+              this.setState({
+                alert: {
+                  type: alert.type,
+                  text: alert.text,
+                  info: alert.info !== '' ? alert.info : undefined,
+                },
+              })
+            },
+          }).onConnect(() => this.reloadMe(true))
         } else Socket.close(2)
         this.setState({ appState: nextAppState })
       }
