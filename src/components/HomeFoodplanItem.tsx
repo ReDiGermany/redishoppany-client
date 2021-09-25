@@ -61,7 +61,7 @@ export default class HomeFoodplanItem extends SafeComponent<{
               icon: 'shopping-basket',
               name: 'cart',
               onPress: () => {
-                console.log(item)
+                // console.log(item)
                 this.setState({ redirect: `/foodplantocart/${item.id}` })
                 // this.setState({ item })
                 // APIFoodplan.addToCart(item.id)
@@ -74,7 +74,7 @@ export default class HomeFoodplanItem extends SafeComponent<{
             icon: 'share-square',
             name: 'go',
             onPress: () => {
-              console.log('recipe', item.recipe.id)
+              // console.log('recipe', item.recipe.id)
               this.setState({ redirect: `/recipe/${item.recipe.id}` })
             },
           })
