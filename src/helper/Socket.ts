@@ -1,4 +1,5 @@
 import { io, Socket as IOSocket } from 'socket.io-client'
+import EventEmitter from 'events'
 import * as Notifications from 'expo-notifications'
 import { ICallback } from '../interfaces/ICallbacks'
 import { domain } from './Constants'
@@ -12,7 +13,15 @@ interface ISocketInit {
 export default class Socket {
   private static socket: IOSocket | null = null
 
+  private static INSTANCE: Socket
+
   private static expoPushToken: string
+
+  private emitter: EventEmitter
+
+  constructor() {
+    this.emitter = new EventEmitter()
+  }
 
   static setPushToken(expoPushToken: string) {
     if (this.socket) this.socket.emit('expoPushToken', expoPushToken)
@@ -23,10 +32,13 @@ export default class Socket {
     this.socket?.on(name, callback)
   }
 
+  private static reloader: Map<string, ICallback<string>> = new Map<
+    string,
+    ICallback<string>
+  >()
+
   public static onReload(path: string, callback: ICallback<any>) {
-    this.on('reload', d => {
-      if (d === path) callback(d)
-    })
+    this.reloader.set(path, callback)
   }
 
   private static init(initData?: ISocketInit) {
@@ -48,10 +60,12 @@ export default class Socket {
         initData?.onAlert?.(data)
       })
       this.socket.on('reload', path => {
-        console.log('reload', path)
+        this.reloader.get(path)?.(path)
       })
       this.socket.on('connect', () => {
         console.log('this.socket.io::connect', this.socket?.id)
+        if (this.socket?.id !== undefined)
+          this.getSocketInstance().emitter.emit('connected')
       })
       this.socket.on('connection', () => {
         console.log('this.socket.io::connection')
@@ -79,10 +93,21 @@ export default class Socket {
     })()
   }
 
+  public static onConnect(callback: () => void) {
+    this.getSocketInstance().emitter.addListener('connected', callback)
+  }
+
   public static getInstance(initData?: ISocketInit): IOSocket | null {
     if (!this.socket) this.init(initData)
+    if (!this.INSTANCE) this.INSTANCE = new Socket()
 
     return this.socket
+  }
+
+  private static getSocketInstance() {
+    if (!this.INSTANCE) this.INSTANCE = new Socket()
+
+    return this.INSTANCE
   }
 
   public static close(r?: number) {
@@ -94,5 +119,7 @@ export default class Socket {
   public static open(initData?: ISocketInit) {
     console.log('socket.io::opening')
     this.getInstance(initData)
+
+    return this
   }
 }
