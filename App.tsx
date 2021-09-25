@@ -83,7 +83,7 @@ export default class App extends Component {
   }
 
   handleNotification = (notification: Notifications.Notification) => {
-    console.log('notification', notification.request.content)
+    console.log('App.tsx: notification', notification.request.content)
 
     return false
   }
