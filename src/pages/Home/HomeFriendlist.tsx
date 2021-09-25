@@ -58,6 +58,7 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
   }
 
   async onRefresh() {
+    this.props.onReload?.()
     APIFriends.list(list => this.update(list))
   }
 
@@ -109,14 +110,12 @@ export default class Friends extends SafeComponent<IPageProps, IPageState> {
       }
     })
     await APIFriends.delete(friend.id)
-    this.update(list)
+    // this.update(list)
   }
 
   async addFriend(email: string, isMail: boolean) {
     const added = await APIFriends.add(email, isMail)
-    if (added) {
-      APIFriends.list(list => this.update(list))
-    } else {
+    if (!added) {
       this.setState({
         alert: {
           type: 'error',
