@@ -57,7 +57,9 @@ export default class Alert extends SafeComponent<IAlertProps> {
       <Animated.View style={[animateAble, { marginTop, opacity }]}>
         <Pressable onPress={this.cancel} style={[box, type[this.props.type]]}>
           <Text style={text}>{this.props.text}</Text>
-          {this.props.info && <Text style={info}>{this.props.info}</Text>}
+          {this.props.info && this.props.info !== '' && (
+            <Text style={info}>{this.props.info}</Text>
+          )}
         </Pressable>
       </Animated.View>
     )
