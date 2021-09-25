@@ -6,6 +6,7 @@ import Row from './Row'
 import AddBarStyles from '../styles/AddBarStyles'
 import SafeComponent from './SafeComponent'
 import Language from '../language/Language'
+import GlobalStyles from '../styles/GlobalStyles'
 
 export default class AddBar extends SafeComponent<IAddBarProps> {
   state = {
@@ -47,7 +48,7 @@ export default class AddBar extends SafeComponent<IAddBarProps> {
     }
 
     return (
-      <Row>
+      <Row style={{ height: GlobalStyles().barHeight }}>
         <TextInput {...textInput} />
         <Icon {...icon} />
       </Row>
