@@ -1,5 +1,4 @@
 import React from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { View } from 'react-native'
 import BottomBox from '../components/BottomBox'
 import Moveable from '../components/Moveable/Moveable'
@@ -14,6 +13,8 @@ import { RedirectIfPossible } from '../Router/react-router'
 import GlobalStyles from '../styles/GlobalStyles'
 import ISettingsState from '../interfaces/ISettingsState'
 import SafeComponent from '../components/SafeComponent'
+import { DefAlert, DefPreErrorAlert, ErrorAlert } from '../helper/DefinedAlerts'
+import Alert from '../components/Alert'
 
 // TODO: fill content!
 // TODO: Active Foodplan => BottomBox
@@ -27,6 +28,7 @@ export default class Settings extends SafeComponent<
     shareFoodplanBox: false,
     activeFoodplanBox: false,
     redirect: '',
+    alert: DefAlert,
   }
 
   constructor(props: IPageProps) {
@@ -45,13 +47,18 @@ export default class Settings extends SafeComponent<
     this.setState({ shareFoodplanBox: !this.state.shareFoodplanBox })
   }
 
-  async inviteToFoodplan(id: number) {
-    APIShareFoodplan.invite(id)
-    const { foodplanFriends } = this.state
-    foodplanFriends.forEach((item, idx) => {
-      if (item.id === id) foodplanFriends[idx].inList = true
+  async inviteToFoodplan({ id, name }: { id: number; name: string }) {
+    await APIShareFoodplan.invite(id, t => {
+      console.log('invite', id, name, t)
+      if (!t)
+        this.setState({ alert: DefPreErrorAlert('foodlist.invite.error') })
+
+      const { foodplanFriends } = this.state
+      foodplanFriends.forEach((item, idx) => {
+        if (item.id === id) foodplanFriends[idx].inList = true
+      })
+      this.setState({ foodplanFriends, shareFoodplanBox: false })
     })
-    this.setState({ foodplanFriends, shareFoodplanBox: false })
   }
 
   async setActiveFoodplan(id: number) {
@@ -73,11 +80,13 @@ export default class Settings extends SafeComponent<
     return (
       <>
         <RedirectIfPossible to={this.state.redirect} />
-        <View
-          style={{
-            height: GlobalStyles().appHeight - GlobalStyles().statusbarHeight,
-          }}
-        >
+        <View style={{ height: GlobalStyles().contentHeight }}>
+          {this.state.alert.text !== '' && (
+            <Alert
+              {...this.state.alert}
+              onClose={() => this.setState({ alert: DefAlert })}
+            />
+          )}
           <Navigation user={this.props.user} label="Einstellungen" />
           {(this.state.foodplanFriends.length > 0 ||
             this.state.plans.length > 1) && (
@@ -112,28 +121,28 @@ export default class Settings extends SafeComponent<
             onClick={() => this.setState({ redirect: '/logout' })}
             large={true}
           />
+          <BottomBox
+            title="Share Foodplan"
+            onClose={() => this.setState({ shareFoodplanBox: false })}
+            items={this.state.foodplanFriends.map(item => ({
+              name: item.user.name,
+              active: item.inList,
+              onClick: () => this.inviteToFoodplan(item.user),
+              onDelete: item.inList ? () => {} : undefined,
+            }))}
+            open={this.state.shareFoodplanBox}
+          />
+          <BottomBox
+            title="Set Active Foodplan"
+            onClose={() => this.setState({ activeFoodplanBox: false })}
+            items={this.state.plans.map((item: IFoodplanPlan) => ({
+              name: item.name,
+              active: item.active,
+              onClick: () => this.setActiveFoodplan(item.id),
+            }))}
+            open={this.state.activeFoodplanBox}
+          />
         </View>
-        <BottomBox
-          title="Share Foodplan"
-          onClose={() => this.setState({ shareFoodplanBox: false })}
-          items={this.state.foodplanFriends.map(item => ({
-            name: `${item.friend.firstName} ${item.friend.lastName}`,
-            active: item.inList,
-            onClick: () => this.inviteToFoodplan(item.friend.id),
-            onDelete: item.inList ? () => {} : undefined,
-          }))}
-          open={this.state.shareFoodplanBox}
-        />
-        <BottomBox
-          title="Set Active Foodplan"
-          onClose={() => this.setState({ activeFoodplanBox: false })}
-          items={this.state.plans.map((item: IFoodplanPlan) => ({
-            name: item.name,
-            active: item.active,
-            onClick: () => this.setActiveFoodplan(item.id),
-          }))}
-          open={this.state.activeFoodplanBox}
-        />
       </>
     )
   }
