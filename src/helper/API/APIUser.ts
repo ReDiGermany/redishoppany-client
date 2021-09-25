@@ -27,7 +27,7 @@ export default class APIUser {
     const password = (await AsyncStorage.getItem('token')) ?? ''
     const username = (await AsyncStorage.getItem('email')) ?? ''
     if (password !== '' && username !== '') {
-      API.get<IAPIUserMe>('/user/me', ret => callback?.(ret))
+      API.get<IAPIUserMe>('/user/me', callback)
     } else callback?.(false)
   }
 
