@@ -42,13 +42,14 @@
     "expo-barcode-scanner": "~10.2.2",
     "expo-blur": "^9.0.3",
     "expo-camera": "~11.2.2",
-    "expo-cli": "^4.11.0",
+    "expo-cli": "^4.12.0",
     "expo-constants": "~11.0.1",
     "expo-error-recovery": "~2.2.0",
     "expo-font": "~9.2.1",
     "expo-google-sign-in": "~9.2.1",
     "expo-linear-gradient": "~9.2.0",
     "expo-linking": "~2.3.1",
+    "expo-localization": "~10.2.0",
     "expo-module-scripts": "^2.0.0",
     "expo-notifications": "~0.12.3",
     "expo-random": "~11.2.0",
@@ -88,8 +89,7 @@
     "react-router-native": "^5.2.0",
     "rn-nodeify": "^10.3.0",
     "socket.io-client": "^4.2.0",
-    "twitter": "^1.7.1",
-    "expo-localization": "~10.2.0"
+    "twitter": "^1.7.1"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
