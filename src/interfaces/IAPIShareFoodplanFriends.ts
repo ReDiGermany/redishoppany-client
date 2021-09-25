@@ -1,9 +1,9 @@
 export default interface IAPIShareFoodplanFriends {
+  accepted: boolean
   id: number
-  friend: {
+  user: {
     id: number
-    firstName: string
-    lastName: string
+    name: string
   }
   inList: boolean
 }
