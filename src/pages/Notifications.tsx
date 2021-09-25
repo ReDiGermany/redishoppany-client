@@ -131,17 +131,28 @@ export default class Notifications extends SafeComponent<
           {this.state.notifications.length === 0 && (
             <InfoMoveable name="notifications.empty" />
           )}
-          {this.state.notifications.map(item => (
-            <Moveable
-              key={item.id}
-              onDelete={() => this.delete(item)}
-              name={Language.getOrText(`notification.${item.name}`)}
-              // name={item.name}
-              secondText={item.info}
-              secondTextOpacity={0.5}
-              buttons={this.notificationButtons[item.name](item)}
-            />
-          ))}
+          {this.state.notifications.map(item => {
+            if (!(item.name in this.notificationButtons)) {
+              console.log("Notifications: Didn't find", item.name!)
+            }
+
+            return (
+              <Moveable
+                key={item.id}
+                large={true}
+                onDelete={() => this.delete(item)}
+                name={Language.getOrText(`notification.${item.name}`)}
+                // name={item.name}
+                secondText={item.info}
+                secondTextOpacity={0.5}
+                buttons={
+                  item.name in this.notificationButtons
+                    ? this.notificationButtons[item.name](item)
+                    : undefined
+                }
+              />
+            )
+          })}
         </ScrollView>
       </View>
     )
