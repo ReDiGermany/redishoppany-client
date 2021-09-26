@@ -14,7 +14,8 @@ import InfoMoveable from '../components/Moveable/InfoMoveable'
 import IMoveableButtonProps from '../interfaces/IMoveableButtonProps'
 import APIFriends from '../helper/API/APIFriends'
 import APIShareShoppinglist from '../helper/API/APIShareShoppinglist'
-import { DefAlert, DefPreSuccessAlert } from '../helper/DefinedAlerts'
+import { DefAlert } from '../helper/DefinedAlerts'
+import APIShareFoodplan from '../helper/API/APIShareFoodplan'
 
 export default class Notifications extends SafeComponent<
   IPageProps,
@@ -29,8 +30,9 @@ export default class Notifications extends SafeComponent<
   notificationButtons: {
     [key: string]: (_item: IAPINotification) => IMoveableButtonProps[]
   } = {
-    'language.changed': () => [],
-    'friend_add': item => [
+    friend_accept: () => [],
+    friend_delete: () => [],
+    friend_add: item => [
       {
         color: '#fff',
         icon: 'external-link-alt',
@@ -46,45 +48,50 @@ export default class Notifications extends SafeComponent<
         },
       },
     ],
-    'friend_deleted': () => [],
-    'friend_denied': () => [],
-    'foodplan_accepted': () => [],
-    'foodplan_denied': () => [],
-    'foodplan_invite': () => [],
-    'foodplan_revoked': () => [],
-    'recipe_accepted': () => [],
-    'recipe_invite': () => [],
-    'recipe_revoked': () => [],
-    'list_accepted': () => [],
-    'shoppinglist_invite': item => [
+
+    foodplan_invite: item => [
       {
-        color: GlobalStyles().color.red,
-        icon: 'times',
-        name: 'deny',
-        onPress: () => this.delete(item),
+        color: GlobalStyles().color.accent,
+        icon: 'check',
+        name: 'accept',
+        onPress: () => {
+          APIShareFoodplan.accept(item.id, () => {
+            this.refresh()
+          })
+        },
       },
+    ],
+    foodplan_revoke: () => [],
+    foodplan_deny: () => [],
+    foodplan_accept: () => [],
+
+    recipe_invite: () => [],
+    recipe_accept: () => [],
+    recipe_deny: () => [],
+    recipe_revoke: () => [],
+
+    shoppinglist_accept: () => [],
+    shoppinglist_deny: () => [],
+    shoppinglist_invite: item => [
       {
         color: GlobalStyles().color.accent,
         icon: 'check',
         name: 'accept',
         onPress: () => {
           APIShareShoppinglist.accept(item.id, () => {
-            this.setState({
-              alert: DefPreSuccessAlert(
-                'notifications.shoppinglist_invite.accept'
-              ),
-            })
             this.refresh()
           })
         },
       },
     ],
+    shoppinglist_leave: () => [],
+    shoppinglist_revoke: () => [],
   }
 
   async refresh() {
+    this.props.onReload?.()
     APINotification.list(notifications => {
       this.setState({ refreshing: false, notifications })
-      this.props.onReload?.()
     })
   }
 
@@ -141,7 +148,7 @@ export default class Notifications extends SafeComponent<
                 key={item.id}
                 large={true}
                 onDelete={() => this.delete(item)}
-                name={Language.getOrText(`notification.${item.name}`)}
+                name={Language.getOrText(`notification.${item.name}.to.title`)}
                 // name={item.name}
                 secondText={item.info}
                 secondTextOpacity={0.5}
