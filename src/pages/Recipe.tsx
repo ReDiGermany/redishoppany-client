@@ -182,10 +182,7 @@ export default class Recipes extends SafeComponent<
           items={this.state.friends.map((friend: ISharedFriend) => ({
             onClick: () => {
               APIShareRecipe.invite(this.props.id, friend.userId, () => {
-                this.setState({
-                  alert: SuccessAlert('Invited'),
-                  shareBox: false,
-                })
+                this.setState({ shareBox: false })
               })
             },
             onDelete: friend.inList
