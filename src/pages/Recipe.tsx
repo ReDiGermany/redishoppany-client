@@ -27,9 +27,6 @@ import APIRecipe from '../helper/API/APIRecipe'
 import recipeImageNotFound from '../../assets/recipe_not_found.jpg'
 import IAPIRecipeDetails from '../interfaces/IAPIRecipeDetails'
 import APIShareRecipe from '../helper/API/APIShareRecipe'
-import { DefAlert, SuccessAlert } from '../helper/DefinedAlerts'
-import IAlertProps from '../interfaces/IAlertProps'
-import Alert from '../components/Alert'
 import ISharedFriend from '../interfaces/ISharedFriend'
 
 interface IRecipeState {
@@ -39,7 +36,6 @@ interface IRecipeState {
   friends: ISharedFriend[]
   redirect: string
   recipe: IAPIRecipeDetails
-  alert: IAlertProps
 }
 
 interface IRecipesProps extends IPageProps {
@@ -66,7 +62,6 @@ export default class Recipes extends SafeComponent<
     shareBox: false,
     focusText: false,
     redirect: '',
-    alert: DefAlert,
   }
 
   constructor(props: IRecipesProps) {
@@ -81,16 +76,8 @@ export default class Recipes extends SafeComponent<
 
   render() {
     return (
-      <View
-        style={{ height: GlobalStyles().appHeight - GlobalStyles().barHeight }}
-      >
+      <View style={{ height: GlobalStyles().contentHeight }}>
         <RedirectIfPossible to={this.state.redirect} />
-        {this.state.alert.text !== '' && (
-          <Alert
-            onClose={() => this.setState({ alert: DefAlert })}
-            {...this.state.alert}
-          />
-        )}
         <Navigation
           user={this.props.user}
           label="Rezept"
