@@ -17,6 +17,8 @@ export default class APIShareShoppinglist {
     return API.delete<boolean>(`/share/shoppinglist/leave/${listId}`)
   }
 
+  // TODO: After Login connect to socket
+
   public static async invite(
     listId: number,
     id: number,
