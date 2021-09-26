@@ -13,7 +13,7 @@ import { RedirectIfPossible } from '../Router/react-router'
 import GlobalStyles from '../styles/GlobalStyles'
 import ISettingsState from '../interfaces/ISettingsState'
 import SafeComponent from '../components/SafeComponent'
-import { DefAlert, DefPreErrorAlert, ErrorAlert } from '../helper/DefinedAlerts'
+import { DefAlert, DefPreErrorAlert } from '../helper/DefinedAlerts'
 import Alert from '../components/Alert'
 
 // TODO: fill content!
@@ -34,9 +34,11 @@ export default class Settings extends SafeComponent<
   constructor(props: IPageProps) {
     super(props)
     APIFoodplan.listPlans(async plans => {
+      console.log({ plans })
       this.setState({ plans })
     })
     APIShareFoodplan.list(async foodplanFriends => {
+      console.log({ foodplanFriends })
       this.setState({ foodplanFriends })
     })
   }
@@ -92,7 +94,7 @@ export default class Settings extends SafeComponent<
             this.state.plans.length > 1) && (
             <ListHeader color="#111" text={Language.get('foodlist')} />
           )}
-          {this.state.plans.length > 1 && (
+          {this.state.plans.length > 0 && (
             <Moveable
               prefix="Active Foodplan:"
               name={activeFoodplanName}
