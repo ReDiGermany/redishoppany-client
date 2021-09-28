@@ -25,11 +25,12 @@ export default class Language {
 
   private Language() {}
 
-  public init(lang: 'de' | 'en', callback: ICallback<void>) {
+  public async init(lang: 'de' | 'en', callback: ICallback<boolean>) {
     this.lang = lang
-    API.get<any>(`/language/${lang}`, temp => {
+
+    return API.get<{ [key: string]: string }>(`/language/${lang}`, temp => {
       this.file = temp
-      callback()
+      callback(temp !== null && temp !== undefined)
     })
   }
 
