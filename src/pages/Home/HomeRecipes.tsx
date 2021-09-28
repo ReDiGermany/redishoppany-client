@@ -44,12 +44,20 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
   }
 
   render() {
-    const image = (item: any) => ({
-      width: GlobalStyles().appWidth,
-      height: 150,
-      style: imageStyle,
-      source: item.image === '' ? recipeImageNotFound : { uri: item.image },
-    })
+    const image = (item: any) => {
+      let source: any
+
+      if (item.image === '') source = recipeImageNotFound
+      else if ('uri' in item.image) source = item.image
+      else source = { uri: item.image }
+
+      return {
+        width: GlobalStyles().appWidth,
+        height: 150,
+        style: imageStyle,
+        source,
+      }
+    }
     let renderedItems = 0
 
     return (
