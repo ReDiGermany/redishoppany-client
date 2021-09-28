@@ -42,17 +42,21 @@ export default class Socket {
   }
 
   private static init(initData?: ISocketInit) {
-    ;(async () => {
-      const { auth } = await getAuth()
-
+    getAuth().then(({ auth }) => {
+      const timeout = 3000
       this.socket = io(domain, {
         auth: {
           ...auth,
           expoPushToken: this.expoPushToken,
         },
+        timeout,
         forceNew: true,
         reconnection: false,
       })
+      const to = setTimeout(() => {
+        this.getSocketInstance().emitter.emit('error')
+        console.log('this.socket.io::timeout')
+      }, timeout)
       this.socket.on('ping', () => {
         this.socket?.emit('pong')
       })
@@ -63,6 +67,7 @@ export default class Socket {
         this.reloader.get(path)?.(path)
       })
       this.socket.on('connect', () => {
+        clearTimeout(to)
         console.log('this.socket.io::connect', this.socket?.id)
         if (this.socket?.id !== undefined)
           this.getSocketInstance().emitter.emit('connected')
@@ -75,6 +80,9 @@ export default class Socket {
       })
       this.socket.on('status', (status: string) => {
         console.log('this.socket.io::status', status)
+      })
+      this.socket.on('error', (error: string) => {
+        console.log('this.socket.io::error', error)
       })
       this.socket.on('welcome', async () => {
         const expoPushToken = (await Notifications.getExpoPushTokenAsync()).data
@@ -90,11 +98,19 @@ export default class Socket {
           console.log('this.socket.io::disconnected', client)
         })
       })
-    })()
+    })
   }
 
   public static onConnect(callback: () => void) {
     this.getSocketInstance().emitter.addListener('connected', callback)
+
+    return this
+  }
+
+  public static onError(callback: () => void) {
+    this.getSocketInstance().emitter.addListener('error', callback)
+
+    return this
   }
 
   public static getInstance(initData?: ISocketInit): IOSocket | null {
