@@ -176,6 +176,7 @@ export default class MoveableText extends SafeComponent<IMoveableTextProps> {
             <Text style={textStyle.shared}>shared</Text>
           )}
           {!isSorting &&
+            (!this.props.disabled ?? false) &&
             this.props.buttons?.map(btn => (
               <MoveableButton key={btn.name} {...btn} />
             ))}
