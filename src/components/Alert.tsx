@@ -28,7 +28,9 @@ export default class Alert extends SafeComponent<IAlertProps> {
       duration: 300,
       useNativeDriver: true,
     }).start()
-    setTimeout(this.cancel, 3 * 1000)
+    if (this.props.exit ?? true) {
+      setTimeout(this.cancel, 3 * 1000)
+    }
   }
 
   cancel = () => {
