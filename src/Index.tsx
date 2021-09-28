@@ -78,7 +78,15 @@ export default class Index extends SafeComponent<IIndexProps, IIndexState> {
                 },
               })
             },
-          }).onConnect(() => this.reloadMe(true))
+          })
+            .onError(() => {
+              this.reloadMe(true)
+              this.setState({ connected: false })
+            })
+            .onConnect(() => {
+              this.setState({ connected: true })
+              this.reloadMe(true)
+            })
         } else Socket.close(2)
         this.setState({ appState: nextAppState })
       }
