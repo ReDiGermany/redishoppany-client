@@ -11,10 +11,13 @@ import Language from './src/language/Language'
 import { Router } from './src/Router/react-router'
 import MainWindowStyles from './src/styles/MainWindowStyles'
 import Socket from './src/helper/Socket'
+import API from './src/helper/API'
+import { DefAlert } from './src/helper/DefinedAlerts'
+import IAlertProps from './src/interfaces/IAlertProps'
+import Alert from './src/components/Alert'
 
 const registerForPushNotificationsAsync = async () => {
   let token = ''
-  // if (Constants.isDevice) {
   const { status: existingStatus } = await Notifications.getPermissionsAsync()
   let finalStatus = existingStatus
   if (existingStatus !== 'granted') {
@@ -27,9 +30,6 @@ const registerForPushNotificationsAsync = async () => {
     return
   }
   token = (await Notifications.getExpoPushTokenAsync()).data
-  // } else {
-  // console.log('Must use physical device for Push Notifications')
-  // }
 
   if (Platform.OS === 'android') {
     Notifications.setNotificationChannelAsync('default', {
@@ -51,35 +51,68 @@ Notifications.setNotificationHandler({
   }),
 })
 
-export default class App extends Component {
-  state = {
+interface IAPPState {
+  checkMeDone: boolean
+  loggedin: boolean
+  isLang?: boolean
+  alert: IAlertProps
+}
+
+export default class App extends Component<{}, IAPPState> {
+  state: IAPPState = {
     checkMeDone: false,
     loggedin: false,
+    isLang: undefined,
+    alert: DefAlert,
   }
 
   constructor(props: any) {
     super(props)
 
     const lang = Localization.locale.split(/-/)[0]
-    Language.getInstance().init(lang === 'de' ? 'de' : 'en', () => {
-      APIUser.getMe(async me => {
-        if (typeof me === 'boolean') {
-          this.setState({ checkMeDone: true, loggedin: false })
-        } else {
-          const expoPushToken = await registerForPushNotificationsAsync()
-          Notifications.addNotificationReceivedListener(this.handleNotification)
+    Language.getInstance()
+      .init(lang === 'de' ? 'de' : 'en', isLang => {
+        console.log('isLang', isLang)
+        this.setState({ isLang })
+        if (isLang) {
+          this.setState({ alert: DefAlert })
+          APIUser.getMe(async me => {
+            if (typeof me === 'boolean') {
+              this.setState({ checkMeDone: true, loggedin: false })
+            } else {
+              const expoPushToken =
+                await registerForPushNotificationsAsync().catch(e => {
+                  console.log('registerForPushNotificationsAsync catch', e)
+                })
+              Notifications.addNotificationReceivedListener(
+                this.handleNotification
+              )
 
-          Notifications.addNotificationResponseReceivedListener(
-            this.handleNotificationResponse
-          )
-          if (expoPushToken && !me.profile.isAnon) {
-            Socket.setPushToken(expoPushToken)
-            APIUser.sendRemoteToken(expoPushToken)
-          }
-          this.setState({ checkMeDone: true, loggedin: me !== undefined })
-        }
+              Notifications.addNotificationResponseReceivedListener(
+                this.handleNotificationResponse
+              )
+              if (expoPushToken && !me.profile.isAnon) {
+                Socket.setPushToken(expoPushToken)
+                APIUser.sendRemoteToken(expoPushToken)
+              }
+              this.setState({ checkMeDone: true, loggedin: me !== undefined })
+            }
+          })
+        } else this.unConnectedAlert()
       })
-    })
+      .catch(() => this.unConnectedAlert())
+  }
+
+  unConnectedAlert() {
+    if (!this.state.isLang)
+      this.setState({
+        alert: {
+          text: 'Server Offline',
+          info: "We Can't connect to the Server!",
+          type: 'error',
+          exit: false,
+        },
+      })
   }
 
   handleNotification = (notification: Notifications.Notification) => {
@@ -94,11 +127,14 @@ export default class App extends Component {
   }
 
   render() {
+    console.log('NODE_ENV:', process.env.NODE_ENV, API.domain)
+
     return (
       <AppearanceProvider>
         <SafeAreaView>
           <StatusBar style="light" />
           <View style={MainWindowStyles.container}>
+            {this.state.alert.text !== '' && <Alert {...this.state.alert} />}
             <Router>
               <Index {...this.state} />
             </Router>
