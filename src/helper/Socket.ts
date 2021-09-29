@@ -43,7 +43,7 @@ export default class Socket {
 
   private static init(initData?: ISocketInit) {
     getAuth().then(({ auth }) => {
-      const timeout = 3000
+      const timeout = 5000
       this.socket = io(domain, {
         auth: {
           ...auth,
@@ -53,9 +53,10 @@ export default class Socket {
         forceNew: true,
         reconnection: false,
       })
+      console.log(new Date().getTime(), domain)
       const to = setTimeout(() => {
         this.getSocketInstance().emitter.emit('error')
-        console.log('this.socket.io::timeout')
+        console.log('this.socket.io::timeout', new Date().getTime())
       }, timeout)
       this.socket.on('ping', () => {
         this.socket?.emit('pong')

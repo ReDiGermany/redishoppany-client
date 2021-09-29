@@ -6,14 +6,12 @@ import * as Constants from 'expo-constants'
 import { ICallback } from '../interfaces/ICallbacks'
 import { getAuth, getPubAuth } from './Functions'
 import Socket from './Socket'
+import { domain as dom } from './Constants'
 
 // Error Handling from https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
 
 export default class API {
-  public static domain =
-    process.env.NODE_ENV === 'development'
-      ? 'http://192.168.0.30:3001'
-      : 'https://api.lisha-app.com'
+  public static domain = dom
 
   private static config = {
     baseURL: this.domain,
