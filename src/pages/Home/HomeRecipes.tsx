@@ -48,7 +48,8 @@ export default class Recipes extends SafeComponent<IPageProps, IRecipesState> {
       let source: any
 
       if (item.image === '') source = recipeImageNotFound
-      else if ('uri' in item.image) source = item.image
+      else if (typeof item.image === 'object' && 'uri' in item.image)
+        source = item.image
       else source = { uri: item.image }
 
       return {
